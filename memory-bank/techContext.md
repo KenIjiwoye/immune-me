@@ -33,6 +33,8 @@
 2. **PostgreSQL**: Relational database
    - Features: ACID compliance, JSON support, robust indexing
    - Benefits: Data integrity, complex query support
+   - Configuration: Connection configured in AdonisJS using environment variables
+   - Connection Key: 'pg' (PostgreSQL client)
 
 3. **JWT Authentication**: Token-based authentication
    - Implementation: AdonisJS Auth module
@@ -70,7 +72,8 @@
 
 3. **Database Management**:
    - Migrations for schema changes
-   - Seeders for test data
+   - Seeders for test data (configured in database.ts)
+   - Environment variables for database credentials
 
 ## Technical Constraints
 
@@ -125,7 +128,7 @@
     "@adonisjs/lucid": "^21.6.1",
     "@vinejs/vine": "^3.0.1",
     "luxon": "^3.6.1",
-    "pg": "^8.16.3",
+    "pg": "^8.16.3", // PostgreSQL client for Node.js
     "reflect-metadata": "^0.2.2"
   }
 }
@@ -149,6 +152,7 @@
 
 - **Backend**: Render.com (planned)
 - **Database**: Cloud PostgreSQL (planned)
+  - Local development: PostgreSQL configured with environment variables
 - **Frontend**: App stores and enterprise distribution (planned)
 
 ### Monitoring
