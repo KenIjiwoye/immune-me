@@ -14,3 +14,10 @@ router.get('/', async () => {
     hello: 'world',
   }
 })
+
+// Health check endpoint for Docker
+router.get('/health', async () => {
+  return {
+    status: 'healthy',
+  }
+})
