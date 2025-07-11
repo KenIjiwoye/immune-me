@@ -3,23 +3,35 @@ import type { NextFn } from '@adonisjs/core/types/http'
 import type { Authenticators } from '@adonisjs/auth/types'
 
 /**
- * Auth middleware is used authenticate HTTP requests and deny
- * access to unauthenticated users.
+ * Auth middleware is used to authenticate HTTP requests and deny
+ * access to unauthenticated users. It also supports role-based access control.
  */
 export default class AuthMiddleware {
   /**
-   * The URL to redirect to, when authentication fails
+   * Handle request
    */
-  redirectTo = '/login'
-
   async handle(
     ctx: HttpContext,
     next: NextFn,
     options: {
       guards?: (keyof Authenticators)[]
+      roles?: string[]
     } = {}
   ) {
-    await ctx.auth.authenticateUsing(options.guards, { loginRoute: this.redirectTo })
+    // Authenticate user using the specified guards or the default guard
+    await ctx.auth.authenticateUsing(options.guards)
+    
+    // If roles are specified, check if user has required role
+    if (options.roles && options.roles.length > 0) {
+      const user = ctx.auth.user!
+      if (!options.roles.includes(user.role)) {
+        return ctx.response.forbidden({
+          error: 'Unauthorized access: insufficient permissions'
+        })
+      }
+    }
+    
+    // Call next middleware
     return next()
   }
 }
