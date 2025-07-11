@@ -2,15 +2,44 @@
 
 ## Technologies Used
 
+### Containerization
+
+1. **Docker**: Container platform for application packaging and deployment
+   - Implementation: Multi-stage builds for optimized images
+   - Features: Isolated environments, consistent deployments
+   - Benefits: Development/production parity, simplified setup
+
+2. **Docker Compose**: Multi-container orchestration tool
+   - Features: Service definition, networking, volume management
+   - Benefits: Simplified multi-container management
+   - Implementation: Orchestrating frontend, backend, and database services
+
+3. **Container Networking**: Docker bridge network
+   - Implementation: Custom `immune-me-network` for service communication
+   - Features: Isolated network for secure service communication
+   - Benefits: Service discovery, security through isolation
+
+4. **Volume Management**: Docker volumes for data persistence
+   - Implementation: Named volume for PostgreSQL data
+   - Features: Data persistence across container restarts
+   - Benefits: Reliable data storage, simplified backups
+
+5. **Health Checks**: Container health monitoring
+   - Implementation: Custom health check commands for each service
+   - Features: Automatic service monitoring
+   - Benefits: Improved reliability, automatic recovery
+
 ### Frontend
 
 1. **React Native**: Cross-platform mobile application framework
    - Version: Latest stable
    - Implementation: Using Expo managed workflow
+   - Containerization: Multi-stage Docker build with Nginx for serving web build
 
 2. **Expo**: Development platform for React Native
    - Features: File-based routing, development builds, hot reloading
    - Benefits: Simplified development workflow, access to native APIs
+   - Containerization: Web export for container deployment
 
 3. **TanStack Query**: Data fetching and state management library
    - Features: Caching, background updates, pagination
@@ -29,12 +58,14 @@
 1. **AdonisJS v6**: Node.js web framework
    - Features: MVC architecture, built-in authentication, ORM
    - Benefits: TypeScript support, structured development
+   - Containerization: Multi-stage Docker build with optimized production image
 
 2. **PostgreSQL**: Relational database
    - Features: ACID compliance, JSON support, robust indexing
    - Benefits: Data integrity, complex query support
    - Configuration: Connection configured in AdonisJS using environment variables
    - Connection Key: 'pg' (PostgreSQL client)
+   - Containerization: Official PostgreSQL Alpine image with persistent volume
 
 3. **JWT Authentication**: Token-based authentication
    - Implementation: AdonisJS Auth module
@@ -50,7 +81,14 @@
 
 ## Development Setup
 
-### Local Development Environment
+### Containerized Development Environment
+
+1. **Docker**: v20.10.0+ for containerization
+2. **Docker Compose**: v2.0.0+ for multi-container orchestration
+3. **Git**: For version control
+4. **Environment Variables**: Configured via .env file
+
+### Local Development Environment (Alternative)
 
 1. **Node.js**: v18+ for backend and frontend development
 2. **npm**: Package management
@@ -58,22 +96,32 @@
 4. **Expo CLI**: For React Native development
 5. **AdonisJS CLI**: For backend development
 
-### Development Workflow
+### Development Workflow with Containers
 
-1. **Backend Development**:
-   - Run `npm run dev` in the backend directory
-   - Hot reloading enabled for rapid development
-   - API testing via HTTP client (e.g., Postman, Insomnia)
+1. **Initial Setup**:
+   - Clone repository
+   - Configure .env file
+   - Run `docker-compose up -d` to start all services
 
-2. **Frontend Development**:
-   - Run `npx expo start` in the frontend directory
-   - Test on iOS simulator, Android emulator, or physical devices
-   - Expo Go for quick testing on physical devices
+2. **Backend Development**:
+   - Edit files in the `backend/` directory
+   - Rebuild with `docker-compose up -d --build backend`
+   - Run migrations with `docker exec -it immune-me-backend node ace migration:run`
+   - View logs with `docker-compose logs backend`
 
-3. **Database Management**:
-   - Migrations for schema changes
-   - Seeders for test data (configured in database.ts)
+3. **Frontend Development**:
+   - Edit files in the `frontend/` directory
+   - Rebuild with `docker-compose up -d --build frontend`
+   - View logs with `docker-compose logs frontend`
+
+4. **Database Management**:
+   - Connect to database with `docker exec -it immune-me-db psql -U ${DB_USER} -d ${DB_DATABASE}`
+   - Persistent storage via Docker volume
    - Environment variables for database credentials
+
+5. **Advanced Development Setup**:
+   - Mount local directories as volumes for hot reloading
+   - Configure volume mounts in docker-compose.yml
 
 ## Technical Constraints
 
@@ -150,10 +198,23 @@
 
 ### Deployment
 
+- **Containerized Deployment**: Docker Compose for all services
+  - Production-ready Docker images with multi-stage builds
+  - Environment variable configuration for different environments
+  - Volume management for data persistence
+  - Health checks for service monitoring
+
 - **Backend**: Render.com (planned)
+  - Container deployment with Docker image
+  - Environment variables configured in Render.com dashboard
+
 - **Database**: Cloud PostgreSQL (planned)
-  - Local development: PostgreSQL configured with environment variables
+  - Local development: PostgreSQL in Docker container
+  - Production: Managed PostgreSQL service or containerized deployment
+
 - **Frontend**: App stores and enterprise distribution (planned)
+  - Web version deployed via containerized Nginx
+  - Native apps built from the same codebase
 
 ### Monitoring
 

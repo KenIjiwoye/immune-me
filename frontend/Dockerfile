@@ -1,4 +1,4 @@
-FROM node:22.16.0-alpine3.22 AS base
+FROM node:24.4.0-alpine3.22 AS base
 
 # Install system dependencies required for React Native/Expo
 RUN apk add --no-cache git

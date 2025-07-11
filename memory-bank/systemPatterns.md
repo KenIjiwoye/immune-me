@@ -2,7 +2,28 @@
 
 ## System Architecture
 
-The Immunization Records Management System follows a client-server architecture with the following components:
+The Immunization Records Management System follows a containerized client-server architecture with the following components:
+
+### Containerization Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Docker Compose                          │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   Frontend  │     │   Backend   │     │  Database   │   │
+│  │  (Nginx/80) │────▶│ (Node/3333) │────▶│ (Postgres)  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Frontend   │     │   Backend   │     │  Postgres   │   │
+│  │   Volume    │     │   Volume    │     │   Volume    │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+│                 immune-me-network (bridge)                  │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### Frontend Architecture (React Native)
 
@@ -63,17 +84,49 @@ The system uses a relational database with the following key entities:
 
 ## Key Technical Decisions
 
-1. **Mobile-First Approach**: The primary interface is a mobile application built with React Native to enable staff mobility within healthcare facilities.
+1. **Containerized Architecture**: Docker and Docker Compose for consistent development, testing, and production environments.
+   - Multi-stage builds for optimized container images
+   - Service orchestration with Docker Compose
+   - Isolated network for secure service communication
+   - Volume management for data persistence
+   - Health checks for service monitoring
 
-2. **API-First Backend**: AdonisJS v6 provides a robust API that can support multiple client applications if needed in the future.
+2. **Mobile-First Approach**: The primary interface is a mobile application built with React Native to enable staff mobility within healthcare facilities.
+   - Web export for containerized deployment
 
-3. **JWT Authentication**: JSON Web Tokens for secure, stateless authentication with role-based permissions.
+3. **API-First Backend**: AdonisJS v6 provides a robust API that can support multiple client applications if needed in the future.
+   - Containerized for consistent deployment
 
-4. **TanStack Query**: For efficient data fetching, caching, and state management in the frontend.
+4. **JWT Authentication**: JSON Web Tokens for secure, stateless authentication with role-based permissions.
 
-5. **PostgreSQL Database**: Relational database for structured data storage with strong consistency guarantees.
+5. **TanStack Query**: For efficient data fetching, caching, and state management in the frontend.
+
+6. **PostgreSQL Database**: Relational database for structured data storage with strong consistency guarantees.
+   - Containerized with persistent volume for data storage
 
 ## Design Patterns
+
+### Containerization Patterns
+
+1. **Multi-Stage Builds**: Separate build and runtime environments for optimized images.
+   - Development dependencies only in build stage
+   - Minimal runtime images for production
+
+2. **Service Composition**: Breaking the application into separate containerized services.
+   - Frontend, backend, and database as separate services
+   - Docker Compose for orchestration
+
+3. **Environment Configuration**: Using environment variables for container configuration.
+   - .env file for local development
+   - Docker Compose environment variables for production
+
+4. **Volume Management**: Persistent storage for stateful services.
+   - Named volume for database data
+   - Bind mounts for development (optional)
+
+5. **Health Checks**: Monitoring service health for reliability.
+   - Custom health check commands for each service
+   - Automatic recovery for failed services
 
 ### Frontend Patterns
 
@@ -101,41 +154,62 @@ The system uses a relational database with the following key entities:
 
 ## Component Relationships
 
-1. **Authentication Flow**:
+1. **Container Communication**:
+   - Frontend Container → Backend Container → Database Container
+   - All services connected via Docker network (immune-me-network)
+   - Environment variables for service discovery
+
+2. **Authentication Flow**:
    - Login Screen → Auth Controller → JWT Generation → Protected Routes
 
-2. **Immunization Record Creation**:
+3. **Immunization Record Creation**:
    - Immunization Form → API Service → Immunization Records Controller → Database
 
-3. **Notification Generation**:
+4. **Notification Generation**:
    - Scheduled Job → Notification Service → Notification Creation → User Dashboard
 
-4. **Reporting Flow**:
+5. **Reporting Flow**:
    - Reports Screen → Reports Controller → Data Aggregation → Formatted Response
+
+6. **Deployment Flow**:
+   - Code Changes → Docker Image Build → Container Orchestration → Service Availability
 
 ## Critical Implementation Paths
 
-1. **Authentication and Authorization**:
+1. **Containerization Infrastructure**:
+   - Docker image creation
+   - Service orchestration
+   - Environment configuration
+   - Volume management
+   - Network setup
+
+2. **Authentication and Authorization**:
    - Secure login
    - Role-based access control
    - Token management
 
-2. **Patient Management**:
+3. **Patient Management**:
    - Patient registration
    - Patient search and filtering
    - Patient profile management
 
-3. **Immunization Workflow**:
+4. **Immunization Workflow**:
    - Vaccine selection
    - Record creation
    - Return date scheduling
 
-4. **Notification System**:
+5. **Notification System**:
    - Due date calculation
    - Notification generation
    - Notification delivery
 
-5. **Reporting and Analytics**:
+6. **Reporting and Analytics**:
    - Data aggregation
    - Visualization
    - Export functionality
+
+7. **Deployment and Operations**:
+   - Container health monitoring
+   - Database backup and recovery
+   - Service scaling
+   - Environment-specific configuration

@@ -131,123 +131,438 @@ docker exec -it immune-me-frontend sh
 docker exec -it immune-me-db psql -U ${DB_USER} -d ${DB_DATABASE}
 ```
 
-## Development Workflow
+## Development vs. Production Modes
 
-### Making Changes to the Frontend
+### Development Mode
 
-1. Edit the files in the `frontend/` directory
-2. The changes will require rebuilding the frontend container:
+The project includes a comprehensive development setup with hot reloading for both frontend and backend. This allows you to see your changes immediately without rebuilding containers.
+
+#### Starting Development Mode
+
+To start the application in development mode:
 
 ```bash
-docker-compose up -d --build frontend
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
-### Making Changes to the Backend
+This will:
+- Start the backend in development mode with hot reloading
+- Start the frontend Expo development server
+- Set up volume mounts for live code updates
+- Configure the database with development settings
 
-1. Edit the files in the `backend/` directory
-2. Rebuild the backend container:
+#### Accessing Development Services
+
+- **Frontend Expo DevTools**: http://localhost:19002
+  - Use this to manage your Expo development environment
+  - Access QR codes for mobile testing
+  - View logs and debugging information
+
+- **Frontend Web App**: http://localhost:19006
+  - The web version of your React Native app
+  - Automatically refreshes when you make changes
+
+- **Backend API**: http://localhost:3333
+  - Direct access to your AdonisJS API
+  - Includes detailed error messages and debugging information
+
+- **Database**: localhost:5432
+  - Connect using any PostgreSQL client with your configured credentials
+
+#### Making Changes in Development Mode
+
+With development mode active:
+
+1. **Frontend Changes**:
+   - Edit any files in the `frontend/` directory
+   - Changes are automatically detected by the Expo dev server
+   - The browser will refresh to show your changes
+   - Check the container logs for any errors: `docker-compose -f docker-compose.dev.yml logs -f frontend`
+
+2. **Backend Changes**:
+   - Edit any files in the `backend/` directory
+   - The AdonisJS server will automatically restart
+   - Changes are applied immediately
+   - View logs to confirm changes: `docker-compose -f docker-compose.dev.yml logs -f backend`
+
+3. **Testing on Mobile Devices**:
+   - Access the Expo DevTools at http://localhost:19002
+   - Scan the QR code with the Expo Go app on your device
+   - Ensure your mobile device is on the same network as your development machine
+
+#### Running Database Migrations in Development Mode
+
+To run database migrations in development mode:
 
 ```bash
-docker-compose up -d --build backend
+# Run migrations
+docker exec -it immune-me-backend-dev node ace migration:run
+
+# Roll back the last batch of migrations
+docker exec -it immune-me-backend-dev node ace migration:rollback
+
+# Create a new migration
+docker exec -it immune-me-backend-dev node ace make:migration create_new_table
+
+# Run seeders
+docker exec -it immune-me-backend-dev node ace db:seed
 ```
 
-### Database Migrations
+#### Installing New Dependencies in Development Mode
 
-To run database migrations:
+To add new packages to your project:
 
 ```bash
+# For backend dependencies
+docker exec -it immune-me-backend-dev npm install package-name
+
+# For frontend dependencies
+docker exec -it immune-me-frontend-dev npm install package-name
+```
+
+### Production Mode
+
+Production mode is optimized for performance, security, and reliability. It uses multi-stage Docker builds to create minimal, efficient containers.
+
+#### Starting Production Mode
+
+```bash
+docker-compose up -d
+```
+
+#### Accessing Production Services
+
+- **Frontend**: http://localhost:80
+  - Served by Nginx for optimal performance
+  - Static files are pre-built and optimized
+
+- **Backend API**: http://localhost:3333
+  - Optimized for performance
+  - Minimal error output for security
+
+- **Database**: localhost:5432
+  - Same connection details as development
+
+#### Making Changes in Production Mode
+
+Changes in production mode require rebuilding the containers:
+
+1. **Frontend Changes**:
+   - Edit the files in the `frontend/` directory
+   - Rebuild the frontend container:
+   ```bash
+   docker-compose up -d --build frontend
+   ```
+
+2. **Backend Changes**:
+   - Edit the files in the `backend/` directory
+   - Rebuild the backend container:
+   ```bash
+   docker-compose up -d --build backend
+   ```
+
+#### Running Database Migrations in Production Mode
+
+```bash
+# Run migrations
 docker exec -it immune-me-backend node ace migration:run
-```
 
-To create a new migration:
-
-```bash
+# Create a new migration (typically done in development first)
 docker exec -it immune-me-backend node ace make:migration create_new_table
 ```
 
-### Working with Development Mode
+### Comparison: Development vs. Production
 
-For active development, you might want to mount your local directories into the containers to see changes without rebuilding. You can modify the `docker-compose.yml` file to add volumes:
+| Feature | Development Mode | Production Mode |
+|---------|-----------------|----------------|
+| **Configuration** | `docker-compose.dev.yml` | `docker-compose.yml` |
+| **Frontend** | Expo development server | Nginx serving static files |
+| **Backend** | Hot reloading enabled | Optimized build |
+| **Code Changes** | Immediate via volume mounts | Requires container rebuild |
+| **Error Reporting** | Verbose, developer-friendly | Minimal, security-focused |
+| **Performance** | Optimized for development speed | Optimized for runtime performance |
+| **Resource Usage** | Higher (dev tools, watchers) | Lower (optimized builds) |
+| **Ports** | Multiple (19000-19002, 8081, 3333, 5432) | Minimal (80, 3333, 5432) |
 
-```yaml
-services:
-  backend:
-    # ... other configuration
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+### When to Use Each Mode
 
-  frontend:
-    # ... other configuration
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-```
+- **Use Development Mode When**:
+  - Actively developing new features
+  - Debugging issues
+  - Testing changes quickly
+  - Working on the frontend with hot reloading
+  - Needing access to development tools like Expo DevTools
 
-> **Note**: This approach may require additional configuration for hot reloading.
+- **Use Production Mode When**:
+  - Testing the final build
+  - Measuring performance
+  - Deploying to staging or production environments
+  - Conducting user acceptance testing
+  - Simulating the production environment locally
 
 ## Troubleshooting Common Issues
 
-### Container Fails to Start
+### Running Frontend Locally (Alternative to Docker)
+
+For React Native/Expo development, you can run the frontend locally on your machine instead of in Docker. This approach is simpler and avoids potential Docker configuration issues, especially when using Expo Go app and Expo development builds for testing on physical devices.
+
+#### Setup for Local Frontend Development
+
+1. **Install Node.js and npm** on your local machine if not already installed
+   ```bash
+   # Check if Node.js is installed
+   node --version
+   npm --version
+   ```
+
+2. **Install frontend dependencies**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+3. **Start the Expo development server**
+   ```bash
+   npm start
+   # Or for specific platforms
+   npm run android
+   npm run ios
+   npm run web
+   ```
+
+4. **Connect to the backend**
+   - The backend will still run in Docker
+   - Update your frontend API configuration to point to the Docker backend service
+   - Typically this would be `http://localhost:3333` for the backend API
+
+#### Benefits of Local Frontend Development
+
+- Simpler setup without Docker configuration issues
+- Direct access to Expo tools and device simulators
+- Faster hot reloading
+- Better integration with local development tools and IDEs
+- Easier debugging of frontend code
+
+#### When to Use This Approach
+
+- When developing primarily for mobile using Expo Go or development builds
+- If you encounter persistent Docker issues with the frontend container
+- When you need direct access to native device features during development
+
+### General Troubleshooting
+
+#### Container Fails to Start
 
 If a container fails to start, check the logs:
 
 ```bash
+# For production mode
 docker-compose logs <service-name>
+
+# For development mode
+docker-compose -f docker-compose.dev.yml logs <service-name>
 ```
 
 Common issues include:
 
 - **Database connection errors**: Ensure the database container is running and the environment variables are correctly set
-- **Port conflicts**: Make sure ports 80, 3333, and 5432 are not in use by other applications
+- **Port conflicts**: Make sure required ports are not in use by other applications
+  - Production: 80, 3333, 5432
+  - Development: 19000-19002, 8081, 3333, 5432
 
-### Database Connection Issues
+#### Database Connection Issues
 
 If the backend can't connect to the database:
 
 1. Ensure the database container is running:
    ```bash
+   # For production
    docker ps | grep immune-me-db
+   
+   # For development
+   docker ps | grep immune-me-db-dev
    ```
 
 2. Check if the environment variables in the backend container match the database settings:
    ```bash
+   # For production
    docker exec immune-me-backend env | grep DB_
+   
+   # For development
+   docker exec immune-me-backend-dev env | grep DB_
    ```
 
 3. Try connecting to the database directly:
    ```bash
+   # For production
    docker exec -it immune-me-db psql -U ${DB_USER} -d ${DB_DATABASE}
+   
+   # For development
+   docker exec -it immune-me-db-dev psql -U ${DB_USER} -d ${DB_DATABASE}
    ```
 
-### Frontend Not Loading
-
-If the frontend is not loading properly:
-
-1. Check if the Nginx server is running:
-   ```bash
-   docker logs immune-me-frontend
-   ```
-
-2. Verify that the backend API is accessible from the frontend container:
-   ```bash
-   docker exec -it immune-me-frontend wget -O- http://backend:3333/api/health
-   ```
-
-### Rebuilding from Scratch
+#### Rebuilding from Scratch
 
 If you need to start fresh:
 
 ```bash
-# Stop and remove all containers, networks, and volumes
+# For production mode
 docker-compose down -v
-
-# Remove all images related to the project
 docker rmi $(docker images | grep immune-me | awk '{print $3}')
-
-# Rebuild and start
 docker-compose up -d --build
+
+# For development mode
+docker-compose -f docker-compose.dev.yml down -v
+docker rmi $(docker images | grep immune-me | awk '{print $3}')
+docker-compose -f docker-compose.dev.yml up -d --build
 ```
+
+### Development Mode Specific Issues
+
+#### Hot Reloading Not Working
+
+If changes to your code are not being detected:
+
+1. Verify that volume mounts are working correctly:
+   ```bash
+   docker-compose -f docker-compose.dev.yml exec backend ls -la
+   docker-compose -f docker-compose.dev.yml exec frontend ls -la
+   ```
+
+2. Check for file watching errors in the logs:
+   ```bash
+   docker-compose -f docker-compose.dev.yml logs -f backend
+   docker-compose -f docker-compose.dev.yml logs -f frontend
+   ```
+
+3. Try restarting the affected service:
+   ```bash
+   docker-compose -f docker-compose.dev.yml restart backend
+   docker-compose -f docker-compose.dev.yml restart frontend
+   ```
+
+#### Expo Development Server Issues
+
+If the Expo development server is not working correctly:
+
+1. Check if the server is running:
+   ```bash
+   docker-compose -f docker-compose.dev.yml logs frontend | grep "Metro waiting"
+   ```
+
+2. Ensure all required ports are exposed:
+   ```bash
+   docker-compose -f docker-compose.dev.yml ps
+   ```
+
+3. Try clearing the Expo cache:
+   ```bash
+   docker-compose -f docker-compose.dev.yml exec frontend npx expo start --clear
+   ```
+
+4. If you're having trouble connecting from a mobile device, ensure your computer and device are on the same network.
+
+#### "npx not found" Error in Frontend Container
+
+If you encounter the following error when starting the frontend development container:
+
+```
+/docker-entrypoint.sh: exec: line 47: npx: not found
+```
+
+This occurs because the Node.js installation in the container is not properly configured or the PATH environment variable is not correctly set. To fix this issue:
+
+1. **Option 1: Run the frontend locally** (recommended)
+   - Follow the instructions in the "Running Frontend Locally" section above
+   - This is the simplest solution and avoids Docker configuration issues
+
+2. **Option 2: Update the docker-compose.dev.yml file**
+   - Change the command to use npm instead of npx:
+     ```yaml
+     command: ["npm", "run", "web"]
+     ```
+   - Ensure the "web" script in frontend/package.json includes the "--host 0.0.0.0" parameter:
+     ```json
+     "web": "expo start --web --host 0.0.0.0"
+     ```
+
+3. **Option 3: Fix the PATH in the Dockerfile.dev**
+   - Update the frontend/Dockerfile.dev to explicitly set the PATH:
+     ```dockerfile
+     ENV PATH="/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+     ```
+   - Rebuild the frontend container:
+     ```bash
+     docker-compose -f docker-compose.dev.yml build frontend
+     docker-compose -f docker-compose.dev.yml up -d
+     ```
+
+The root cause is typically related to how Node.js is installed in the Alpine Linux image and how the PATH environment variable is configured in the container.
+
+#### Node Modules Issues
+
+If you're experiencing dependency-related errors:
+
+1. Rebuild node_modules inside the container:
+   ```bash
+   # For backend
+   docker-compose -f docker-compose.dev.yml exec backend rm -rf node_modules
+   docker-compose -f docker-compose.dev.yml exec backend npm ci
+   
+   # For frontend
+   docker-compose -f docker-compose.dev.yml exec frontend rm -rf node_modules
+   docker-compose -f docker-compose.dev.yml exec frontend npm ci
+   ```
+
+2. Restart the affected service:
+   ```bash
+   docker-compose -f docker-compose.dev.yml restart backend
+   docker-compose -f docker-compose.dev.yml restart frontend
+   ```
+
+#### Database Migration Errors
+
+If you encounter issues with database migrations:
+
+1. Check the migration status:
+   ```bash
+   docker-compose -f docker-compose.dev.yml exec backend node ace migration:status
+   ```
+
+2. Try resetting the migrations (caution: this will delete all data):
+   ```bash
+   docker-compose -f docker-compose.dev.yml exec backend node ace migration:reset
+   docker-compose -f docker-compose.dev.yml exec backend node ace migration:run
+   ```
+
+3. Check for syntax errors in your migration files:
+   ```bash
+   docker-compose -f docker-compose.dev.yml exec backend node ace migration:run --dry-run
+   ```
+
+#### Missing 'ts-node-maintained' Package Error
+
+If you encounter the following error when starting the development containers:
+
+```
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'ts-node-maintained' imported from /app/ace.js
+```
+
+This occurs because the development dependencies are not being properly installed in the backend container. To fix this issue:
+
+1. Ensure the `ts-node-maintained` package is listed in the `devDependencies` section of `backend/package.json`
+2. Verify that the `npm ci` command in `backend/Dockerfile.dev` includes the `--include=dev` flag:
+  ```dockerfile
+  # Install all dependencies including dev dependencies
+  RUN npm ci --include=dev
+  ```
+3. Rebuild the backend container:
+  ```bash
+  docker-compose -f docker-compose.dev.yml build backend
+  docker-compose -f docker-compose.dev.yml up -d
+  ```
+
+This ensures that all development dependencies, including `ts-node-maintained`, are properly installed in the development container.
 
 ## Additional Resources
 
@@ -261,16 +576,46 @@ docker-compose up -d --build
 
 ```
 immune-me/
-├── .env                  # Environment variables
-├── docker-compose.yml    # Docker Compose configuration
-├── backend/              # AdonisJS backend application
-│   ├── Dockerfile        # Backend Docker configuration
+├── .env                     # Environment variables
+├── docker-compose.yml       # Docker Compose production configuration
+├── docker-compose.dev.yml   # Docker Compose development configuration
+├── backend/                 # AdonisJS backend application
+│   ├── Dockerfile           # Backend production Docker configuration (multi-stage build)
+│   ├── Dockerfile.dev       # Backend development Docker configuration (with hot reloading)
+│   ├── app/                 # Application code
+│   ├── config/              # Configuration files
+│   ├── database/            # Database migrations and seeders
+│   ├── start/               # Application entry points and routes
 │   └── ...
-├── frontend/             # React Native/Expo frontend application
-│   ├── Dockerfile        # Frontend Docker configuration
+├── frontend/                # React Native/Expo frontend application
+│   ├── Dockerfile           # Frontend production Docker configuration (builds to Nginx)
+│   ├── Dockerfile.dev       # Frontend development Docker configuration (Expo dev server)
+│   ├── app/                 # Application code
+│   ├── assets/              # Static assets (images, fonts)
 │   └── ...
-└── README.md             # This file
+└── README.md                # This file
 ```
+
+### Development-Specific Files
+
+#### docker-compose.dev.yml
+This file defines the development environment configuration:
+- Sets up volume mounts for live code updates
+- Configures the backend to run with hot reloading
+- Runs the frontend with Expo development server
+- Exposes additional ports for development tools
+
+#### backend/Dockerfile.dev
+A simplified Dockerfile for development that:
+- Installs all dependencies including dev dependencies
+- Sets up the environment for hot reloading
+- Doesn't perform production optimizations
+
+#### frontend/Dockerfile.dev
+A development-focused Dockerfile that:
+- Configures the Expo development server
+- Exposes ports for Expo DevTools and web access
+- Sets up environment for live code updates
 
 ## License
 
