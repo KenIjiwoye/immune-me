@@ -213,3 +213,157 @@ The system uses a relational database with the following key entities:
    - Database backup and recovery
    - Service scaling
    - Environment-specific configuration
+
+## Liberia Immunization Schedule Patterns
+
+The following patterns are required to support the Liberia immunization schedule:
+
+### Schedule Management Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  Schedule Management                         │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   Schedule  │     │  Schedule   │     │  Patient    │   │
+│  │  Definition │────▶│    Items    │────▶│ Assignment  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Country    │     │   Vaccine   │     │  Schedule   │   │
+│  │  Specific   │     │  Sequence   │     │ Compliance  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Schedule Definition**: Create and manage standardized immunization schedules with metadata (name, country, description).
+
+2. **Schedule Items**: Define specific vaccines in a schedule with recommended ages and sequence.
+
+3. **Patient Assignment**: Assign specific schedules to patients based on their country/region.
+
+4. **Country-Specific Customization**: Support for different national immunization programs, starting with Liberia.
+
+5. **Vaccine Sequence Management**: Define the correct sequence for vaccine administration, especially for series vaccines.
+
+6. **Schedule Compliance Tracking**: Monitor patient adherence to assigned schedules.
+
+### Vaccine Series Tracking Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 Vaccine Series Tracking                      │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   Series    │     │   Sequence  │     │    Next     │   │
+│  │ Definition  │────▶│   Tracking  │────▶│   Vaccine   │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Related    │     │  Validation │     │ Completion  │   │
+│  │  Vaccines   │     │    Rules    │     │   Status    │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Series Definition**: Group related vaccines into series (e.g., "OPV", "Penta").
+
+2. **Sequence Tracking**: Track the administration sequence within a series (e.g., OPV0, OPV1, OPV2, OPV3).
+
+3. **Next Vaccine Suggestion**: Automatically suggest the next vaccine in a series based on patient history.
+
+4. **Related Vaccines Management**: Maintain relationships between vaccines in the same series.
+
+5. **Validation Rules**: Ensure correct sequence administration and prevent out-of-sequence vaccinations.
+
+6. **Completion Status**: Track and display series completion status for patients.
+
+### Schedule Compliance Monitoring Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│               Schedule Compliance Monitoring                 │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Schedule   │     │   Status    │     │ Compliance  │   │
+│  │  Tracking   │────▶│ Calculation │────▶│  Reporting  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   Due Date  │     │ Notification│     │  Analytics  │   │
+│  │ Calculation │     │  Generation │     │ Generation  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Schedule Tracking**: Monitor whether immunizations follow the assigned schedule.
+
+2. **Status Calculation**: Determine status (on schedule, delayed, missed) for each required vaccine.
+
+3. **Compliance Reporting**: Generate compliance reports at individual and facility levels.
+
+4. **Due Date Calculation**: Calculate when the next vaccine is due based on the schedule and patient history.
+
+5. **Notification Generation**: Create alerts for upcoming and overdue vaccines.
+
+6. **Analytics Generation**: Produce insights on compliance rates and trends.
+
+### UI/UX Patterns for Liberia Schedule
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 UI/UX for Liberia Schedule                   │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Schedule   │     │   Series    │     │ Compliance  │   │
+│  │Visualization│────▶│Presentation │────▶│ Indicators  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Recording  │     │   History   │     │  Reporting  │   │
+│  │  Interface  │     │     View    │     │ Dashboards  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Schedule Visualization**: Visual timeline representation of the Liberia immunization schedule.
+
+2. **Series Presentation**: Group related vaccines and show sequence progress.
+
+3. **Compliance Indicators**: Visual indicators for upcoming, due, and overdue vaccines.
+
+4. **Recording Interface**: Redesigned interface organized by Liberia schedule.
+
+5. **History View**: Patient immunization history showing progress against standard schedule.
+
+6. **Reporting Dashboards**: Visualizations aligned with Liberia's reporting requirements.
+
+### Implementation Approach
+
+The implementation of these patterns will follow a phased approach:
+
+1. **Phase 1 (High Priority)**:
+   - Data model changes to support the Liberia schedule
+   - Basic schedule management functionality
+   - Enhanced vaccine tracking with series support
+   - Updated immunization recording interface
+
+2. **Phase 2 (Medium Priority)**:
+   - Schedule compliance monitoring
+   - Enhanced notification system
+   - Reporting enhancements
+   - Patient immunization history visualization
+
+3. **Phase 3 (Lower Priority)**:
+   - Supplementary immunization activities tracking
+   - Advanced data import/export
+   - Multi-facility coordination
+   - Multilingual support

@@ -14,6 +14,11 @@ The Immunization Records Management System requires screens for managing immuniz
 3. Create a vaccine selection interface
 4. Implement return date scheduling
 5. Add validation for immunization data entry
+6. Implement Liberia immunization schedule support:
+   - Schedule visualization
+   - Vaccine series tracking
+   - Compliance monitoring
+   - Enhanced recording interface for Liberia EPI
 
 ## Code Example
 
@@ -43,7 +48,28 @@ type Vaccine = {
   id: number;
   name: string;
   description: string;
+  vaccineCode: string;
+  sequenceNumber: number | null;
+  vaccineSeries: string | null;
+  standardScheduleAge: string | null;
+  isSupplementary: boolean;
+};
+
+type VaccineSchedule = {
+  id: number;
+  name: string;
+  country: string;
+  description: string;
+  isActive: boolean;
+};
+
+type VaccineScheduleItem = {
+  id: number;
+  scheduleId: number;
+  vaccineId: number;
   recommendedAge: string;
+  isRequired: boolean;
+  sequenceInSchedule: number;
 };
 
 export default function AddImmunizationScreen() {
@@ -66,8 +92,15 @@ export default function AddImmunizationScreen() {
     administeredDate: new Date(),
     batchNumber: '',
     returnDate: null as Date | null,
+    healthOfficer: '',
+    isStandardSchedule: true,
+    scheduleStatus: 'on_schedule',
     notes: '',
   });
+  
+  const [schedules, setSchedules] = useState<VaccineSchedule[]>([]);
+  const [selectedSchedule, setSelectedSchedule] = useState<number | null>(null);
+  const [scheduleItems, setScheduleItems] = useState<VaccineScheduleItem[]>([]);
 
   // Form validation
   const [errors, setErrors] = useState<Record<string, string>>({});

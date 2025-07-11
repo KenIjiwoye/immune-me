@@ -65,3 +65,43 @@ The success of the system will be measured by:
 4. **User Adoption**: Percentage of staff actively using the system for daily immunization management.
 
 5. **Reporting Efficiency**: Reduction in time required to generate immunization reports and analytics.
+
+## Liberia Immunization Schedule Requirements
+
+The system must support the Liberia Expanded Program on Immunization (EPI) schedule, which includes:
+
+1. **Standard Vaccines**:
+   - BCG (Anti-TB): At birth
+   - OPV (Oral Polio): Four doses (OPV0 at birth, OPV1, OPV2, OPV3)
+   - Penta (Pentavalent): Three doses (Penta1, Penta2, Penta3)
+   - PCV (Pneumococcal Conjugate Vaccine): Three doses (PCV1, PCV2, PCV3)
+   - Rota (Rotavirus): Two doses (Rota1, Rota2)
+   - IPV (Inactivated Polio Vaccine): One dose
+   - Measles/MCV (Measles Containing Vaccine): Two doses (MCV1, MCV2)
+   - YF (Yellow Fever): One dose
+   - TCV (Typhoid Conjugate Vaccine): One dose
+   - Vitamin A: Two doses (Vitamin A1, Vitamin A2)
+
+2. **EPI Card Requirements**:
+   - Health facility information
+   - Child's demographic information (name, sex, date of birth)
+   - Parents' information (names, contact details)
+   - Location information (district, town/village/community)
+   - Health worker information
+   - Vaccination dates (day, month, year)
+   - Return dates for follow-up vaccinations
+   - Supplementary immunization activities tracking
+
+3. **Schedule Management Requirements**:
+   - Support for country-specific immunization schedules
+   - Ability to assign schedules to patients based on location
+   - Tracking of vaccine series (e.g., OPV0, OPV1, OPV2, OPV3)
+   - Monitoring of schedule compliance (on schedule, delayed, missed)
+   - Generation of compliance reports at individual and facility levels
+
+4. **Additional Liberia-Specific Requirements**:
+   - Enhanced notification system aligned with Liberia's return dates
+   - Health worker attribution for vaccine administration
+   - Liberia-specific reporting capabilities
+   - Data import/export matching the Liberia EPI card format
+   - Multi-facility coordination for patient records

@@ -221,3 +221,117 @@
 - **Logging**: Pino for structured logging
 - **Error Tracking**: To be determined
 - **Performance Monitoring**: To be determined
+
+## Data Model for Liberia Immunization Schedule
+
+### Enhanced Database Schema
+
+The following enhancements to the database schema are required to support the Liberia immunization schedule:
+
+#### Vaccines Table Enhancements
+
+```sql
+CREATE TABLE vaccines (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  vaccine_code VARCHAR(50) NOT NULL, -- Standardized codes (e.g., "BCG", "OPV0")
+  sequence_number INTEGER, -- Dose number in a series (e.g., 1 for OPV1)
+  vaccine_series VARCHAR(100), -- Group related vaccines (e.g., "OPV", "Penta")
+  standard_schedule_age VARCHAR(100), -- Recommended administration age
+  is_supplementary BOOLEAN DEFAULT FALSE, -- Distinguish between standard and supplementary
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Immunization Records Table Enhancements
+
+```sql
+CREATE TABLE immunization_records (
+  id SERIAL PRIMARY KEY,
+  patient_id INTEGER NOT NULL REFERENCES patients(id),
+  vaccine_id INTEGER NOT NULL REFERENCES vaccines(id),
+  facility_id INTEGER NOT NULL REFERENCES facilities(id),
+  administered_date DATE NOT NULL,
+  health_officer VARCHAR(255), -- Who administered the vaccine
+  is_standard_schedule BOOLEAN DEFAULT TRUE, -- If part of standard schedule
+  schedule_status VARCHAR(50), -- Enum: 'on_schedule', 'delayed', 'missed'
+  return_date DATE, -- Next scheduled immunization date
+  notes TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### New Tables Required
+
+##### Vaccine Schedules
+
+```sql
+CREATE TABLE vaccine_schedules (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL, -- e.g., "Liberia EPI Schedule"
+  country VARCHAR(100) NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### Vaccine Schedule Items
+
+```sql
+CREATE TABLE vaccine_schedule_items (
+  id SERIAL PRIMARY KEY,
+  schedule_id INTEGER NOT NULL REFERENCES vaccine_schedules(id),
+  vaccine_id INTEGER NOT NULL REFERENCES vaccines(id),
+  recommended_age VARCHAR(100) NOT NULL, -- e.g., "At birth", "6 weeks"
+  is_required BOOLEAN DEFAULT TRUE,
+  sequence_in_schedule INTEGER, -- Order in the schedule
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### Supplementary Immunizations
+
+```sql
+CREATE TABLE supplementary_immunizations (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  facility_id INTEGER REFERENCES facilities(id),
+  vaccine_id INTEGER REFERENCES vaccines(id),
+  target_population TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Data Model Relationships
+
+1. **Patients to Vaccine Schedules**: Many-to-one relationship where patients are assigned to a specific vaccine schedule based on their country/region.
+
+2. **Vaccine Schedules to Vaccine Schedule Items**: One-to-many relationship where a vaccine schedule contains multiple schedule items.
+
+3. **Vaccines to Vaccine Schedule Items**: One-to-many relationship where a vaccine can be part of multiple schedule items across different schedules.
+
+4. **Immunization Records to Vaccines**: Many-to-one relationship where immunization records reference specific vaccines.
+
+5. **Supplementary Immunizations to Vaccines**: Many-to-one relationship where supplementary immunization activities reference specific vaccines.
+
+### Data Access Patterns
+
+1. **Schedule-Based Queries**: Retrieve all vaccines in a specific schedule, ordered by recommended age.
+
+2. **Series Completion Queries**: Check if a patient has completed all doses in a vaccine series.
+
+3. **Compliance Monitoring Queries**: Identify patients who are due or overdue for specific vaccines based on their assigned schedule.
+
+4. **Reporting Queries**: Generate coverage reports by vaccine, age group, facility, or geographic region.
+
+5. **Health Worker Attribution Queries**: Track immunizations administered by specific health workers.
