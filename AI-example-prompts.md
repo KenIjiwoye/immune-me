@@ -16,3 +16,12 @@ due to the new authFinder mixin, you can verify credentials with one line like s
  ```
 
 please note that we are using docker containers in this project. please remember this when executing commands
+
+============
+
+## Prompts most tasks
+please work on this ticket @/project-tasks/backend/BE-03-authentication-system.md 
+the backend adonis project is located in @/backend
+please ONLY work on this current ticket and complete the task when finished. also update memory-bank and IGNORE conport.
+
+please note that we are using docker containers in this project. please remember this when executing commands
