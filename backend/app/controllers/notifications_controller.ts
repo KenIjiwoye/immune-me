@@ -3,6 +3,7 @@ import Notification from '#models/notification'
 import { DateTime } from 'luxon'
 import { notificationStoreValidator } from '#validators/notification/store'
 import { notificationUpdateValidator } from '#validators/notification/update'
+import NotificationService from '#services/notification_service'
 
 export default class NotificationsController {
   /**
@@ -131,5 +132,20 @@ export default class NotificationsController {
     const notifications = await query.paginate(page, limit)
     
     return response.json(notifications)
+  }
+
+  /**
+   * Manually trigger notification generation (admin only)
+   */
+  async generateNotifications({ response }: HttpContext) {
+    const notificationService = new NotificationService()
+    
+    const dueResult = await notificationService.generateDueNotifications()
+    const overdueResult = await notificationService.updateOverdueNotifications()
+    
+    return response.json({
+      due: dueResult,
+      overdue: overdueResult
+    })
   }
 }

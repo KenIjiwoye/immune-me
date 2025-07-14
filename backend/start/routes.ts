@@ -59,6 +59,30 @@ const vaccinesRoutes = router.group(() => {
   .prefix('/api/vaccines')
   .use(middleware.auth())
 
+// Patients routes
+router.group(() => {
+  router.get('/', '#controllers/patients_controller.index')
+  router.get('/search', '#controllers/patients_controller.search')
+  router.get('/:id', '#controllers/patients_controller.show')
+  router.post('/', '#controllers/patients_controller.store')
+  router.put('/:id', '#controllers/patients_controller.update')
+  router.delete('/:id', '#controllers/patients_controller.destroy').use(middleware.auth({ roles: ['administrator'] }))
+  router.get('/:patientId/immunization-records', '#controllers/immunization_records_controller.getPatientRecords')
+})
+  .prefix('/api/patients')
+  .use(middleware.auth())
+
+// Immunization records routes
+router.group(() => {
+  router.get('/', '#controllers/immunization_records_controller.index')
+  router.get('/:id', '#controllers/immunization_records_controller.show')
+  router.post('/', '#controllers/immunization_records_controller.store')
+  router.put('/:id', '#controllers/immunization_records_controller.update')
+  router.delete('/:id', '#controllers/immunization_records_controller.destroy').use(middleware.auth({ roles: ['administrator'] }))
+})
+  .prefix('/api/immunization-records')
+  .use(middleware.auth())
+
 // Notifications routes
 const notificationsRoutes = router.group(() => {
   router.get('/', '#controllers/notifications_controller.index')
@@ -67,6 +91,10 @@ const notificationsRoutes = router.group(() => {
   router.post('/', '#controllers/notifications_controller.store')
   router.put('/:id', '#controllers/notifications_controller.update')
   router.delete('/:id', '#controllers/notifications_controller.destroy')
+  
+  // Admin-only route to manually trigger notification generation
+  router.post('/generate', '#controllers/notifications_controller.generateNotifications')
+    .use(middleware.auth({ roles: ['administrator'] }))
 })
   .prefix('/api/notifications')
   .use(middleware.auth())

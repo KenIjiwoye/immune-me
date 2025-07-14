@@ -57,3 +57,30 @@ curl -X PUT http://localhost:3333/api/notifications/1 \
   -d '{
     "status": "viewed"
   }'
+
+
+curl -X POST http://localhost:3333/api/facilities \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer oat_MQ.R2trS19VQ1VjZFdSZDlFOF82Y25TSTVvcFYxNmVjQW9EVmxvY0d3bjI2NzkzMTgxMzg" \
+   -d '{
+     "name": "Test Notification Facility",
+     "district": "Test District",
+     "address": "123 Test St",
+     "contactPhone": "123-456-7890"
+   }'
+
+curl -X POST http://localhost:3333/api/patients \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer oat_MQ.R2trS19VQ1VjZFdSZDlFOF82Y25TSTVvcFYxNmVjQW9EVmxvY0d3bjI2NzkzMTgxMzg" \
+   -d '{
+     "fullName": "Notification Test Patient",
+     "sex": "M",
+     "dateOfBirth": "2024-07-14",
+     "motherName": "Test Mother",
+     "fatherName": "Test Father",
+     "district": "Test District",
+     "townVillage": "Test Village",
+     "address": "456 Test St",
+     "contactPhone": "987-654-3210",
+     "facilityId": "2"
+   }'
