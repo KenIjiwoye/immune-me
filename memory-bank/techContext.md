@@ -190,6 +190,11 @@
    - Usage: User feedback for actions, error messages, success confirmations
    - Benefits: Consistent user feedback, improved user experience
 
+5. **Expo Secure Store**: Secure storage for sensitive data
+   - Features: Encrypted key-value storage, iOS Keychain/Android Keystore integration
+   - Usage: Secure token storage, persistent authentication state
+   - Benefits: Secure storage that persists across app restarts
+
 ### Backend Dependencies
 
 ```json
@@ -360,3 +365,92 @@ CREATE TABLE supplementary_immunizations (
 4. **Reporting Queries**: Generate coverage reports by vaccine, age group, facility, or geographic region.
 
 5. **Health Worker Attribution Queries**: Track immunizations administered by specific health workers.
+
+## Authentication Implementation Details
+
+### Frontend Authentication Architecture
+
+The authentication system has been implemented with the following components:
+
+#### 1. AuthContext Implementation
+- **File**: [`auth.tsx`](frontend/app/context/auth.tsx)
+- **Purpose**: Centralized authentication state management
+- **Features**:
+  - User state management with TypeScript interfaces
+  - Token storage and retrieval using expo-secure-store
+  - Login/logout functionality with API integration
+  - Loading and error states
+  - Automatic token refresh mechanism
+
+#### 2. Secure Token Storage
+- **Library**: expo-secure-store
+- **Implementation**: Secure storage of authentication tokens
+- **Key Features**:
+  - Encrypted storage using platform-specific secure storage (iOS Keychain/Android Keystore)
+  - Persistent storage across app restarts
+  - Automatic token cleanup on logout
+  - Error handling for storage operations
+
+#### 3. API Service Integration
+- **File**: [`api.ts`](frontend/app/services/api.ts)
+- **Purpose**: Centralized API communication with authentication
+- **Features**:
+  - Automatic injection of authentication headers
+  - Centralized error handling
+  - Response parsing and validation
+  - Type-safe API calls with TypeScript
+
+#### 4. Login Screen Implementation
+- **File**: [`login.tsx`](frontend/app/login.tsx)
+- **Features**:
+  - Email/password form with React Hook Form
+  - Zod schema validation for input validation
+  - Loading states during authentication
+  - Error handling and user feedback
+  - Responsive design for mobile devices
+
+#### 5. Protected Routes
+- **File**: [`_layout.tsx`](frontend/app/_layout.tsx)
+- **Implementation**: Navigation guards using AuthContext
+- **Features**:
+  - Automatic redirection to login for unauthenticated users
+  - Loading states during authentication check
+  - Seamless navigation after successful login
+  - Protected route access control
+
+### Authentication Flow
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│   Login Screen  │────▶│   AuthContext    │────▶│   API Service   │
+│   (login.tsx)   │     │   (auth.tsx)     │     │   (api.ts)      │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Form Submit    │     │  Token Storage   │     │  Backend API    │
+│  Validation     │     │  State Update    │     │  Authentication │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+```
+
+### Security Features
+
+1. **Token Security**:
+   - Secure storage using platform-native encryption
+   - Automatic token cleanup on logout
+   - No tokens stored in plain text
+
+2. **Input Validation**:
+   - Email format validation using Zod schemas
+   - Password strength requirements
+   - Sanitization of user inputs
+
+3. **Error Handling**:
+   - Graceful handling of authentication failures
+   - User-friendly error messages
+   - Network error handling
+
+4. **Session Management**:
+   - Persistent sessions across app restarts
+   - Automatic session restoration
+   - Clean logout with token removal

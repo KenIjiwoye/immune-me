@@ -91,10 +91,10 @@ As the project is in the initial setup phase, the following components are in pl
 ### Frontend Development
 
 1. **Authentication Flow**:
-   - [ ] Login screen
-   - [ ] Password recovery
-   - [ ] Token management
-   - [ ] Protected routes
+   - [x] Login screen
+   - [x] Password recovery
+   - [x] Token management
+   - [x] Protected routes
 
 2. **Navigation Structure**:
    - [ ] Authentication stack

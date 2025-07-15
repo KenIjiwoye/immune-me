@@ -140,6 +140,33 @@ The system uses a relational database with the following key entities:
 
 5. **Navigation Patterns**: Stack and tab navigation for intuitive user experience.
 
+### Authentication Patterns
+
+1. **AuthContext Pattern**: Centralized authentication state management using React Context
+   - **Implementation**: [`AuthContext`](frontend/app/context/auth.tsx) provides authentication state and methods
+   - **Features**: User state, token management, login/logout methods, loading states
+   - **Benefits**: Single source of truth for authentication across the app
+
+2. **Secure Token Storage Pattern**: Using expo-secure-store for persistent, secure token storage
+   - **Implementation**: Token storage and retrieval in AuthContext
+   - **Features**: Encrypted storage, automatic token refresh, secure key management
+   - **Benefits**: Tokens persist across app restarts while maintaining security
+
+3. **Protected Route Pattern**: Automatic redirection based on authentication state
+   - **Implementation**: Navigation guards in `_layout.tsx` using AuthContext
+   - **Features**: Automatic login redirect, protected route access, loading states
+   - **Benefits**: Seamless user experience with proper access control
+
+4. **API Integration Pattern**: Centralized API service with authentication headers
+   - **Implementation**: [`api.ts`](frontend/app/services/api.ts) service with automatic token injection
+   - **Features**: Automatic authentication headers, error handling, response parsing
+   - **Benefits**: Consistent API interaction across the application
+
+5. **Form Validation Pattern**: Zod schema validation with React Hook Form
+   - **Implementation**: Login form with email/password validation
+   - **Features**: Real-time validation, error messages, type safety
+   - **Benefits**: Improved user experience and data integrity
+
 ### Backend Patterns
 
 1. **MVC Architecture**: Controllers handle requests, Models represent data, and Views (API responses) present data.
