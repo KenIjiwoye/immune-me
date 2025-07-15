@@ -48,6 +48,11 @@ As the project is in the initial setup phase, the following components are in pl
 4. **Frontend**:
    - React Native (Expo) project initialized
    - Basic project structure with file-based routing
+   - Essential development packages installed:
+     - Zod for schema validation
+     - TanStack Query for server state management
+     - React Hook Form for form handling
+     - React Native Toast Message for user feedback
    - Containerized with Docker for web deployment
 
 ## What's Left to Build

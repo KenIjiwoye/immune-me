@@ -25,6 +25,14 @@ The Immunization Records Management System is now focusing on implementing suppo
 
 Recent changes to the project include:
 
+1. **Frontend Package Installation**: Added essential development packages to improve code quality and developer experience:
+   - **Zod (^4.0.5)**: Schema validation library for type-safe validation of forms and API responses
+   - **TanStack Query (^5.83.0)**: Server state management for efficient API calls and caching
+   - **React Hook Form (^7.60.0)**: Performant form handling with minimal re-renders
+   - **React Native Toast Message (^2.3.3)**: User feedback system for notifications and alerts
+
+   These packages provide a solid foundation for frontend development and should be used consistently across all frontend features.
+
 1. **Liberia Immunization Schedule Support**: The project is being enhanced to support the Liberia Expanded Program on Immunization (EPI) schedule:
    - Updated product requirements to include Liberia-specific immunization schedule
    - Enhanced data model to support country-specific schedules, vaccine series, and compliance tracking
@@ -168,13 +176,83 @@ The immediate next steps for the project are focused on implementing the Liberia
    - snake_case for database columns
    - Task files follow a consistent naming pattern (e.g., BE-01-database-config.md)
 
-4. **State Management**:
-   - TanStack Query for server state
-   - Context API for global application state
+4. **Frontend Development Standards**:
+   - **Form Handling**: Use React Hook Form for all forms throughout the application
+   - **Validation**: Use Zod schemas for form validation and API response validation
+   - **Server State**: Use TanStack Query for all API calls and server state management
+   - **User Feedback**: Use React Native Toast Message for success/error notifications
+   - **Global State**: Use Context API for authentication and global application state
 
 5. **Testing Approach**:
    - Backend: Unit tests for services, integration tests for API endpoints
    - Frontend: Component tests and end-to-end tests
+
+## Frontend Development Guidelines
+
+**IMPORTANT**: The following packages have been installed and MUST be used consistently across all frontend development:
+
+### Required Package Usage
+
+1. **React Hook Form (^7.60.0)** - MANDATORY for ALL forms
+   - Use `useForm` hook for form state management
+   - Implement `Controller` component for custom inputs
+   - Leverage built-in validation and error handling
+   - Example: Login forms, patient registration, immunization recording
+
+2. **Zod (^4.0.5)** - MANDATORY for ALL validation
+   - Create schemas for form validation
+   - Validate API responses for type safety
+   - Use with React Hook Form via `@hookform/resolvers/zod`
+   - Example: Patient data validation, immunization record validation
+
+3. **TanStack Query (^5.83.0)** - MANDATORY for ALL API calls
+   - Use `useQuery` for data fetching
+   - Use `useMutation` for create/update/delete operations
+   - Implement proper error handling and loading states
+   - Leverage automatic caching and background updates
+   - Example: Patient lists, immunization records, dashboard data
+
+4. **React Native Toast Message (^2.3.3)** - MANDATORY for ALL user feedback
+   - Use for success messages after successful operations
+   - Use for error messages when operations fail
+   - Use for informational messages to guide users
+   - Configure at app root level and use throughout the application
+
+### Implementation Standards
+
+- **No manual form state management** - Always use React Hook Form
+- **No manual validation logic** - Always use Zod schemas
+- **No fetch/axios calls** - Always use TanStack Query
+- **No alert() or custom modals for simple feedback** - Always use Toast Message
+- **Consistent error handling** - Use TanStack Query's error handling with Toast notifications
+- **Type safety** - Leverage Zod schemas for TypeScript type inference
+
+### Code Examples
+
+```typescript
+// Form with validation
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
+
+const { control, handleSubmit } = useForm({
+  resolver: zodResolver(schema)
+});
+
+// API call with mutation
+const loginMutation = useMutation({
+  mutationFn: (data) => api.post('/auth/login', data),
+  onSuccess: () => {
+    Toast.show({ type: 'success', text1: 'Login successful' });
+  },
+  onError: () => {
+    Toast.show({ type: 'error', text1: 'Login failed' });
+  }
+});
+```
+
+This approach ensures consistent code quality, better user experience, and maintainable codebase across all frontend features.
 
 ## Learnings and Project Insights
 

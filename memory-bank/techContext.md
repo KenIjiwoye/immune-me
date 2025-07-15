@@ -153,17 +153,42 @@
 ```json
 {
   "dependencies": {
-    "react": "^18.2.0",
-    "react-native": "^0.73.0",
-    "expo": "^50.0.0",
-    "@tanstack/react-query": "^5.0.0",
-    "@react-navigation/native": "^6.0.0",
-    "@react-navigation/stack": "^6.0.0",
-    "@react-native-picker/picker": "^2.0.0",
-    "@react-native-community/datetimepicker": "^7.0.0"
+    "react": "19.0.0",
+    "react-native": "0.79.5",
+    "expo": "~53.0.17",
+    "@tanstack/react-query": "^5.83.0",
+    "@react-navigation/native": "^7.1.6",
+    "@react-navigation/bottom-tabs": "^7.3.10",
+    "react-hook-form": "^7.60.0",
+    "zod": "^4.0.5",
+    "react-native-toast-message": "^2.3.3",
+    "@expo/vector-icons": "^14.1.0",
+    "expo-router": "~5.1.3"
   }
 }
 ```
+
+### Key Frontend Libraries
+
+1. **Zod**: Schema validation library
+   - Features: Type-safe schema validation, runtime type checking
+   - Usage: Form validation, API response validation, data parsing
+   - Benefits: Catches errors at runtime, provides excellent TypeScript integration
+
+2. **React Hook Form**: Performant forms library
+   - Features: Minimal re-renders, built-in validation, easy integration
+   - Usage: All form handling throughout the application
+   - Benefits: Better performance, less boilerplate, excellent developer experience
+
+3. **TanStack Query**: Server state management
+   - Features: Caching, background updates, pagination, optimistic updates
+   - Usage: All API calls, server state management, data fetching
+   - Benefits: Reduced boilerplate, automatic caching, improved user experience
+
+4. **React Native Toast Message**: User feedback system
+   - Features: Customizable toast notifications, multiple types (success, error, info)
+   - Usage: User feedback for actions, error messages, success confirmations
+   - Benefits: Consistent user feedback, improved user experience
 
 ### Backend Dependencies
 
