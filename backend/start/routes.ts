@@ -107,3 +107,15 @@ router.group(() => {
 })
   .prefix('/api/admin')
   .use(middleware.auth({ roles: ['administrator'] }))
+
+// Reports routes
+router.group(() => {
+  router.get('/immunization-coverage', '#controllers/reports_controller.immunizationCoverage')
+  router.get('/due-immunizations', '#controllers/reports_controller.dueImmunizations')
+  router.get('/facility-performance', '#controllers/reports_controller.facilityPerformance')
+    .use(middleware.auth({ roles: ['administrator', 'supervisor'] }))
+  router.get('/immunization-trends', '#controllers/reports_controller.immunizationTrends')
+  router.get('/age-distribution', '#controllers/reports_controller.ageDistribution')
+})
+  .prefix('/api/reports')
+  .use(middleware.auth({ roles: ['doctor', 'administrator', 'supervisor'] }))

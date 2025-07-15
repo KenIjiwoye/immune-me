@@ -75,18 +75,18 @@ As the project is in the initial setup phase, the following components are in pl
    - [ ] Configure role-based access control
 
 3. **API Endpoints**:
-   - [ ] Users CRUD
-   - [ ] Patients CRUD
-   - [ ] Facilities CRUD
-   - [ ] Vaccines CRUD
-   - [ ] Immunization Records CRUD
-   - [ ] Notifications CRUD
-   - [ ] Reports and Analytics endpoints
+  - [x] Users CRUD
+  - [x] Patients CRUD
+  - [x] Facilities CRUD
+  - [x] Vaccines CRUD
+  - [x] Immunization Records CRUD
+  - [x] Notifications CRUD
+  - [x] Reports and Analytics endpoints
 
 4. **Business Logic**:
-   - [ ] Notification generation service
-   - [ ] Reporting and analytics service
-   - [ ] Data validation and sanitization
+  - [x] Notification generation service
+  - [x] Reporting and analytics service
+  - [ ] Data validation and sanitization
 
 ### Frontend Development
 
