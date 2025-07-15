@@ -25,3 +25,10 @@ the backend adonis project is located in @/backend
 please ONLY work on this current ticket and complete the task when finished. also update memory-bank and IGNORE conport.
 
 please note that we are using docker containers in this project. please remember this when executing commands
+
+
+## Frontend prompt for tasks
+
+please work on this ticket @/project-tasks/frontend/FE-01-summary.md @/project-tasks/frontend/FE-01-authentication-flow.md 
+the frontend react native project is located in @/frontend 
+please ONLY work on this current ticket and complete the task when finished. also update memory-bank and IGNORE conport.
