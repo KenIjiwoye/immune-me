@@ -31,28 +31,28 @@ services:
     command: ["node", "ace", "serve", "--watch"]
 
   # Frontend service
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    container_name: immune-me-frontend-dev
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      NODE_ENV: development
-      EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
-    ports:
-      - "19000:19000"
-      - "19001:19001"
-      - "19002:19002"
-      - "8081:8081"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    networks:
-      - immune-me-network
-    command: ["npm", "run", "web"]
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.dev
+  #   container_name: immune-me-frontend-dev
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - backend
+  #   environment:
+  #     NODE_ENV: development
+  #     EXPO_DEVTOOLS_LISTEN_ADDRESS: 0.0.0.0
+  #   ports:
+  #     - "19000:19000"
+  #     - "19001:19001"
+  #     - "19002:19002"
+  #     - "8081:8081"
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   networks:
+  #     - immune-me-network
+  #   command: ["npm", "run", "web"]
 
   # Database service
   db:
