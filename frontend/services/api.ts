@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://fast-laws-call.loca.lt/api';
+const API_URL = 'https://lemon-comics-mix.loca.lt/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -27,6 +27,10 @@ export default {
   
   // Helper method to set auth token
   setAuthToken,
+  
+  // Dashboard endpoints
+  getDashboardStats: () => api.get('/dashboard/stats'),
+  getDueNotifications: () => api.get('/notifications/due'),
   
   // Expose axios methods
   get: api.get,
