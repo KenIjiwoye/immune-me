@@ -32,7 +32,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare role: string
 
-  @column()
+  @column({ columnName: 'facilityId' })
   declare facilityId: number
 
   @column.dateTime({ autoCreate: true })

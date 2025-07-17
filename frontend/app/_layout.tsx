@@ -2,6 +2,7 @@ import React from 'react';
 import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from '../context/auth';
 import { ActivityIndicator, View } from 'react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Auth guard component
 function AuthGuard({ children }: { children: React.ReactNode }) {
@@ -18,27 +19,37 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+// Create a client
+const queryClient = new QueryClient();
+
 // Root layout component
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <AuthGuard>
-        <Stack>
-          <Stack.Screen
-            name="login"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="index"
-            options={{
-              headerTitle: 'Dashboard',
-            }}
-          />
-          {/* Add other screens here */}
-        </Stack>
-      </AuthGuard>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <AuthGuard>
+          <Stack>
+            <Stack.Screen
+              name="login"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="index"
+              options={{
+                headerTitle: 'Dashboard',
+              }}
+            />
+            <Stack.Screen
+              name="patients"
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack>
+        </AuthGuard>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
