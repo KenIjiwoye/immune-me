@@ -47,6 +47,36 @@ export default function RootLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="reports"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="reports/immunization-coverage"
+              options={{
+                headerTitle: 'Immunization Coverage',
+              }}
+            />
+            <Stack.Screen
+              name="reports/due-immunizations"
+              options={{
+                headerTitle: 'Due Immunizations',
+              }}
+            />
+            <Stack.Screen
+              name="reports/facility-performance"
+              options={{
+                headerTitle: 'Facility Performance',
+              }}
+            />
+            <Stack.Screen
+              name="reports/age-distribution"
+              options={{
+                headerTitle: 'Age Distribution',
+              }}
+            />
           </Stack>
         </AuthGuard>
       </AuthProvider>
