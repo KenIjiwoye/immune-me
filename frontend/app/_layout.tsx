@@ -28,7 +28,10 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <AuthGuard>
-          <Stack>
+          <Stack
+            screenOptions={{
+              headerShown: false
+            }}>
             <Stack.Screen
               name="login"
               options={{
@@ -39,12 +42,19 @@ export default function RootLayout() {
               name="index"
               options={{
                 headerTitle: 'Dashboard',
+                headerShown: true,
               }}
             />
             <Stack.Screen
               name="settings"
               options={{
                 headerTitle: 'Settings',
+              }}
+            />
+            <Stack.Screen
+              name="notifications"
+              options={{
+                headerShown: false,
               }}
             />
           </Stack>

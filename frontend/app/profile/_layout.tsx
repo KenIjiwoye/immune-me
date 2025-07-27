@@ -8,6 +8,7 @@ export default function ProfileLayout() {
         name="index"
         options={{
           headerTitle: 'Profile',
+          headerShown: false
         }}
       />
       <Stack.Screen
