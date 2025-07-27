@@ -9,7 +9,7 @@ export default function ImmunizationsLayout() {
         options={{
           headerTitle: 'Add Immunization',
           presentation: 'modal',
-          headerShown: false
+          headerShown: true
         }}
       />
     </Stack>
