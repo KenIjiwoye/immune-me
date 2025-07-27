@@ -127,7 +127,7 @@ export default function DashboardScreen() {
         
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={() => router.push('/immunizations/new')}
+          onPress={() => router.push('/immunizations/add')}
         >
           <Ionicons name="add-circle" size={24} color="#28a745" />
           <Text style={styles.actionText}>New Immunization</Text>
