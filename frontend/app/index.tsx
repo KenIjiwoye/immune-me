@@ -77,9 +77,14 @@ export default function DashboardScreen() {
           <Text style={styles.welcome}>Welcome, {user?.fullName || 'User'}</Text>
           <Text style={styles.role}>{user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'User'}</Text>
         </View>
-        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-          <Ionicons name="log-out-outline" size={24} color="#dc3545" />
-        </TouchableOpacity>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/profile')}>
+            <Ionicons name="person-circle-outline" size={28} color="#007bff" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} onPress={logout}>
+            <Ionicons name="log-out-outline" size={28} color="#dc3545" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <Text style={styles.sectionTitle}>Overview</Text>
@@ -204,8 +209,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6c757d',
   },
-  logoutButton: {
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconButton: {
     padding: 8,
+    marginLeft: 8,
   },
   sectionTitle: {
     fontSize: 18,
