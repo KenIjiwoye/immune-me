@@ -39,10 +39,10 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
-        name="immunizations/add"
+        name="immunizations"
         options={{
-          drawerLabel: 'New Immunization',
-          title: 'Add Immunization',
+          drawerLabel: 'Immunizations',
+          title: 'Immunizations',
           drawerIcon: ({ color }) => (
             <Ionicons name="add-circle-outline" size={22} color={color} />
           ),
