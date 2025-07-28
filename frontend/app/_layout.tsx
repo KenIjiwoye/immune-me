@@ -69,20 +69,7 @@ export default function RootLayout() {
                   }}
                 />
                 <Stack.Screen
-                  name="index"
-                  options={{
-                    headerTitle: 'Dashboard',
-                    headerShown: true,
-                  }}
-                />
-                <Stack.Screen
-                  name="settings"
-                  options={{
-                    headerTitle: 'Settings',
-                  }}
-                />
-                <Stack.Screen
-                  name="notifications"
+                  name="(drawer)"
                   options={{
                     headerShown: false,
                   }}

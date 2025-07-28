@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://thirty-peaches-ask.loca.lt/api';
+const API_URL = 'https://tricky-cooks-mate.loca.lt/api';
 
 const api = axios.create({
   baseURL: API_URL,
