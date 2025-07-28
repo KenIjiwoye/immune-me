@@ -145,12 +145,12 @@ export default function AddImmunizationScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#007bff" />
         </TouchableOpacity>
         <Text style={styles.title}>Add Immunization Record</Text>
-      </View>
+      </View> */}
 
       {/* Patient Selection */}
       {!routePatientId && (
@@ -406,6 +406,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 12,
+    marginTop: 12,
     color: '#212529',
   },
   patientCard: {

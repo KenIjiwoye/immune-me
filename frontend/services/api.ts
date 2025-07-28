@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://easy-drinks-happen.loca.lt/api';
+const API_URL = 'https://tricky-cooks-mate.loca.lt/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -31,6 +31,13 @@ export default {
   // Dashboard endpoints
   getDashboardStats: () => api.get('/dashboard/stats'),
   getDueNotifications: () => api.get('/notifications/due'),
+  
+  // Notifications endpoints
+  getNotifications: (params?: { page?: number; limit?: number; status?: string }) => 
+    api.get('/notifications', { params }),
+  getNotification: (id: number) => api.get(`/notifications/${id}`),
+  updateNotificationStatus: (id: number, status: string) => 
+    api.put(`/notifications/${id}`, { status }),
   
   // Expose axios methods
   get: api.get,
