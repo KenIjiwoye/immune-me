@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../context/auth';
-import { usePatients } from '../../hooks/usePatients';
-import PatientCard from '../components/PatientCard';
-import { PatientQueryParams, PatientWithRelations } from '../../types/patient';
+import { useAuth } from '../../../context/auth';
+import { usePatients } from '../../../hooks/usePatients';
+import PatientCard from '../../components/PatientCard';
+import { PatientQueryParams, PatientWithRelations } from '../../../types/patient';
 
 export default function PatientListScreen() {
   const { isAuthenticated } = useAuth();

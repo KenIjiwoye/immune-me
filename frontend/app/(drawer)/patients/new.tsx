@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
 import { router, Stack } from 'expo-router';
-import { useAuth } from '../../context/auth';
-import { useCreatePatient } from '../../hooks/usePatients';
-import PatientForm from '../../app/components/PatientForm';
-import { PatientFormData } from '../../types/patient';
+import { useAuth } from '../../../context/auth';
+import { useCreatePatient } from '../../../hooks/usePatients';
+import PatientForm from '../../components/PatientForm';
+import { PatientFormData } from '../../../types/patient';
 
 export default function AddPatientScreen() {
   const { isAuthenticated } = useAuth();

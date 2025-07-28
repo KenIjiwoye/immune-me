@@ -14,7 +14,6 @@ export default function DrawerLayout() {
         drawerActiveTintColor: '#fff',
         drawerInactiveTintColor: '#333',
         drawerLabelStyle: {
-          // marginLeft: -25,
           fontSize: 15,
         },
       }}

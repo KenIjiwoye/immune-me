@@ -33,10 +33,15 @@ export default function DashboardScreen() {
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace('/login');
+    }
+  }, [isAuthenticated]);
+
+  // Load dashboard data
+  useEffect(() => {
+    if (!isAuthenticated) {
       return;
     }
 
-    // Load dashboard data
     const loadDashboardData = async () => {
       try {
         setIsLoading(true);
@@ -59,7 +64,12 @@ export default function DashboardScreen() {
   }, [isAuthenticated]);
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007bff" />
+        <Text style={styles.loadingText}>Redirecting to login...</Text>
+      </View>
+    );
   }
 
   if (isLoading) {

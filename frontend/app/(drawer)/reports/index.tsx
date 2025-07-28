@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../context/auth';
-import ReportCard from '../components/ReportCard';
+import { useAuth } from '../../../context/auth';
+import ReportCard from '../../components/ReportCard';
 
 export default function ReportsDashboardScreen() {
   const { isAuthenticated, user } = useAuth();

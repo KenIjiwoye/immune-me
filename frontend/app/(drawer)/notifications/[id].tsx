@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useAuth } from '../../context/auth';
+import { useAuth } from '../../../context/auth';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../services/api';
+import api from '../../../services/api';
 import { format } from 'date-fns';
 
 type NotificationDetail = {

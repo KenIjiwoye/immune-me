@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../context/auth';
+import { useAuth } from '../../../context/auth';
 import { useQuery } from '@tanstack/react-query';
-import api from '../../services/api';
+import api from '../../../services/api';
 
 export default function ProfileScreen() {
   const { isAuthenticated, user, logout } = useAuth();

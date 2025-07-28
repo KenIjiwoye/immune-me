@@ -3,12 +3,12 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image,
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { useAuth } from '../../context/auth';
+import { useAuth } from '../../../context/auth';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '../../services/api';
+import api from '../../../services/api';
 
 const profileSchema = z.object({
   fullName: z.string().min(1, 'Full name is required'),
