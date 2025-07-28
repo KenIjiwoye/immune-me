@@ -10,8 +10,8 @@ import {
 import { router, useLocalSearchParams, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { format, differenceInYears } from 'date-fns';
-import { useAuth } from '../../context/auth';
-import { usePatient, usePatientImmunizations } from '../../hooks/usePatients';
+import { useAuth } from '../../../context/auth';
+import { usePatient, usePatientImmunizations } from '../../../hooks/usePatients';
 
 export default function PatientDetailsScreen() {
   const { isAuthenticated } = useAuth();

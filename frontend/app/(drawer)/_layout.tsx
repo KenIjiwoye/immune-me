@@ -14,7 +14,6 @@ export default function DrawerLayout() {
         drawerActiveTintColor: '#fff',
         drawerInactiveTintColor: '#333',
         drawerLabelStyle: {
-          // marginLeft: -25,
           fontSize: 15,
         },
       }}
@@ -40,10 +39,10 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
-        name="immunizations/add"
+        name="immunizations"
         options={{
-          drawerLabel: 'New Immunization',
-          title: 'Add Immunization',
+          drawerLabel: 'Immunizations',
+          title: 'Immunizations',
           drawerIcon: ({ color }) => (
             <Ionicons name="add-circle-outline" size={22} color={color} />
           ),

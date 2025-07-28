@@ -28,15 +28,21 @@ export default function DashboardScreen() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
       router.replace('/login');
+    }
+  }, [isAuthenticated]);
+
+  // Load dashboard data
+  useEffect(() => {
+    if (!isAuthenticated) {
       return;
     }
 
-    // Load dashboard data
     const loadDashboardData = async () => {
       try {
         setIsLoading(true);
@@ -59,7 +65,12 @@ export default function DashboardScreen() {
   }, [isAuthenticated]);
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007bff" />
+        <Text style={styles.loadingText}>Redirecting to login...</Text>
+      </View>
+    );
   }
 
   if (isLoading) {
@@ -70,8 +81,6 @@ export default function DashboardScreen() {
       </View>
     );
   }
-
-  const navigation = useNavigation();
 
   return (
     <ScrollView style={styles.container}>

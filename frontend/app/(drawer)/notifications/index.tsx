@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
-import { useAuth } from '../../context/auth';
+import { useAuth } from '../../../context/auth';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../services/api';
-import NotificationCard from '../components/NotificationCard';
+import api from '../../../services/api';
+import NotificationCard from '../../components/NotificationCard';
 
 type Notification = {
   id: number;
