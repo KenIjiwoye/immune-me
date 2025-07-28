@@ -28,6 +28,7 @@ export default function DashboardScreen() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -80,8 +81,6 @@ export default function DashboardScreen() {
       </View>
     );
   }
-
-  const navigation = useNavigation();
 
   return (
     <ScrollView style={styles.container}>
