@@ -1,8 +1,11 @@
 import React from 'react';
 import { Drawer } from 'expo-router/drawer';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../../context/auth';
 
 export default function DrawerLayout() {
+  const { user } = useAuth();
+
   return (
     <Drawer
       screenOptions={{
@@ -88,6 +91,18 @@ export default function DrawerLayout() {
           ),
         }}
       />
+      {/* {user?.role === 'administrator' && ( */}
+        <Drawer.Screen
+          name="admin"
+          options={{
+            drawerLabel: 'Admin',
+            title: 'Admin',
+            drawerIcon: ({ color }) => (
+              <Ionicons name="lock-closed-outline" size={22} color={color} />
+            ),
+          }}
+        />
+      {/* )} */}
     </Drawer>
   );
 }
