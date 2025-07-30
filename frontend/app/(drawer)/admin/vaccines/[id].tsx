@@ -20,7 +20,19 @@ export default function EditVaccineScreen() {
 
   const updateVaccineMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await api.put(`/vaccines/${id}`, data);
+      // Clean up the data to remove null/undefined values for optional fields
+      const cleanData = {
+        name: data.name,
+        description: data.description,
+        vaccineCode: data.vaccineCode,
+        isSupplementary: data.isSupplementary,
+        isActive: data.isActive,
+        ...(data.sequenceNumber !== null && data.sequenceNumber !== undefined && { sequenceNumber: data.sequenceNumber }),
+        ...(data.vaccineSeries && { vaccineSeries: data.vaccineSeries }),
+        ...(data.standardScheduleAge && { standardScheduleAge: data.standardScheduleAge }),
+      };
+      
+      const response = await api.put(`/vaccines/${id}`, cleanData);
       return response.data;
     },
     onSuccess: () => {
