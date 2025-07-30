@@ -12,6 +12,9 @@ RUN npm ci --include=dev
 # Copy the rest of the application
 COPY . .
 
+# Run database migration and seed data for cloud dev env. (Only run once if using free limited cloud services)
+RUN node ace migration:run && node ace db:seed
+
 # Expose the port
 EXPOSE 3333
 
