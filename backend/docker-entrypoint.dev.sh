@@ -78,4 +78,4 @@ fi
 
 # Start the development server
 echo "🎯 Starting development server with hot reload..."
-exec node ace serve --watch --port 3333
+exec node ace serve --watch
