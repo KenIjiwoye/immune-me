@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Alert, ActivityIndicator, Text } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { router, useLocalSearchParams, Stack } from 'expo-router';
 import { useAuth } from '../../../../context/auth';
 import { usePatient, useUpdatePatient } from '../../../../hooks/usePatients';
@@ -44,31 +44,45 @@ export default function EditPatientScreen() {
 
   if (isPatientLoading) {
     return (
-      <View style={styles.loadingContainer}>
+      <KeyboardAvoidingView 
+        style={styles.loadingContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
         <ActivityIndicator size="large" color="#007bff" />
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 
   if (isPatientError || !patient) {
     return (
-      <View style={styles.errorContainer}>
+      <KeyboardAvoidingView 
+        style={styles.errorContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
         <Text style={styles.errorText}>Patient not found</Text>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 
   return (
     <>
       <Stack.Screen options={{ title: 'Edit Patient' }} />
-      <View style={styles.container}>
-        <PatientForm
-          initialData={patient}
-          onSubmit={handleSubmit}
-          isLoading={updatePatient.isPending}
-          submitButtonText="Update Patient"
-        />
-      </View>
+      <KeyboardAvoidingView 
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
+        <View style={styles.content}>
+          <PatientForm
+            initialData={patient}
+            onSubmit={handleSubmit}
+            isLoading={updatePatient.isPending}
+            submitButtonText="Update Patient"
+          />
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 }
@@ -77,6 +91,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  content: {
+    flex: 1,
   },
   loadingContainer: {
     flex: 1,

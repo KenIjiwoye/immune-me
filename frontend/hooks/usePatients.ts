@@ -13,31 +13,66 @@ export const patientKeys = {
 
 // Fetch patients with pagination and filtering
 const fetchPatients = async (params: PatientQueryParams): Promise<PatientListResponse> => {
-  const response = await api.get('/patients', { params });
-  return response.data;
+  console.log('Fetching patients with params:', params);
+  try {
+    const response = await api.get('/patients', { params });
+    console.log('Patients fetched successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching patients:', error);
+    throw error;
+  }
 };
 
 // Fetch single patient
 const fetchPatient = async (id: number): Promise<PatientWithRelations> => {
-  const response = await api.get(`/patients/${id}`);
-  return response.data;
+  console.log('Fetching patient with ID:', id);
+  try {
+    const response = await api.get(`/patients/${id}`);
+    console.log('Patient fetched successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching patient:', error);
+    throw error;
+  }
 };
 
 // Create new patient
 const createPatient = async (patient: Omit<Patient, 'id'>): Promise<Patient> => {
-  const response = await api.post('/patients', patient);
-  return response.data;
+  console.log('Creating patient with data:', patient);
+  try {
+    const response = await api.post('/patients', patient);
+    console.log('Patient created successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating patient:', error);
+    throw error;
+  }
 };
 
 // Update patient
 const updatePatient = async ({ id, data }: { id: number; data: Partial<Patient> }): Promise<Patient> => {
-  const response = await api.put(`/patients/${id}`, data);
-  return response.data;
+  console.log('Updating patient with ID:', id, 'and data:', data);
+  try {
+    const response = await api.put(`/patients/${id}`, data);
+    console.log('Patient updated successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating patient:', error);
+    throw error;
+  }
 };
 
 // Delete patient
 const deletePatient = async (id: number): Promise<void> => {
-  await api.delete(`/patients/${id}`);
+  console.log('Deleting patient with ID:', id);
+  try {
+    await api.delete(`/patients/${id}`);
+    console.log('Patient deleted successfully');
+  } catch (error) {
+    console.error('Error deleting patient:', error);
+    throw error;
+  }
 };
 
 // React Query hooks
@@ -63,8 +98,12 @@ export const useCreatePatient = () => {
   
   return useMutation({
     mutationFn: createPatient,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Create patient mutation succeeded:', data);
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
+    },
+    onError: (error) => {
+      console.error('Create patient mutation failed:', error);
     },
   });
 };
@@ -75,10 +114,14 @@ export const useUpdatePatient = () => {
   return useMutation({
     mutationFn: updatePatient,
     onSuccess: (data) => {
+      console.log('Update patient mutation succeeded:', data);
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
       if (data.id) {
         queryClient.invalidateQueries({ queryKey: patientKeys.detail(data.id) });
       }
+    },
+    onError: (error) => {
+      console.error('Update patient mutation failed:', error);
     },
   });
 };
@@ -89,7 +132,11 @@ export const useDeletePatient = () => {
   return useMutation({
     mutationFn: deletePatient,
     onSuccess: () => {
+      console.log('Delete patient mutation succeeded');
       queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
+    },
+    onError: (error) => {
+      console.error('Delete patient mutation failed:', error);
     },
   });
 };
@@ -99,8 +146,15 @@ export const usePatientImmunizations = (patientId: number) => {
   return useQuery({
     queryKey: [...patientKeys.detail(patientId), 'immunizations'],
     queryFn: async () => {
-      const response = await api.get(`/patients/${patientId}/immunization-records`);
-      return response.data;
+      console.log('Fetching immunizations for patient:', patientId);
+      try {
+        const response = await api.get(`/patients/${patientId}/immunization-records`);
+        console.log('Immunizations fetched successfully:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching immunizations:', error);
+        throw error;
+      }
     },
     enabled: !!patientId,
   });

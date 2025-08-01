@@ -126,7 +126,7 @@ export default function PatientDetailsScreen() {
             <Text style={styles.sectionTitle}>Immunization History</Text>
             <TouchableOpacity
               style={styles.addImmunizationButton}
-              onPress={() => router.push(`/immunizations/new?patientId=${patient.id}` as any)}
+              onPress={() => router.push(`/immunizations/add?patientId=${patient.id}` as any)}
             >
               <Ionicons name="add" size={20} color="#fff" />
               <Text style={styles.addImmunizationText}>Add</Text>
@@ -146,7 +146,7 @@ export default function PatientDetailsScreen() {
                 <TouchableOpacity
                   key={record.id}
                   style={styles.immunizationCard}
-                  onPress={() => router.push(`/immunizations/${record.id}` as any)}
+                  // onPress={() => router.push(`/immunizations/${record.id}` as any)}
                 >
                   <View style={styles.immunizationHeader}>
                     <Text style={styles.vaccineName}>{record.vaccine.name}</Text>
