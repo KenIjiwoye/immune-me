@@ -201,12 +201,14 @@ export default function PatientForm({
           name="motherName"
           label="Mother's Name"
           placeholder="Enter mother's name"
+          required
         />
 
         <FormInput
           name="fatherName"
           label="Father's Name"
           placeholder="Enter father's name"
+          required
         />
       </View>
 
@@ -224,6 +226,7 @@ export default function PatientForm({
           name="townVillage"
           label="Town/Village"
           placeholder="Enter town or village"
+          required
         />
 
         <FormInput
@@ -231,6 +234,7 @@ export default function PatientForm({
           label="Address"
           placeholder="Enter full address"
           multiline
+          required
         />
 
         <FormInput
@@ -238,6 +242,7 @@ export default function PatientForm({
           label="Contact Phone"
           placeholder="Enter phone number"
           keyboardType="phone-pad"
+          required
         />
       </View>
 
