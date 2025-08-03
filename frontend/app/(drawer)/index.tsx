@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { useAuth } from '../../context/auth';
-import { router, useNavigation } from 'expo-router';
+import { router, useNavigation, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import api from '../../services/api';
@@ -28,6 +28,7 @@ export default function DashboardScreen() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   // Redirect to login if not authenticated
@@ -38,31 +39,46 @@ export default function DashboardScreen() {
   }, [isAuthenticated]);
 
   // Load dashboard data
-  useEffect(() => {
+  const loadDashboardData = useCallback(async () => {
     if (!isAuthenticated) {
       return;
     }
 
-    const loadDashboardData = async () => {
-      try {
-        setIsLoading(true);
-        
-        // Fetch dashboard stats
-        const statsResponse = await api.getDashboardStats();
-        setStats(statsResponse.data);
-        
-        // Fetch notifications
-        const notificationsResponse = await api.getDueNotifications();
-        setNotifications(notificationsResponse.data.slice(0, 5)); // Show only 5 most recent
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadDashboardData();
+    try {
+      setIsLoading(true);
+      
+      // Fetch dashboard stats
+      const statsResponse = await api.getDashboardStats();
+      setStats(statsResponse.data);
+      
+      // Fetch notifications
+      const notificationsResponse = await api.getDueNotifications();
+      setNotifications(notificationsResponse.data.slice(0, 5)); // Show only 5 most recent
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
+    }
   }, [isAuthenticated]);
+
+  // Initial load
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  // Refresh on screen focus
+  useFocusEffect(
+    useCallback(() => {
+      loadDashboardData();
+    }, [loadDashboardData])
+  );
+
+  // Pull-to-refresh handler
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   if (!isAuthenticated) {
     return (
@@ -83,7 +99,17 @@ export default function DashboardScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#007bff']}
+          tintColor="#007bff"
+        />
+      }
+    >
       <View style={styles.header}>
         {/* <TouchableOpacity 
           style={styles.menuButton} 
@@ -119,18 +145,28 @@ export default function DashboardScreen() {
           icon="medical-outline"
           color="#2196F3"
         />
-        <StatCard
-          title="Pending"
-          value={stats?.pendingImmunizations || 0}
-          icon="time-outline"
-          color="#FF9800"
-        />
-        <StatCard
-          title="Overdue"
-          value={stats?.overdueImmunizations || 0}
-          icon="alert-circle-outline"
-          color="#F44336"
-        />
+        {/* <TouchableOpacity
+          style={styles.statTouchable}
+          onPress={() => router.push('/notifications?filter=pending')}
+        > */}
+          <StatCard
+            title="Pending"
+            value={stats?.pendingImmunizations || 0}
+            icon="time-outline"
+            color="#FF9800"
+          />
+        {/* </TouchableOpacity> */}
+        {/* <TouchableOpacity
+          style={styles.statTouchable}
+          onPress={() => router.push('/notifications?filter=overdue')}
+        > */}
+          <StatCard
+            title="Overdue"
+            value={stats?.overdueImmunizations || 0}
+            icon="alert-circle-outline"
+            color="#F44336"
+          />
+        {/* </TouchableOpacity> */}
       </View>
 
       <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -306,4 +342,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6c757d',
   },
+  statTouchable: {
+    width: '48%',
+  },
 });
+
