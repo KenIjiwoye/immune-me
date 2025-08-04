@@ -341,6 +341,58 @@ The following patterns are required to support the Liberia immunization schedule
 
 6. **Analytics Generation**: Produce insights on compliance rates and trends.
 
+### Navigation and Filtering Patterns
+
+#### Dashboard-to-Notifications Navigation Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              Dashboard-to-Notifications Flow                 │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Dashboard  │────▶│   Filter    │────▶│ Notifications│   │
+│  │   Stats     │     │ Parameters  │     │   Screen    │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Clickable  │     │  URL Query  │     │  Filtered   │   │
+│  │   Stats     │     │  Parameters │     │   View      │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Clickable Statistics**: Dashboard stats cards are now interactive
+2. **URL Parameter Navigation**: Filter parameters passed via URL query strings
+3. **State Synchronization**: Filter state synchronized with URL parameters
+4. **Deep Linking**: Direct navigation to specific filtered views
+
+#### Notifications Filtering Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 Notifications Filtering                      │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   Filter    │────▶│   Data      │────▶│   Sorted    │   │
+│  │  Controls   │     │  Filtering  │     │   Results   │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   Filter    │     │  Status     │     │  Chronology │   │
+│  │   Buttons   │     │  Filtering  │     │   Sorting   │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Filter Controls**: Visual filter buttons for All/Upcoming/Overdue
+2. **Status Filtering**: Filter notifications by pending/overdue status
+3. **Chronological Sorting**: Sort by due date (closest first)
+4. **Empty State Handling**: Context-specific empty messages
+
 ### UI/UX Patterns for Liberia Schedule
 
 ```

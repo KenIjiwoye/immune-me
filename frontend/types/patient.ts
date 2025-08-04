@@ -8,15 +8,14 @@ export const patientSchema = z.object({
     message: 'Please select a sex'
   }),
   dateOfBirth: z.string().min(1, 'Date of birth is required'),
-  motherName: z.string().optional(),
-  fatherName: z.string().optional(),
+  motherName: z.string().min(2, 'Mother\'s name must be at least 2 characters'),
+  fatherName: z.string().min(2, 'Father\'s name must be at least 2 characters'),
   district: z.string().min(1, 'District is required'),
-  townVillage: z.string().optional(),
-  address: z.string().optional(),
+  townVillage: z.string().min(2, 'Town/Village must be at least 2 characters'),
+  address: z.string().min(5, 'Address must be at least 5 characters'),
   contactPhone: z.string()
-    .regex(/^\+?[0-9\s-()]+$/, 'Please enter a valid phone number')
-    .optional()
-    .or(z.literal('')),
+    .min(5, 'Contact phone must be at least 5 characters')
+    .regex(/^\+?[0-9\s-()]+$/, 'Please enter a valid phone number'),
   healthWorkerName: z.string().optional(),
   healthWorkerPhone: z.string()
     .regex(/^\+?[0-9\s-()]+$/, 'Please enter a valid phone number')

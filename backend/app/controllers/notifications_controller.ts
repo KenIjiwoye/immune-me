@@ -110,16 +110,22 @@ export default class NotificationsController {
   /**
    * Get due notifications
    */
+  /**
+   * Get due notifications - returns notifications that are due today or within the next 7 days
+   */
   async getDueNotifications({ request, response, auth }: HttpContext) {
     const user = auth.user!
     const page = request.input('page', 1)
     const limit = request.input('limit', 20)
     const today = DateTime.now().toISODate()
+    // Get notifications due within the next 7 days (including today)
+    const dueWithinDays = DateTime.now().plus({ days: 7 }).toISODate()
     
-    // Create a query builder
+    // Create a query builder - get notifications due today or within the next 7 days
     const query = Notification.query()
       .where('status', 'pending')
-      .where('dueDate', '<=', today)
+      .where('dueDate', '>=', today)  // Due today or later
+      .where('dueDate', '<=', dueWithinDays)  // But within 7 days
       .preload('patient')
       .preload('vaccine')
       .preload('facility')

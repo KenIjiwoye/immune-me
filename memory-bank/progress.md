@@ -47,6 +47,10 @@
 - [x] Notification details view
 - [x] Mark as read functionality
 - [x] Notification card component
+- [x] **Enhanced filtering system** - Added filter buttons for All/Upcoming/Overdue
+- [x] **Dashboard integration** - Clickable stats cards for pending/overdue vaccinations
+- [x] **Smart sorting** - Notifications sorted by due date (closest first)
+- [x] **URL parameter support** - Direct navigation to filtered views from dashboard
 
 ### ✅ Admin Vaccine Management (FE-08)
 - [x] Admin-only access control

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { useAuth } from '../../../context/auth';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import api from '../../../services/api';
 import NotificationCard from '../../components/NotificationCard';
@@ -18,7 +18,10 @@ type Notification = {
 
 export default function NotificationsScreen() {
   const { user } = useAuth();
+  const { filter } = useLocalSearchParams();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'pending' | 'overdue'>('all');
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -26,7 +29,7 @@ export default function NotificationsScreen() {
     try {
       setIsLoading(true);
       const response = await api.get('/notifications/due');
-      setNotifications(response.data);
+      setNotifications(response.data.data || []);
     } catch (error) {
       console.error('Failed to load notifications:', error);
     } finally {
@@ -38,9 +41,40 @@ export default function NotificationsScreen() {
     loadNotifications();
   }, []);
 
+  useEffect(() => {
+    // Set initial filter based on URL parameter
+    if (filter === 'pending') {
+      setActiveFilter('pending');
+    } else if (filter === 'overdue') {
+      setActiveFilter('overdue');
+    } else {
+      setActiveFilter('all');
+    }
+  }, [filter]);
+
+  useEffect(() => {
+    // Filter and sort notifications
+    let filtered = [...notifications];
+
+    if (activeFilter === 'pending') {
+      filtered = filtered.filter(n => n.status === 'pending');
+    } else if (activeFilter === 'overdue') {
+      filtered = filtered.filter(n => n.status === 'overdue');
+    }
+
+    // Sort by due date (closest first)
+    filtered.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+
+    setFilteredNotifications(filtered);
+  }, [notifications, activeFilter]);
+
   const handleRefresh = () => {
     setRefreshing(true);
     loadNotifications().finally(() => setRefreshing(false));
+  };
+
+  const handleFilterChange = (filter: 'all' | 'pending' | 'overdue') => {
+    setActiveFilter(filter);
   };
 
   const renderNotification = ({ item }: { item: Notification }) => (
@@ -71,8 +105,29 @@ export default function NotificationsScreen() {
         </TouchableOpacity>
       </View>
 
+      <View style={styles.filterContainer}>
+        <TouchableOpacity
+          style={[styles.filterButton, activeFilter === 'all' && styles.activeFilter]}
+          onPress={() => handleFilterChange('all')}
+        >
+          <Text style={[styles.filterText, activeFilter === 'all' && styles.activeFilterText]}>All</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.filterButton, activeFilter === 'pending' && styles.activeFilter]}
+          onPress={() => handleFilterChange('pending')}
+        >
+          <Text style={[styles.filterText, activeFilter === 'pending' && styles.activeFilterText]}>Upcoming</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.filterButton, activeFilter === 'overdue' && styles.activeFilter]}
+          onPress={() => handleFilterChange('overdue')}
+        >
+          <Text style={[styles.filterText, activeFilter === 'overdue' && styles.activeFilterText]}>Overdue</Text>
+        </TouchableOpacity>
+      </View>
+
       <FlatList
-        data={notifications}
+        data={filteredNotifications}
         renderItem={renderNotification}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.listContainer}
@@ -83,7 +138,11 @@ export default function NotificationsScreen() {
           <View style={styles.emptyContainer}>
             <Ionicons name="notifications-off-outline" size={64} color="#6c757d" />
             <Text style={styles.emptyText}>No notifications found</Text>
-            <Text style={styles.emptySubtext}>No due immunizations at this time</Text>
+            <Text style={styles.emptySubtext}>
+              {activeFilter === 'pending' ? 'No upcoming vaccinations' :
+               activeFilter === 'overdue' ? 'No overdue vaccinations' :
+               'No due immunizations at this time'}
+            </Text>
           </View>
         }
       />
@@ -138,5 +197,33 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 14,
     color: '#6c757d',
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e9ecef',
+  },
+  filterButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#f8f9fa',
+    borderWidth: 1,
+    borderColor: '#dee2e6',
+  },
+  activeFilter: {
+    backgroundColor: '#007bff',
+    borderColor: '#007bff',
+  },
+  filterText: {
+    fontSize: 14,
+    color: '#6c757d',
+  },
+  activeFilterText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
