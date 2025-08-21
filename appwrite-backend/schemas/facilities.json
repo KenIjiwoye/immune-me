@@ -1,0 +1,108 @@
+{
+  "$id": "facilities",
+  "name": "facilities",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "name",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "district",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "address",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "contact_phone",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "name_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["name"]
+    },
+    {
+      "key": "district_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["district"]
+    },
+    {
+      "key": "name_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["name"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin"],
+    "update": ["role:admin"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "name": {
+        "min_length": 2,
+        "max_length": 255,
+        "pattern": "^[a-zA-Z0-9\\s\\-\\.]+$"
+      },
+      "district": {
+        "min_length": 2,
+        "max_length": 100
+      },
+      "address": {
+        "min_length": 5,
+        "max_length": 500
+      },
+      "contact_phone": {
+        "pattern": "^\\+?[0-9\\s\\-\\(\\)]+$",
+        "min_length": 8,
+        "max_length": 20
+      }
+    }
+  }
+}

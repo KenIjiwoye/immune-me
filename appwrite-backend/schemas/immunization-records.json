@@ -1,0 +1,236 @@
+{
+  "$id": "immunization_records",
+  "name": "immunization_records",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "patient_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "vaccine_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "administered_date",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "administered_by_user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "facility_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "batch_number",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "health_officer",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "return_date",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "is_standard_schedule",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": true
+    },
+    {
+      "key": "schedule_status",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "notes",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "patient_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["patient_id"]
+    },
+    {
+      "key": "vaccine_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["vaccine_id"]
+    },
+    {
+      "key": "facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id"]
+    },
+    {
+      "key": "administered_by_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["administered_by_user_id"]
+    },
+    {
+      "key": "administered_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["administered_date"]
+    },
+    {
+      "key": "batch_number_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["batch_number"]
+    },
+    {
+      "key": "schedule_status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["schedule_status"]
+    },
+    {
+      "key": "is_standard_schedule_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["is_standard_schedule"]
+    },
+    {
+      "key": "patient_vaccine_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["patient_id", "vaccine_id"]
+    },
+    {
+      "key": "facility_date_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id", "administered_date"]
+    },
+    {
+      "key": "notes_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["notes"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin", "role:healthcare_worker"],
+    "update": ["role:admin", "role:healthcare_worker"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "batch_number": {
+        "min_length": 3,
+        "max_length": 100,
+        "pattern": "^[A-Z0-9\\-]+$"
+      },
+      "schedule_status": {
+        "enum": ["on_schedule", "delayed", "missed"]
+      },
+      "health_officer": {
+        "max_length": 255
+      },
+      "notes": {
+        "max_length": 1000
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "patients",
+        "foreign_key": "patient_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "vaccines",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "administered_by_user_id",
+        "local_key": "$id"
+      }
+    ]
+  }
+}

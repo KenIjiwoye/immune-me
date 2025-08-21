@@ -1,0 +1,263 @@
+{
+  "$id": "supplementary_immunizations",
+  "name": "supplementary_immunizations",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "name",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "description",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "start_date",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "end_date",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "facility_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "vaccine_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "target_population",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "campaign_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": "routine"
+    },
+    {
+      "key": "target_age_min",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "target_age_max",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "target_districts",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "planned"
+    },
+    {
+      "key": "created_by",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "name_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["name"]
+    },
+    {
+      "key": "vaccine_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["vaccine_id"]
+    },
+    {
+      "key": "facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id"]
+    },
+    {
+      "key": "start_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["start_date"]
+    },
+    {
+      "key": "end_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["end_date"]
+    },
+    {
+      "key": "status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["status"]
+    },
+    {
+      "key": "campaign_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["campaign_type"]
+    },
+    {
+      "key": "created_by_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["created_by"]
+    },
+    {
+      "key": "date_range_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["start_date", "end_date"]
+    },
+    {
+      "key": "facility_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id", "status"]
+    },
+    {
+      "key": "name_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["name", "description", "target_population"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin"],
+    "update": ["role:admin"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "name": {
+        "min_length": 3,
+        "max_length": 255,
+        "pattern": "^[a-zA-Z0-9\\s\\-\\.\\(\\)]+$"
+      },
+      "description": {
+        "max_length": 1000
+      },
+      "target_population": {
+        "max_length": 500
+      },
+      "campaign_type": {
+        "enum": ["routine", "outbreak_response", "catch_up", "mass_campaign", "special_risk"],
+        "required": true
+      },
+      "status": {
+        "enum": ["planned", "active", "completed", "cancelled", "suspended"],
+        "required": true
+      },
+      "target_age_min": {
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$",
+        "max_length": 20
+      },
+      "target_age_max": {
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$",
+        "max_length": 20
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "vaccines",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "created_by",
+        "local_key": "$id"
+      }
+    ]
+  }
+}

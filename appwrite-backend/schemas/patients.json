@@ -1,0 +1,254 @@
+{
+  "$id": "patients",
+  "name": "patients",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "full_name",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "sex",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 1,
+      "default": null
+    },
+    {
+      "key": "date_of_birth",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "mother_name",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "father_name",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "district",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "town_village",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "address",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "contact_phone",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "health_worker_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "health_worker_name",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "health_worker_phone",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "health_worker_address",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "facility_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "full_name_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["full_name"]
+    },
+    {
+      "key": "facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id"]
+    },
+    {
+      "key": "district_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["district"]
+    },
+    {
+      "key": "date_of_birth_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["date_of_birth"]
+    },
+    {
+      "key": "health_worker_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["health_worker_id"]
+    },
+    {
+      "key": "full_name_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["full_name"]
+    },
+    {
+      "key": "facility_district_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id", "district"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin", "role:healthcare_worker"],
+    "update": ["role:admin", "role:healthcare_worker"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "full_name": {
+        "min_length": 2,
+        "max_length": 255,
+        "pattern": "^[a-zA-Z\\s\\-\\.]+$"
+      },
+      "sex": {
+        "enum": ["M", "F"],
+        "required": true
+      },
+      "district": {
+        "min_length": 2,
+        "max_length": 100
+      },
+      "town_village": {
+        "max_length": 100
+      },
+      "address": {
+        "min_length": 5,
+        "max_length": 500
+      },
+      "contact_phone": {
+        "pattern": "^\\+?[0-9\\s\\-\\(\\)]+$",
+        "min_length": 8,
+        "max_length": 20
+      },
+      "health_worker_phone": {
+        "pattern": "^\\+?[0-9\\s\\-\\(\\)]+$",
+        "min_length": 8,
+        "max_length": 20
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_id",
+        "local_key": "$id"
+      }
+    ],
+    "has_many": [
+      {
+        "collection": "immunization_records",
+        "foreign_key": "patient_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "notifications",
+        "foreign_key": "patient_id",
+        "local_key": "$id"
+      }
+    ]
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "$id": "vaccine_schedule_items",
+  "name": "vaccine_schedule_items",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "schedule_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "vaccine_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "recommended_age",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "sequence_in_schedule",
+      "type": "integer",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "minimum_age",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "maximum_age",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "interval_from_previous",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "is_mandatory",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": true
+    },
+    {
+      "key": "notes",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "schedule_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["schedule_id"]
+    },
+    {
+      "key": "vaccine_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["vaccine_id"]
+    },
+    {
+      "key": "sequence_in_schedule_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["sequence_in_schedule"]
+    },
+    {
+      "key": "is_mandatory_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["is_mandatory"]
+    },
+    {
+      "key": "schedule_sequence_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["schedule_id", "sequence_in_schedule"]
+    },
+    {
+      "key": "schedule_vaccine_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["schedule_id", "vaccine_id"]
+    },
+    {
+      "key": "schedule_sequence_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["schedule_id", "sequence_in_schedule"]
+    },
+    {
+      "key": "notes_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["notes"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin"],
+    "update": ["role:admin"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "recommended_age": {
+        "min_length": 1,
+        "max_length": 50,
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$"
+      },
+      "minimum_age": {
+        "max_length": 50,
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$"
+      },
+      "maximum_age": {
+        "max_length": 50,
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$"
+      },
+      "interval_from_previous": {
+        "max_length": 50,
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$"
+      },
+      "sequence_in_schedule": {
+        "min": 1,
+        "max": 999
+      },
+      "notes": {
+        "max_length": 500
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "vaccine_schedules",
+        "foreign_key": "schedule_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "vaccines",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      }
+    ]
+  }
+}

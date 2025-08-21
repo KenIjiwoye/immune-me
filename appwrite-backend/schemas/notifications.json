@@ -1,0 +1,204 @@
+{
+  "$id": "notifications",
+  "name": "notifications",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "patient_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "vaccine_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "due_date",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "pending"
+    },
+    {
+      "key": "facility_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "message",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "priority",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 10,
+      "default": "normal"
+    },
+    {
+      "key": "sent_at",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "viewed_at",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "patient_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["patient_id"]
+    },
+    {
+      "key": "vaccine_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["vaccine_id"]
+    },
+    {
+      "key": "facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id"]
+    },
+    {
+      "key": "due_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["due_date"]
+    },
+    {
+      "key": "status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["status"]
+    },
+    {
+      "key": "priority_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["priority"]
+    },
+    {
+      "key": "facility_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id", "status"]
+    },
+    {
+      "key": "patient_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["patient_id", "status"]
+    },
+    {
+      "key": "due_date_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["due_date", "status"]
+    },
+    {
+      "key": "message_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["message"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin", "role:healthcare_worker"],
+    "update": ["role:admin", "role:healthcare_worker"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "status": {
+        "enum": ["pending", "viewed", "completed", "overdue"],
+        "required": true
+      },
+      "priority": {
+        "enum": ["low", "normal", "high", "urgent"],
+        "required": true
+      },
+      "message": {
+        "max_length": 500
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "patients",
+        "foreign_key": "patient_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "vaccines",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_id",
+        "local_key": "$id"
+      }
+    ]
+  }
+}

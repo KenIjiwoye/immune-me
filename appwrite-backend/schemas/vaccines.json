@@ -1,0 +1,202 @@
+{
+  "$id": "vaccines",
+  "name": "vaccines",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "name",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "description",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "vaccine_code",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "sequence_number",
+      "type": "integer",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "vaccine_series",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "standard_schedule_age",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "is_supplementary",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "is_active",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": true
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "name_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["name"]
+    },
+    {
+      "key": "vaccine_code_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["vaccine_code"]
+    },
+    {
+      "key": "is_active_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["is_active"]
+    },
+    {
+      "key": "is_supplementary_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["is_supplementary"]
+    },
+    {
+      "key": "vaccine_series_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["vaccine_series"]
+    },
+    {
+      "key": "sequence_number_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["sequence_number"]
+    },
+    {
+      "key": "name_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["name", "description"]
+    },
+    {
+      "key": "series_sequence_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["vaccine_series", "sequence_number"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin"],
+    "update": ["role:admin"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "name": {
+        "min_length": 2,
+        "max_length": 255,
+        "pattern": "^[a-zA-Z0-9\\s\\-\\.\\(\\)]+$"
+      },
+      "vaccine_code": {
+        "min_length": 2,
+        "max_length": 50,
+        "pattern": "^[A-Z0-9\\-]+$",
+        "unique": true
+      },
+      "description": {
+        "max_length": 1000
+      },
+      "sequence_number": {
+        "min": 1,
+        "max": 99
+      },
+      "vaccine_series": {
+        "max_length": 100
+      },
+      "standard_schedule_age": {
+        "max_length": 50,
+        "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$"
+      }
+    }
+  },
+  "relationships": {
+    "has_many": [
+      {
+        "collection": "immunization_records",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "notifications",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "vaccine_schedule_items",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      },
+      {
+        "collection": "supplementary_immunizations",
+        "foreign_key": "vaccine_id",
+        "local_key": "$id"
+      }
+    ]
+  }
+}

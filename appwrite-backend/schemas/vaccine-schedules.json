@@ -1,0 +1,172 @@
+{
+  "$id": "vaccine_schedules",
+  "name": "vaccine_schedules",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "name",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 255,
+      "default": null
+    },
+    {
+      "key": "country",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "description",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "is_active",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": true
+    },
+    {
+      "key": "version",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": "1.0"
+    },
+    {
+      "key": "effective_date",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "created_by",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "name_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["name"]
+    },
+    {
+      "key": "country_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["country"]
+    },
+    {
+      "key": "is_active_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["is_active"]
+    },
+    {
+      "key": "effective_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["effective_date"]
+    },
+    {
+      "key": "name_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["name", "country"]
+    },
+    {
+      "key": "country_active_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["country", "is_active"]
+    },
+    {
+      "key": "name_fulltext",
+      "type": "fulltext",
+      "status": "available",
+      "attributes": ["name", "description"]
+    }
+  ],
+  "permissions": {
+    "read": ["role:admin", "role:healthcare_worker"],
+    "create": ["role:admin"],
+    "update": ["role:admin"],
+    "delete": ["role:admin"]
+  },
+  "validation": {
+    "rules": {
+      "name": {
+        "min_length": 3,
+        "max_length": 255,
+        "pattern": "^[a-zA-Z0-9\\s\\-\\.\\(\\)]+$"
+      },
+      "country": {
+        "min_length": 2,
+        "max_length": 100,
+        "pattern": "^[a-zA-Z\\s\\-]+$"
+      },
+      "description": {
+        "max_length": 1000
+      },
+      "version": {
+        "pattern": "^[0-9]+\\.[0-9]+$",
+        "max_length": 20
+      }
+    }
+  },
+  "relationships": {
+    "has_many": [
+      {
+        "collection": "vaccine_schedule_items",
+        "foreign_key": "schedule_id",
+        "local_key": "$id"
+      }
+    ],
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "created_by",
+        "local_key": "$id"
+      }
+    ]
+  }
+}
