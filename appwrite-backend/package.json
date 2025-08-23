@@ -1,0 +1,32 @@
+{
+  "name": "appwrite-backend-auth",
+  "version": "1.0.0",
+  "description": "Appwrite authentication system for healthcare immunization management",
+  "main": "index.js",
+  "scripts": {
+    "setup-teams": "node config/teams-setup.js setup",
+    "test-auth": "node tests/auth-tests.js",
+    "setup-mfa": "node config/mfa-setup.js",
+    "migrate-users": "node utils/user-migration.js",
+    "test-password": "node tests/auth-tests.js password",
+    "test-permissions": "node tests/auth-tests.js permissions",
+    "test-teams": "node tests/auth-tests.js teams"
+  },
+  "dependencies": {
+    "node-appwrite": "^14.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "keywords": [
+    "appwrite",
+    "authentication",
+    "healthcare",
+    "immunization",
+    "mfa",
+    "rbac"
+  ],
+  "author": "Healthcare Team",
+  "license": "MIT"
+}

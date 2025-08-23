@@ -1,0 +1,46 @@
+{
+  "auth": {
+    "session": {
+      "duration": 86400,
+      "inactivityTimeout": 3600,
+      "maxSessions": 5,
+      "alerts": {
+        "enabled": true,
+        "beforeExpiry": 300
+      }
+    },
+    "passwordPolicy": {
+      "minLength": 8,
+      "maxLength": 128,
+      "requireUppercase": true,
+      "requireLowercase": true,
+      "requireNumbers": true,
+      "requireSymbols": true,
+      "noPersonalInfo": true,
+      "noCommonPasswords": true,
+      "passwordHistory": 5
+    },
+    "mfa": {
+      "enabled": true,
+      "requiredForRoles": ["admin"],
+      "methods": ["totp", "email"]
+    },
+    "roles": {
+      "admin": {
+        "teamId": "admin-team",
+        "permissions": ["*"],
+        "description": "System administrators with full access"
+      },
+      "healthcare_worker": {
+        "teamId": "healthcare-workers",
+        "permissions": ["patients.*", "immunizations.*", "notifications.read"],
+        "description": "Healthcare workers managing patient records"
+      },
+      "facility_manager": {
+        "teamId": "facility-managers",
+        "permissions": ["facility.*", "reports.*", "users.facility"],
+        "description": "Facility managers with administrative access to their facility"
+      }
+    }
+  }
+}
