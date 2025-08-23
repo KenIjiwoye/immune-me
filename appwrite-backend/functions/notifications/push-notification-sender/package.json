@@ -1,0 +1,14 @@
+{
+  "name": "push-notification-sender",
+  "version": "1.0.0",
+  "description": "Appwrite function for sending push notifications",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^11.0.0",
+    "firebase-admin": "^11.11.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}

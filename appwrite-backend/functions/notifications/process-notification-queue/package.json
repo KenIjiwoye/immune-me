@@ -1,0 +1,13 @@
+{
+  "name": "process-notification-queue",
+  "version": "1.0.0",
+  "description": "Appwrite function for processing notification queue",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^11.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}

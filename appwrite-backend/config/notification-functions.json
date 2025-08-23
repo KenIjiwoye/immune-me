@@ -1,0 +1,89 @@
+{
+  "functions": [
+    {
+      "name": "due-immunization-reminders",
+      "runtime": "node-18.0",
+      "execute": ["role:admin", "role:system"],
+      "events": [],
+      "schedule": "0 8 * * *",
+      "timeout": 300,
+      "env": {
+        "APPWRITE_ENDPOINT": "$APPWRITE_ENDPOINT",
+        "APPWRITE_PROJECT_ID": "$APPWRITE_PROJECT_ID",
+        "APPWRITE_API_KEY": "$APPWRITE_API_KEY"
+      }
+    },
+    {
+      "name": "email-sender",
+      "runtime": "node-18.0",
+      "execute": ["role:admin", "role:system"],
+      "events": [],
+      "schedule": "*/15 * * * *",
+      "timeout": 600,
+      "env": {
+        "SMTP_HOST": "$SMTP_HOST",
+        "SMTP_PORT": "$SMTP_PORT",
+        "SMTP_SECURE": "$SMTP_SECURE",
+        "SMTP_USER": "$SMTP_USER",
+        "SMTP_PASS": "$SMTP_PASS",
+        "FROM_EMAIL": "$FROM_EMAIL"
+      }
+    },
+    {
+      "name": "sms-sender",
+      "runtime": "node-18.0",
+      "execute": ["role:admin", "role:system"],
+      "events": [],
+      "schedule": "*/15 * * * *",
+      "timeout": 300,
+      "env": {
+        "SMS_PROVIDER": "$SMS_PROVIDER",
+        "TWILIO_ACCOUNT_SID": "$TWILIO_ACCOUNT_SID",
+        "TWILIO_AUTH_TOKEN": "$TWILIO_AUTH_TOKEN",
+        "TWILIO_FROM_NUMBER": "$TWILIO_FROM_NUMBER",
+        "SMS_API_URL": "$SMS_API_URL",
+        "SMS_API_KEY": "$SMS_API_KEY"
+      }
+    },
+    {
+      "name": "push-notification-sender",
+      "runtime": "node-18.0",
+      "execute": ["role:admin", "role:system"],
+      "events": [],
+      "schedule": "*/15 * * * *",
+      "timeout": 300,
+      "env": {
+        "PUSH_PROVIDER": "$PUSH_PROVIDER",
+        "FIREBASE_PROJECT_ID": "$FIREBASE_PROJECT_ID",
+        "FIREBASE_CLIENT_EMAIL": "$FIREBASE_CLIENT_EMAIL",
+        "FIREBASE_PRIVATE_KEY": "$FIREBASE_PRIVATE_KEY",
+        "PUSH_API_URL": "$PUSH_API_URL",
+        "PUSH_API_KEY": "$PUSH_API_KEY"
+      }
+    },
+    {
+      "name": "process-notification-queue",
+      "runtime": "node-18.0",
+      "execute": ["role:admin", "role:system"],
+      "events": ["databases.*.collections.notifications.documents.*.create"],
+      "schedule": "*/5 * * * *",
+      "timeout": 300
+    },
+    {
+      "name": "schedule-notifications",
+      "runtime": "node-18.0",
+      "execute": ["role:admin", "role:system"],
+      "events": [],
+      "schedule": "0 */6 * * *",
+      "timeout": 300
+    },
+    {
+      "name": "cleanup-old-notifications",
+      "runtime": "node-18.0",
+      "execute": ["role:admin"],
+      "events": [],
+      "schedule": "0 2 * * 0",
+      "timeout": 600
+    }
+  ]
+}

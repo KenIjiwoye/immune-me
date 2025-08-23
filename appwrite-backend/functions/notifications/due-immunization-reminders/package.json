@@ -1,0 +1,13 @@
+{
+  "name": "due-immunization-reminders",
+  "version": "1.0.0",
+  "description": "Appwrite function for generating due immunization reminders",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^11.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}
