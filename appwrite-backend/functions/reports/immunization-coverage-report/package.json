@@ -1,0 +1,23 @@
+{
+  "name": "immunization-coverage-report",
+  "version": "1.0.0",
+  "description": "Appwrite function to generate immunization coverage reports with caching",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "node --watch src/main.js",
+    "test": "node --test"
+  },
+  "keywords": ["appwrite", "immunization", "coverage", "reports"],
+  "author": "ImmuneMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^14.0.0",
+    "date-fns": "^3.6.0",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "facility-performance-metrics",
+  "version": "1.0.0",
+  "description": "Appwrite function to calculate comprehensive facility performance metrics including immunization rates, notification response rates, and staff performance",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node test/test.js",
+    "dev": "node --watch src/main.js"
+  },
+  "keywords": [
+    "appwrite",
+    "function",
+    "facility",
+    "performance",
+    "metrics",
+    "immunization",
+    "notifications"
+  ],
+  "author": "ImmuneMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^14.0.0",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.1.3"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
