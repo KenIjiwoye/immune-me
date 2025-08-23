@@ -1,0 +1,29 @@
+{
+  "name": "appwrite-collection-setup",
+  "version": "1.0.0",
+  "description": "Appwrite collection setup scripts for BE-AW-02 database schema implementation",
+  "main": "setup-collections.js",
+  "scripts": {
+    "setup": "node setup-collections.js",
+    "setup:test": "node setup-collections.js --test",
+    "mcp:setup": "node mcp-collection-creator.js",
+    "mcp:test": "node mcp-collection-creator.js --test",
+    "validate": "node validate-schemas.js"
+  },
+  "dependencies": {
+    "node-appwrite": "^11.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "keywords": [
+    "appwrite",
+    "database",
+    "collections",
+    "mcp",
+    "schema"
+  ],
+  "author": "ImmuneMe Team",
+  "license": "MIT"
+}
