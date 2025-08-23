@@ -42,11 +42,45 @@ This backend implementation is designed to:
 
 ## Getting Started
 
-1. Set up an Appwrite project and configure the environment
-2. Deploy the database schemas and collections
-3. Deploy the cloud functions
-4. Configure authentication and security rules
-5. Run data migration scripts (if migrating from existing system)
+### Quick Start
+
+1. **Prerequisites**: Ensure Node.js 18+ and Appwrite CLI are installed
+2. **Setup**: Run `./setup.sh` to initialize the configuration
+3. **Configure**: Edit `config/.env` with your Appwrite project details
+4. **Deploy**: Follow the [Setup Guide](SETUP_GUIDE.md) for complete deployment
+
+### Detailed Setup
+
+For comprehensive setup instructions, see [SETUP_GUIDE.md](SETUP_GUIDE.md).
+
+### Configuration Files
+
+- [`config/appwrite.json`](config/appwrite.json) - Main project configuration
+- [`config/.env.example`](config/.env.example) - Environment variables template
+- [`config/security-rules.json`](config/security-rules.json) - Security and permissions
+- [`config/README.md`](config/README.md) - Detailed configuration documentation
+
+### Project Structure
+
+```
+appwrite-backend/
+├── config/                    # Configuration files
+│   ├── appwrite.json         # Main Appwrite configuration
+│   ├── appwrite.production.json # Production configuration
+│   ├── .env.example          # Environment variables template
+│   ├── security-rules.json   # Security rules and permissions
+│   └── README.md             # Configuration documentation
+├── functions/                 # Cloud functions
+│   ├── notifications/        # Notification functions
+│   ├── reports/             # Report generation functions
+│   └── data-sync/           # Data synchronization functions
+├── schemas/                  # Database schemas (existing)
+├── utils/                   # Shared utilities
+├── types/                   # TypeScript definitions
+├── migrations/              # Data migration scripts
+├── setup.sh                 # Setup automation script
+└── SETUP_GUIDE.md          # Complete setup guide
+```
 
 ## Benefits
 

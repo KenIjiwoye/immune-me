@@ -1,0 +1,619 @@
+{
+  "projectId": "immune-me-dev",
+  "projectName": "Immune Me - Development",
+  "settings": {
+    "services": {
+      "account": true,
+      "avatars": true,
+      "databases": true,
+      "locale": true,
+      "health": true,
+      "storage": true,
+      "teams": true,
+      "users": true,
+      "functions": true,
+      "graphql": false,
+      "messaging": true
+    }
+  },
+  "auth": {
+    "methods": {
+      "emailPassword": true,
+      "phone": false,
+      "anonymous": false,
+      "invites": true,
+      "jwt": false,
+      "emailOTP": false,
+      "smsOTP": false,
+      "phoneOTP": false
+    },
+    "security": {
+      "duration": 31536000,
+      "limit": 0,
+      "sessionsLimit": 10,
+      "passwordHistory": 0,
+      "passwordDictionary": false,
+      "personalDataCheck": false
+    }
+  },
+  "databases": [
+    {
+      "databaseId": "main",
+      "name": "Main Database",
+      "enabled": true
+    }
+  ],
+  "collections": [
+    {
+      "databaseId": "main",
+      "collectionId": "patients",
+      "name": "Patients",
+      "documentSecurity": true,
+      "enabled": true,
+      "attributes": [
+        {
+          "key": "patient_id",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "first_name",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 100
+        },
+        {
+          "key": "last_name",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 100
+        },
+        {
+          "key": "date_of_birth",
+          "type": "datetime",
+          "status": "available",
+          "required": true,
+          "array": false
+        },
+        {
+          "key": "gender",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 10
+        },
+        {
+          "key": "contact_info",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 1000
+        },
+        {
+          "key": "facility_id",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "guardian_info",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 1000
+        },
+        {
+          "key": "medical_history",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 2000
+        },
+        {
+          "key": "is_active",
+          "type": "boolean",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": [
+        {
+          "key": "patient_id_unique",
+          "type": "unique",
+          "status": "available",
+          "attributes": ["patient_id"]
+        },
+        {
+          "key": "facility_patients",
+          "type": "key",
+          "status": "available",
+          "attributes": ["facility_id"]
+        },
+        {
+          "key": "patient_search",
+          "type": "fulltext",
+          "status": "available",
+          "attributes": ["first_name", "last_name", "patient_id"]
+        }
+      ]
+    },
+    {
+      "databaseId": "main",
+      "collectionId": "facilities",
+      "name": "Facilities",
+      "documentSecurity": true,
+      "enabled": true,
+      "attributes": [
+        {
+          "key": "facility_code",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 20
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 200
+        },
+        {
+          "key": "type",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "location",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 500
+        },
+        {
+          "key": "contact_info",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 1000
+        },
+        {
+          "key": "is_active",
+          "type": "boolean",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": [
+        {
+          "key": "facility_code_unique",
+          "type": "unique",
+          "status": "available",
+          "attributes": ["facility_code"]
+        },
+        {
+          "key": "facility_search",
+          "type": "fulltext",
+          "status": "available",
+          "attributes": ["name", "facility_code"]
+        }
+      ]
+    },
+    {
+      "databaseId": "main",
+      "collectionId": "vaccines",
+      "name": "Vaccines",
+      "documentSecurity": true,
+      "enabled": true,
+      "attributes": [
+        {
+          "key": "vaccine_code",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 20
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 200
+        },
+        {
+          "key": "manufacturer",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 100
+        },
+        {
+          "key": "disease_targeted",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 200
+        },
+        {
+          "key": "dosage_info",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 500
+        },
+        {
+          "key": "storage_requirements",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 500
+        },
+        {
+          "key": "is_active",
+          "type": "boolean",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "default": true
+        }
+      ],
+      "indexes": [
+        {
+          "key": "vaccine_code_unique",
+          "type": "unique",
+          "status": "available",
+          "attributes": ["vaccine_code"]
+        },
+        {
+          "key": "vaccine_search",
+          "type": "fulltext",
+          "status": "available",
+          "attributes": ["name", "vaccine_code", "disease_targeted"]
+        }
+      ]
+    },
+    {
+      "databaseId": "main",
+      "collectionId": "immunization_records",
+      "name": "Immunization Records",
+      "documentSecurity": true,
+      "enabled": true,
+      "attributes": [
+        {
+          "key": "patient_id",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "vaccine_id",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "facility_id",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "administered_date",
+          "type": "datetime",
+          "status": "available",
+          "required": true,
+          "array": false
+        },
+        {
+          "key": "administered_by",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 100
+        },
+        {
+          "key": "batch_number",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "expiry_date",
+          "type": "datetime",
+          "status": "available",
+          "required": false,
+          "array": false
+        },
+        {
+          "key": "site_given",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 100
+        },
+        {
+          "key": "adverse_reactions",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 1000
+        },
+        {
+          "key": "notes",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 1000
+        }
+      ],
+      "indexes": [
+        {
+          "key": "patient_records",
+          "type": "key",
+          "status": "available",
+          "attributes": ["patient_id"]
+        },
+        {
+          "key": "facility_records",
+          "type": "key",
+          "status": "available",
+          "attributes": ["facility_id"]
+        },
+        {
+          "key": "vaccine_records",
+          "type": "key",
+          "status": "available",
+          "attributes": ["vaccine_id"]
+        },
+        {
+          "key": "date_records",
+          "type": "key",
+          "status": "available",
+          "attributes": ["administered_date"]
+        }
+      ]
+    },
+    {
+      "databaseId": "main",
+      "collectionId": "notifications",
+      "name": "Notifications",
+      "documentSecurity": true,
+      "enabled": true,
+      "attributes": [
+        {
+          "key": "type",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 200
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 1000
+        },
+        {
+          "key": "recipient_id",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "facility_id",
+          "type": "string",
+          "status": "available",
+          "required": false,
+          "array": false,
+          "size": 50
+        },
+        {
+          "key": "priority",
+          "type": "string",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "size": 20,
+          "default": "normal"
+        },
+        {
+          "key": "is_read",
+          "type": "boolean",
+          "status": "available",
+          "required": true,
+          "array": false,
+          "default": false
+        },
+        {
+          "key": "scheduled_for",
+          "type": "datetime",
+          "status": "available",
+          "required": false,
+          "array": false
+        },
+        {
+          "key": "sent_at",
+          "type": "datetime",
+          "status": "available",
+          "required": false,
+          "array": false
+        }
+      ],
+      "indexes": [
+        {
+          "key": "recipient_notifications",
+          "type": "key",
+          "status": "available",
+          "attributes": ["recipient_id"]
+        },
+        {
+          "key": "facility_notifications",
+          "type": "key",
+          "status": "available",
+          "attributes": ["facility_id"]
+        },
+        {
+          "key": "unread_notifications",
+          "type": "key",
+          "status": "available",
+          "attributes": ["is_read"]
+        }
+      ]
+    }
+  ],
+  "buckets": [
+    {
+      "bucketId": "patient-documents",
+      "name": "Patient Documents",
+      "permissions": [
+        "read(\"role:healthcare_worker\")",
+        "create(\"role:healthcare_worker\")",
+        "update(\"role:healthcare_worker\")",
+        "delete(\"role:admin\")"
+      ],
+      "fileSecurity": true,
+      "enabled": true,
+      "maximumFileSize": 10485760,
+      "allowedFileExtensions": ["pdf", "jpg", "jpeg", "png", "doc", "docx"],
+      "compression": "gzip",
+      "encryption": true,
+      "antivirus": true
+    },
+    {
+      "bucketId": "reports",
+      "name": "Generated Reports",
+      "permissions": [
+        "read(\"role:healthcare_worker\")",
+        "create(\"role:system\")",
+        "update(\"role:admin\")",
+        "delete(\"role:admin\")"
+      ],
+      "fileSecurity": true,
+      "enabled": true,
+      "maximumFileSize": 52428800,
+      "allowedFileExtensions": ["pdf", "xlsx", "csv"],
+      "compression": "gzip",
+      "encryption": true,
+      "antivirus": false
+    }
+  ],
+  "functions": [
+    {
+      "functionId": "notifications",
+      "name": "Notification Functions",
+      "runtime": "node-18.0",
+      "execute": ["role:system", "role:admin"],
+      "events": [
+        "databases.main.collections.immunization_records.documents.*.create",
+        "databases.main.collections.patients.documents.*.create"
+      ],
+      "schedule": "",
+      "timeout": 30,
+      "enabled": true,
+      "logging": true,
+      "entrypoint": "src/index.js",
+      "commands": "npm install",
+      "ignore": ["node_modules", ".git"],
+      "path": "./functions/notifications"
+    },
+    {
+      "functionId": "reports",
+      "name": "Report Generation Functions",
+      "runtime": "node-18.0",
+      "execute": ["role:system", "role:admin", "role:healthcare_worker"],
+      "events": [],
+      "schedule": "0 6 * * *",
+      "timeout": 300,
+      "enabled": true,
+      "logging": true,
+      "entrypoint": "src/index.js",
+      "commands": "npm install",
+      "ignore": ["node_modules", ".git"],
+      "path": "./functions/reports"
+    },
+    {
+      "functionId": "data-sync",
+      "name": "Data Synchronization Functions",
+      "runtime": "node-18.0",
+      "execute": ["role:system", "role:admin"],
+      "events": [],
+      "schedule": "",
+      "timeout": 600,
+      "enabled": true,
+      "logging": true,
+      "entrypoint": "src/index.js",
+      "commands": "npm install",
+      "ignore": ["node_modules", ".git"],
+      "path": "./functions/data-sync"
+    }
+  ],
+  "teams": [
+    {
+      "teamId": "healthcare-workers",
+      "name": "Healthcare Workers"
+    },
+    {
+      "teamId": "administrators",
+      "name": "System Administrators"
+    },
+    {
+      "teamId": "facility-managers",
+      "name": "Facility Managers"
+    }
+  ]
+}

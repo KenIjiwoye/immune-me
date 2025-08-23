@@ -1,0 +1,30 @@
+{
+  "name": "immune-me-reports",
+  "version": "1.0.0",
+  "description": "Report generation functions for Immune Me healthcare application",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "jest",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "node-appwrite": "^13.0.0",
+    "exceljs": "^4.3.0",
+    "pdfkit": "^0.13.0"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0"
+  },
+  "keywords": [
+    "appwrite",
+    "healthcare",
+    "reports",
+    "immunization",
+    "analytics"
+  ],
+  "author": "Immune Me Development Team",
+  "license": "MIT"
+}

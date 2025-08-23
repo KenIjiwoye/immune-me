@@ -1,0 +1,413 @@
+{
+  "version": "1.0",
+  "description": "Security rules and permissions framework for Immune Me healthcare application",
+  "roles": {
+    "admin": {
+      "description": "System administrators with full access",
+      "permissions": [
+        "users.*",
+        "databases.*",
+        "storage.*",
+        "functions.*",
+        "teams.*"
+      ]
+    },
+    "healthcare_worker": {
+      "description": "Healthcare workers with patient data access",
+      "permissions": [
+        "databases.main.collections.patients.documents.read",
+        "databases.main.collections.patients.documents.create",
+        "databases.main.collections.patients.documents.update",
+        "databases.main.collections.immunization_records.documents.*",
+        "databases.main.collections.vaccines.documents.read",
+        "databases.main.collections.facilities.documents.read",
+        "databases.main.collections.notifications.documents.read",
+        "storage.patient-documents.files.*",
+        "storage.reports.files.read"
+      ]
+    },
+    "facility_manager": {
+      "description": "Facility managers with facility-specific access",
+      "permissions": [
+        "databases.main.collections.patients.documents.read",
+        "databases.main.collections.immunization_records.documents.read",
+        "databases.main.collections.vaccines.documents.read",
+        "databases.main.collections.facilities.documents.update",
+        "databases.main.collections.notifications.documents.*",
+        "storage.reports.files.*"
+      ]
+    },
+    "read_only": {
+      "description": "Read-only access for reporting and analytics",
+      "permissions": [
+        "databases.main.collections.*.documents.read",
+        "storage.reports.files.read"
+      ]
+    },
+    "system": {
+      "description": "System functions and automated processes",
+      "permissions": [
+        "databases.*",
+        "storage.*",
+        "functions.execute",
+        "users.read"
+      ]
+    }
+  },
+  "collections": {
+    "patients": {
+      "documentSecurity": true,
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "create": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "update": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      },
+      "documentPermissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "update": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      },
+      "fieldLevelSecurity": {
+        "medical_history": {
+          "read": ["role:admin", "role:healthcare_worker"],
+          "write": ["role:admin", "role:healthcare_worker"]
+        },
+        "contact_info": {
+          "read": ["role:admin", "role:healthcare_worker", "role:facility_manager"],
+          "write": ["role:admin", "role:healthcare_worker"]
+        }
+      }
+    },
+    "facilities": {
+      "documentSecurity": true,
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "create": [
+          "role:admin"
+        ],
+        "update": [
+          "role:admin",
+          "role:facility_manager"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      }
+    },
+    "vaccines": {
+      "documentSecurity": false,
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager",
+          "role:read_only"
+        ],
+        "create": [
+          "role:admin"
+        ],
+        "update": [
+          "role:admin"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      }
+    },
+    "immunization_records": {
+      "documentSecurity": true,
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "create": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "update": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      },
+      "documentPermissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "update": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      },
+      "auditRequired": true,
+      "immutableFields": [
+        "patient_id",
+        "vaccine_id",
+        "administered_date",
+        "administered_by"
+      ]
+    },
+    "notifications": {
+      "documentSecurity": true,
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "create": [
+          "role:admin",
+          "role:system"
+        ],
+        "update": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      }
+    }
+  },
+  "storage": {
+    "patient-documents": {
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "create": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "update": [
+          "role:admin",
+          "role:healthcare_worker"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      },
+      "fileSecurity": true,
+      "encryptionRequired": true,
+      "antivirusRequired": true,
+      "maxFileSize": 10485760,
+      "allowedExtensions": ["pdf", "jpg", "jpeg", "png", "doc", "docx"]
+    },
+    "reports": {
+      "permissions": {
+        "read": [
+          "role:admin",
+          "role:healthcare_worker",
+          "role:facility_manager",
+          "role:read_only"
+        ],
+        "create": [
+          "role:admin",
+          "role:system"
+        ],
+        "update": [
+          "role:admin"
+        ],
+        "delete": [
+          "role:admin"
+        ]
+      },
+      "fileSecurity": true,
+      "encryptionRequired": true,
+      "maxFileSize": 52428800,
+      "allowedExtensions": ["pdf", "xlsx", "csv"]
+    }
+  },
+  "functions": {
+    "notifications": {
+      "execute": [
+        "role:admin",
+        "role:system"
+      ],
+      "rateLimit": {
+        "requests": 100,
+        "duration": 3600
+      }
+    },
+    "reports": {
+      "execute": [
+        "role:admin",
+        "role:healthcare_worker",
+        "role:facility_manager",
+        "role:system"
+      ],
+      "rateLimit": {
+        "requests": 10,
+        "duration": 3600
+      }
+    },
+    "data-sync": {
+      "execute": [
+        "role:admin",
+        "role:system"
+      ],
+      "rateLimit": {
+        "requests": 5,
+        "duration": 3600
+      }
+    }
+  },
+  "authentication": {
+    "providers": {
+      "email": {
+        "enabled": true,
+        "passwordPolicy": {
+          "minLength": 8,
+          "requireUppercase": true,
+          "requireLowercase": true,
+          "requireNumbers": true,
+          "requireSpecialChars": true,
+          "preventCommonPasswords": true,
+          "preventPersonalInfo": true
+        },
+        "accountLocking": {
+          "enabled": true,
+          "maxAttempts": 5,
+          "lockoutDuration": 1800
+        }
+      },
+      "phone": {
+        "enabled": false
+      },
+      "oauth": {
+        "enabled": false
+      }
+    },
+    "sessions": {
+      "maxSessions": 10,
+      "sessionTimeout": 86400,
+      "requireReauth": true,
+      "reauthTimeout": 3600
+    },
+    "mfa": {
+      "enabled": false,
+      "required": false,
+      "methods": ["totp", "email"]
+    }
+  },
+  "rateLimiting": {
+    "global": {
+      "requests": 1000,
+      "duration": 3600
+    },
+    "authentication": {
+      "requests": 10,
+      "duration": 900
+    },
+    "api": {
+      "requests": 500,
+      "duration": 3600
+    }
+  },
+  "cors": {
+    "origins": [
+      "http://localhost:3000",
+      "http://localhost:8081",
+      "https://immuneme.app",
+      "https://admin.immuneme.app"
+    ],
+    "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    "headers": [
+      "Content-Type",
+      "Authorization",
+      "X-Appwrite-Project",
+      "X-Appwrite-Key"
+    ],
+    "credentials": true
+  },
+  "audit": {
+    "enabled": true,
+    "events": [
+      "account.sessions.create",
+      "account.sessions.delete",
+      "databases.*.collections.*.documents.create",
+      "databases.*.collections.*.documents.update",
+      "databases.*.collections.*.documents.delete",
+      "storage.*.files.create",
+      "storage.*.files.delete",
+      "users.create",
+      "users.update",
+      "users.delete"
+    ],
+    "retention": {
+      "days": 2555
+    }
+  },
+  "compliance": {
+    "hipaa": {
+      "enabled": true,
+      "dataEncryption": true,
+      "accessLogging": true,
+      "dataMinimization": true,
+      "rightToErasure": true
+    },
+    "gdpr": {
+      "enabled": true,
+      "consentRequired": true,
+      "dataPortability": true,
+      "rightToErasure": true
+    }
+  },
+  "dataIsolation": {
+    "facilityBased": true,
+    "rules": [
+      {
+        "collection": "patients",
+        "field": "facility_id",
+        "isolationType": "strict"
+      },
+      {
+        "collection": "immunization_records",
+        "field": "facility_id",
+        "isolationType": "strict"
+      },
+      {
+        "collection": "notifications",
+        "field": "facility_id",
+        "isolationType": "flexible"
+      }
+    ]
+  }
+}
