@@ -1,0 +1,135 @@
+{
+  "defaultCollections": [
+    "patients",
+    "immunization_records",
+    "notifications"
+  ],
+  "batch": {
+    "limit": 100,
+    "deletedLimit": 50,
+    "maxPages": 10
+  },
+  "realtime": {
+    "heartbeatWindowSeconds": 300
+  },
+  "loggingCollections": {
+    "syncOperations": "sync_operations",
+    "deletionLog": "deletion_log",
+    "queueProcessingLog": "queue_processing_log",
+    "conflictLog": "conflict_log",
+    "activeSyncSessions": "active_sync_sessions",
+    "syncNotifications": "sync_notifications",
+    "realtimeNotifications": "realtime_notifications"
+  },
+  "conflictStrategies": {
+    "patients": "merge_with_server_priority",
+    "immunization_records": "server_wins",
+    "notifications": "client_wins",
+    "facilities": "server_wins",
+    "vaccines": "server_wins",
+    "default": "server_wins"
+  },
+  "validation": {
+    "patients": {
+      "required": [
+        "fullName",
+        "dateOfBirth",
+        "facilityId"
+      ],
+      "types": {
+        "fullName": "string",
+        "dateOfBirth": "string",
+        "facilityId": "string",
+        "contactPhone": "string",
+        "address": "string"
+      }
+    },
+    "immunization_records": {
+      "required": [
+        "patientId",
+        "vaccineId",
+        "doseNumber",
+        "dateAdministered",
+        "facilityId"
+      ],
+      "types": {
+        "patientId": "string",
+        "vaccineId": "string",
+        "doseNumber": "number",
+        "dateAdministered": "string",
+        "facilityId": "string",
+        "administeredBy": "string"
+      }
+    },
+    "notifications": {
+      "required": [
+        "userId",
+        "type",
+        "title",
+        "status"
+      ],
+      "types": {
+        "userId": "string",
+        "type": "string",
+        "title": "string",
+        "message": "string",
+        "status": "string"
+      }
+    }
+  },
+  "functionIds": {
+    "incremental": "incremental-data-sync",
+    "conflict": "conflict-resolution",
+    "queue": "offline-queue-processor",
+    "realtime": "real-time-sync-trigger",
+    "validation": "data-validation",
+    "monitor": "sync-status-monitor"
+  },
+  "deployment": {
+    "functions": [
+      {
+        "name": "incremental-data-sync",
+        "runtime": "node-18.0",
+        "execute": [
+          "role:authenticated"
+        ],
+        "events": [],
+        "timeout": 600
+      },
+      {
+        "name": "conflict-resolution",
+        "runtime": "node-18.0",
+        "execute": [
+          "role:authenticated"
+        ],
+        "events": [],
+        "timeout": 300
+      },
+      {
+        "name": "offline-queue-processor",
+        "runtime": "node-18.0",
+        "execute": [
+          "role:authenticated"
+        ],
+        "events": [],
+        "timeout": 900
+      },
+      {
+        "name": "real-time-sync-trigger",
+        "runtime": "node-18.0",
+        "execute": [
+          "role:system"
+        ],
+        "events": [
+          "databases.*.collections.patients.documents.*.create",
+          "databases.*.collections.patients.documents.*.update",
+          "databases.*.collections.patients.documents.*.delete",
+          "databases.*.collections.immunization_records.documents.*.create",
+          "databases.*.collections.immunization_records.documents.*.update",
+          "databases.*.collections.immunization_records.documents.*.delete"
+        ],
+        "timeout": 300
+      }
+    ]
+  }
+}

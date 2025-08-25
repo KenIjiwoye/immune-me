@@ -1,0 +1,13 @@
+{
+  "name": "real-time-sync-trigger",
+  "version": "1.0.0",
+  "description": "Appwrite function triggered by database events to notify active sync sessions",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}

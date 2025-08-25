@@ -1,0 +1,186 @@
+{
+  "collections": [
+    {
+      "$id": "sync_operations",
+      "name": "sync_operations",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "device_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "user_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "facility_id", "type": "string", "status": "available", "required": false, "array": false, "size": 64, "default": null },
+        { "key": "sync_timestamp", "type": "datetime", "status": "available", "required": true, "array": false, "default": null },
+        { "key": "last_sync_timestamp", "type": "datetime", "status": "available", "required": true, "array": false, "default": null },
+        { "key": "collections", "type": "string", "status": "available", "required": false, "array": true, "size": 64, "default": null },
+        { "key": "status", "type": "string", "status": "available", "required": true, "array": false, "size": 20, "default": "completed" },
+        { "key": "results", "type": "string", "status": "available", "required": false, "array": false, "size": 16384, "default": null }
+      ],
+      "indexes": [
+        { "key": "device_index", "type": "key", "status": "available", "attributes": ["device_id"] },
+        { "key": "user_index", "type": "key", "status": "available", "attributes": ["user_id"] },
+        { "key": "status_index", "type": "key", "status": "available", "attributes": ["status"] },
+        { "key": "sync_time_index", "type": "key", "status": "available", "attributes": ["sync_timestamp"] }
+      ],
+      "permissions": {
+        "read": ["role:admin"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    },
+    {
+      "$id": "deletion_log",
+      "name": "deletion_log",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "collection", "type": "string", "status": "available", "required": true, "array": false, "size": 128, "default": null },
+        { "key": "document_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "original_data", "type": "string", "status": "available", "required": false, "array": false, "size": 16384, "default": null },
+        { "key": "deleted_by", "type": "string", "status": "available", "required": false, "array": false, "size": 64, "default": null },
+        { "key": "deleted_at", "type": "datetime", "status": "available", "required": true, "array": false, "default": null }
+      ],
+      "indexes": [
+        { "key": "collection_index", "type": "key", "status": "available", "attributes": ["collection"] },
+        { "key": "doc_index", "type": "key", "status": "available", "attributes": ["document_id"] },
+        { "key": "deleted_at_index", "type": "key", "status": "available", "attributes": ["deleted_at"] }
+      ],
+      "permissions": {
+        "read": ["role:admin"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    },
+    {
+      "$id": "queue_processing_log",
+      "name": "queue_processing_log",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "device_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "user_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "total_operations", "type": "integer", "status": "available", "required": true, "array": false, "default": 0 },
+        { "key": "success_count", "type": "integer", "status": "available", "required": true, "array": false, "default": 0 },
+        { "key": "failure_count", "type": "integer", "status": "available", "required": true, "array": false, "default": 0 },
+        { "key": "processed_at", "type": "datetime", "status": "available", "required": true, "array": false, "default": null },
+        { "key": "results", "type": "string", "status": "available", "required": false, "array": false, "size": 16384, "default": null }
+      ],
+      "indexes": [
+        { "key": "device_index", "type": "key", "status": "available", "attributes": ["device_id"] },
+        { "key": "user_index", "type": "key", "status": "available", "attributes": ["user_id"] },
+        { "key": "processed_at_index", "type": "key", "status": "available", "attributes": ["processed_at"] }
+      ],
+      "permissions": {
+        "read": ["role:admin"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    },
+    {
+      "$id": "conflict_log",
+      "name": "conflict_log",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "collection", "type": "string", "status": "available", "required": true, "array": false, "size": 128, "default": null },
+        { "key": "document_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "server_data", "type": "string", "status": "available", "required": false, "array": false, "size": 16384, "default": null },
+        { "key": "client_data", "type": "string", "status": "available", "required": false, "array": false, "size": 16384, "default": null },
+        { "key": "resolved_data", "type": "string", "status": "available", "required": false, "array": false, "size": 16384, "default": null },
+        { "key": "strategy", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": "server_wins" },
+        { "key": "device_id", "type": "string", "status": "available", "required": false, "array": false, "size": 64, "default": null },
+        { "key": "user_id", "type": "string", "status": "available", "required": false, "array": false, "size": 64, "default": null },
+        { "key": "timestamp", "type": "datetime", "status": "available", "required": true, "array": false, "default": null }
+      ],
+      "indexes": [
+        { "key": "collection_index", "type": "key", "status": "available", "attributes": ["collection"] },
+        { "key": "document_index", "type": "key", "status": "available", "attributes": ["document_id"] },
+        { "key": "timestamp_index", "type": "key", "status": "available", "attributes": ["timestamp"] }
+      ],
+      "permissions": {
+        "read": ["role:admin"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    },
+    {
+      "$id": "active_sync_sessions",
+      "name": "active_sync_sessions",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "device_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "user_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "collections", "type": "string", "status": "available", "required": false, "array": true, "size": 64, "default": null },
+        { "key": "last_heartbeat", "type": "datetime", "status": "available", "required": true, "array": false, "default": null },
+        { "key": "status", "type": "string", "status": "available", "required": true, "array": false, "size": 20, "default": "active" }
+      ],
+      "indexes": [
+        { "key": "device_index", "type": "key", "status": "available", "attributes": ["device_id"] },
+        { "key": "user_index", "type": "key", "status": "available", "attributes": ["user_id"] },
+        { "key": "status_index", "type": "key", "status": "available", "attributes": ["status"] },
+        { "key": "heartbeat_index", "type": "key", "status": "available", "attributes": ["last_heartbeat"] }
+      ],
+      "permissions": {
+        "read": ["role:admin"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    },
+    {
+      "$id": "sync_notifications",
+      "name": "sync_notifications",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "device_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "user_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "collection", "type": "string", "status": "available", "required": true, "array": false, "size": 128, "default": null },
+        { "key": "document_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "operation", "type": "string", "status": "available", "required": true, "array": false, "size": 20, "default": "update" },
+        { "key": "timestamp", "type": "datetime", "status": "available", "required": true, "array": false, "default": null },
+        { "key": "status", "type": "string", "status": "available", "required": true, "array": false, "size": 20, "default": "pending" }
+      ],
+      "indexes": [
+        { "key": "device_index", "type": "key", "status": "available", "attributes": ["device_id"] },
+        { "key": "user_index", "type": "key", "status": "available", "attributes": ["user_id"] },
+        { "key": "timestamp_index", "type": "key", "status": "available", "attributes": ["timestamp"] },
+        { "key": "status_index", "type": "key", "status": "available", "attributes": ["status"] }
+      ],
+      "permissions": {
+        "read": ["role:admin", "role:system"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    },
+    {
+      "$id": "realtime_notifications",
+      "name": "realtime_notifications",
+      "enabled": true,
+      "documentSecurity": true,
+      "attributes": [
+        { "key": "device_id", "type": "string", "status": "available", "required": true, "array": false, "size": 64, "default": null },
+        { "key": "data", "type": "string", "status": "available", "required": true, "array": false, "size": 8192, "default": null },
+        { "key": "created_at", "type": "datetime", "status": "available", "required": true, "array": false, "default": null },
+        { "key": "delivered", "type": "boolean", "status": "available", "required": true, "array": false, "default": false }
+      ],
+      "indexes": [
+        { "key": "device_index", "type": "key", "status": "available", "attributes": ["device_id"] },
+        { "key": "created_index", "type": "key", "status": "available", "attributes": ["created_at"] },
+        { "key": "delivered_index", "type": "key", "status": "available", "attributes": ["delivered"] }
+      ],
+      "permissions": {
+        "read": ["role:admin", "role:system"],
+        "create": ["role:admin", "role:system"],
+        "update": ["role:admin", "role:system"],
+        "delete": ["role:admin"]
+      }
+    }
+  ],
+  "notes": "These collections support offline-first sync: operation logs, deletions, queue processing, conflict audits, active sync sessions, and notifications."
+}

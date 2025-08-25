@@ -1,0 +1,13 @@
+{
+  "name": "incremental-data-sync",
+  "version": "1.0.0",
+  "description": "Appwrite function for incremental, offline-first data synchronization",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}

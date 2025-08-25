@@ -1,0 +1,24 @@
+{
+  "runtime": "node-18.0",
+  "entrypoint": "src/main.js",
+  "path": "src/main.js",
+  "variables": {
+    "APPWRITE_ENDPOINT": "",
+    "APPWRITE_PROJECT_ID": "",
+    "APPWRITE_API_KEY": ""
+  },
+  "scopes": [
+    "databases.read",
+    "databases.write"
+  ],
+  "events": [
+    "databases.*.collections.patients.documents.*.create",
+    "databases.*.collections.patients.documents.*.update",
+    "databases.*.collections.patients.documents.*.delete",
+    "databases.*.collections.immunization_records.documents.*.create",
+    "databases.*.collections.immunization_records.documents.*.update",
+    "databases.*.collections.immunization_records.documents.*.delete"
+  ],
+  "schedule": "",
+  "timeout": 300
+}

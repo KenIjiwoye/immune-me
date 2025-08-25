@@ -1,0 +1,13 @@
+{
+  "name": "data-validation",
+  "version": "1.0.0",
+  "description": "Appwrite function for schema-based validation and optional upsert",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}

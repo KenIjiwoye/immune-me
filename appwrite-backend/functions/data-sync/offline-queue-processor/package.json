@@ -1,0 +1,13 @@
+{
+  "name": "offline-queue-processor",
+  "version": "1.0.0",
+  "description": "Appwrite function to process offline queued operations with conflict resolution and soft delete logging",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  },
+  "scripts": {
+    "start": "node src/main.js"
+  }
+}

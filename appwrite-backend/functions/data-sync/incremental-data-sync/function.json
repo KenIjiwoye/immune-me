@@ -1,0 +1,17 @@
+{
+  "runtime": "node-18.0",
+  "entrypoint": "src/main.js",
+  "path": "src/main.js",
+  "variables": {
+    "APPWRITE_ENDPOINT": "",
+    "APPWRITE_PROJECT_ID": "",
+    "APPWRITE_API_KEY": ""
+  },
+  "scopes": [
+    "databases.read",
+    "databases.write"
+  ],
+  "events": [],
+  "schedule": "",
+  "timeout": 600
+}
