@@ -1,0 +1,29 @@
+{
+  "name": "report-utils",
+  "version": "1.0.0",
+  "description": "Shared utilities for report functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "node-appwrite": "^11.0.0",
+    "joi": "^17.11.0",
+    "archiver": "^6.0.1",
+    "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0"
+  },
+  "keywords": [
+    "appwrite",
+    "reports",
+    "utilities"
+  ],
+  "author": "ImmuneMe Team",
+  "license": "MIT"
+}

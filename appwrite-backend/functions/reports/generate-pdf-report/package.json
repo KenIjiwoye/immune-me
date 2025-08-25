@@ -1,0 +1,22 @@
+{
+  "name": "generate-pdf-report",
+  "version": "1.0.0",
+  "description": "Generate PDF reports for immunization data",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node test-structure.js"
+  },
+  "keywords": ["appwrite", "function", "pdf", "reports", "immunization"],
+  "author": "ImmuneMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^14.0.0",
+    "pdfkit": "^0.15.0",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

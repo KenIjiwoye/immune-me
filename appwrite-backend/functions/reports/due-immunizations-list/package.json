@@ -1,0 +1,32 @@
+{
+  "name": "due-immunizations-list",
+  "version": "1.0.0",
+  "description": "Appwrite function to generate due immunizations report with overdue, upcoming, and priority-based categorization",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node test-structure.js",
+    "dev": "node --watch src/main.js"
+  },
+  "keywords": [
+    "appwrite",
+    "serverless",
+    "immunization",
+    "healthcare",
+    "reporting"
+  ],
+  "author": "ImmuneMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^14.0.0",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.1.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

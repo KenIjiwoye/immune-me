@@ -1,0 +1,288 @@
+{
+  "project": {
+    "name": "Immunization Management System - Reporting Functions",
+    "version": "1.0.0",
+    "description": "Comprehensive reporting and analytics functions for immunization tracking system",
+    "environment": "production",
+    "deployment_date": "2025-08-24"
+  },
+  "functions": {
+    "due-immunizations-list": {
+      "name": "Due Immunizations List",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 60,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "PATIENTS_COLLECTION_ID": "patients",
+        "IMMUNIZATION_RECORDS_COLLECTION_ID": "immunization-records",
+        "VACCINES_COLLECTION_ID": "vaccines"
+      },
+      "triggers": ["http", "schedule"],
+      "schedule": "0 6 * * *"
+    },
+    "vaccine-usage-statistics": {
+      "name": "Vaccine Usage Statistics",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 60,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "IMMUNIZATION_RECORDS_COLLECTION_ID": "immunization-records",
+        "VACCINES_COLLECTION_ID": "vaccines"
+      },
+      "triggers": ["http", "schedule"],
+      "schedule": "0 7 * * 1"
+    },
+    "generate-pdf-report": {
+      "name": "Generate PDF Report",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 1024,
+      "timeout": 120,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "BUCKET_ID": "reports",
+        "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true",
+        "PUPPETEER_EXECUTABLE_PATH": "/usr/bin/chromium-browser"
+      },
+      "triggers": ["http"]
+    },
+    "generate-excel-export": {
+      "name": "Generate Excel Export",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 60,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "BUCKET_ID": "reports"
+      },
+      "triggers": ["http"]
+    },
+    "generate-csv-export": {
+      "name": "Generate CSV Export",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 256,
+      "timeout": 30,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "BUCKET_ID": "reports"
+      },
+      "triggers": ["http"]
+    },
+    "immunization-coverage-report": {
+      "name": "Immunization Coverage Report",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 60,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "PATIENTS_COLLECTION_ID": "patients",
+        "IMMUNIZATION_RECORDS_COLLECTION_ID": "immunization-records",
+        "VACCINES_COLLECTION_ID": "vaccines"
+      },
+      "triggers": ["http", "schedule"],
+      "schedule": "0 8 * * 1"
+    },
+    "age-distribution-analysis": {
+      "name": "Age Distribution Analysis",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 60,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "PATIENTS_COLLECTION_ID": "patients",
+        "IMMUNIZATION_RECORDS_COLLECTION_ID": "immunization-records"
+      },
+      "triggers": ["http", "schedule"],
+      "schedule": "0 9 * * 1"
+    },
+    "facility-performance-metrics": {
+      "name": "Facility Performance Metrics",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 60,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "FACILITIES_COLLECTION_ID": "facilities",
+        "IMMUNIZATION_RECORDS_COLLECTION_ID": "immunization-records"
+      },
+      "triggers": ["http", "schedule"],
+      "schedule": "0 10 * * 1"
+    },
+    "scheduled-weekly-reports": {
+      "name": "Scheduled Weekly Reports",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "DATABASE_ID": "immunization-db",
+        "BUCKET_ID": "reports",
+        "EMAIL_SENDER_FUNCTION_ID": "email-sender",
+        "NOTIFICATION_QUEUE_FUNCTION_ID": "process-notification-queue"
+      },
+      "triggers": ["schedule"],
+      "schedule": "0 6 * * 1"
+    }
+  },
+  "collections": {
+    "patients": {
+      "name": "patients",
+      "attributes": [
+        { "key": "firstName", "type": "string", "size": 100, "required": true },
+        { "key": "lastName", "type": "string", "size": 100, "required": true },
+        { "key": "dateOfBirth", "type": "datetime", "required": true },
+        { "key": "gender", "type": "enum", "elements": ["male", "female", "other"], "required": true },
+        { "key": "parentGuardianName", "type": "string", "size": 200 },
+        { "key": "parentGuardianPhone", "type": "string", "size": 20 },
+        { "key": "parentGuardianEmail", "type": "string", "size": 100 },
+        { "key": "address", "type": "string", "size": 500 },
+        { "key": "facilityId", "type": "string", "size": 36, "required": true },
+        { "key": "createdAt", "type": "datetime", "required": true },
+        { "key": "updatedAt", "type": "datetime", "required": true }
+      ],
+      "indexes": [
+        { "key": "facilityId_idx", "type": "key", "attributes": ["facilityId"] },
+        { "key": "dateOfBirth_idx", "type": "key", "attributes": ["dateOfBirth"] }
+      ]
+    },
+    "immunization-records": {
+      "name": "immunization-records",
+      "attributes": [
+        { "key": "patientId", "type": "string", "size": 36, "required": true },
+        { "key": "vaccineId", "type": "string", "size": 36, "required": true },
+        { "key": "facilityId", "type": "string", "size": 36, "required": true },
+        { "key": "administeredDate", "type": "datetime", "required": true },
+        { "key": "nextDueDate", "type": "datetime" },
+        { "key": "doseNumber", "type": "integer", "min": 1, "max": 10, "required": true },
+        { "key": "totalDoses", "type": "integer", "min": 1, "max": 10, "required": true },
+        { "key": "lotNumber", "type": "string", "size": 50 },
+        { "key": "administeredBy", "type": "string", "size": 100 },
+        { "key": "notes", "type": "string", "size": 1000 },
+        { "key": "createdAt", "type": "datetime", "required": true },
+        { "key": "updatedAt", "type": "datetime", "required": true }
+      ],
+      "indexes": [
+        { "key": "patientId_idx", "type": "key", "attributes": ["patientId"] },
+        { "key": "vaccineId_idx", "type": "key", "attributes": ["vaccineId"] },
+        { "key": "facilityId_idx", "type": "key", "attributes": ["facilityId"] },
+        { "key": "administeredDate_idx", "type": "key", "attributes": ["administeredDate"] },
+        { "key": "nextDueDate_idx", "type": "key", "attributes": ["nextDueDate"] }
+      ]
+    },
+    "vaccines": {
+      "name": "vaccines",
+      "attributes": [
+        { "key": "name", "type": "string", "size": 100, "required": true },
+        { "key": "manufacturer", "type": "string", "size": 100 },
+        { "key": "type", "type": "string", "size": 50, "required": true },
+        { "key": "targetDisease", "type": "string", "size": 100, "required": true },
+        { "key": "dosesRequired", "type": "integer", "min": 1, "max": 10, "required": true },
+        { "key": "intervalDays", "type": "integer", "min": 0, "max": 365 },
+        { "key": "minimumAge", "type": "integer", "min": 0, "max": 18 },
+        { "key": "maximumAge", "type": "integer", "min": 0, "max": 18 },
+        { "key": "isActive", "type": "boolean", "required": true },
+        { "key": "createdAt", "type": "datetime", "required": true },
+        { "key": "updatedAt", "type": "datetime", "required": true }
+      ],
+      "indexes": [
+        { "key": "type_idx", "type": "key", "attributes": ["type"] },
+        { "key": "targetDisease_idx", "type": "key", "attributes": ["targetDisease"] },
+        { "key": "isActive_idx", "type": "key", "attributes": ["isActive"] }
+      ]
+    },
+    "facilities": {
+      "name": "facilities",
+      "attributes": [
+        { "key": "name", "type": "string", "size": 200, "required": true },
+        { "key": "type", "type": "string", "size": 50, "required": true },
+        { "key": "address", "type": "string", "size": 500 },
+        { "key": "phone", "type": "string", "size": 20 },
+        { "key": "email", "type": "string", "size": 100 },
+        { "key": "isActive", "type": "boolean", "required": true },
+        { "key": "createdAt", "type": "datetime", "required": true },
+        { "key": "updatedAt", "type": "datetime", "required": true }
+      ],
+      "indexes": [
+        { "key": "type_idx", "type": "key", "attributes": ["type"] },
+        { "key": "isActive_idx", "type": "key", "attributes": ["isActive"] }
+      ]
+    }
+  },
+  "buckets": {
+    "reports": {
+      "name": "reports",
+      "permissions": ["read", "write", "create", "delete"],
+      "fileSecurity": true,
+      "maximumFileSize": 10485760,
+      "allowedFileExtensions": ["pdf", "xlsx", "csv", "json"],
+      "compression": "gzip"
+    }
+  },
+  "deployment": {
+    "regions": ["us-east-1", "eu-west-1"],
+    "domains": ["reports.immune-me.com", "api.immune-me.com"],
+    "ssl": true,
+    "cdn": true,
+    "backup": {
+      "enabled": true,
+      "frequency": "daily",
+      "retention": 30
+    }
+  },
+  "monitoring": {
+    "alerts": {
+      "function_errors": {
+        "threshold": 5,
+        "time_window": "5m"
+      },
+      "function_duration": {
+        "threshold": 5000,
+        "time_window": "5m"
+      },
+      "memory_usage": {
+        "threshold": 80,
+        "time_window": "5m"
+      }
+    },
+    "logging": {
+      "level": "info",
+      "retention": 30
+    }
+  }
+}

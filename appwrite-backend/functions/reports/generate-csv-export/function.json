@@ -1,0 +1,22 @@
+{
+  "runtime": "node-18.0",
+  "entrypoint": "src/main.js",
+  "path": "src/main.js",
+  "variables": {
+    "APPWRITE_ENDPOINT": "",
+    "APPWRITE_PROJECT_ID": "",
+    "APPWRITE_API_KEY": "",
+    "APPWRITE_DATABASE_ID": "",
+    "APPWRITE_STORAGE_BUCKET_ID": "",
+    "MAX_RECORDS_PER_BATCH": "1000",
+    "CSV_CHUNK_SIZE": "10000"
+  },
+  "scopes": [
+    "databases.read",
+    "storage.write",
+    "buckets.read"
+  ],
+  "events": [],
+  "schedule": "",
+  "timeout": 300
+}

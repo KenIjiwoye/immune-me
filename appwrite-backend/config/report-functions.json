@@ -1,0 +1,218 @@
+{
+  "functions": {
+    "due-immunizations-list": {
+      "name": "Due Immunizations List",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/due-immunizations-list",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 300,
+      "enabled": true
+    },
+    "vaccine-usage-statistics": {
+      "name": "Vaccine Usage Statistics",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/vaccine-usage-statistics",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 300,
+      "enabled": true
+    },
+    "generate-pdf-report": {
+      "name": "Generate PDF Report",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/generate-pdf-report",
+      "memory": 1024,
+      "timeout": 600,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 7200,
+        "MAX_RECORDS": 5000,
+        "ENABLE_CACHING": true,
+        "PDF_GENERATION_TIMEOUT": 300
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 600,
+      "enabled": true
+    },
+    "generate-excel-export": {
+      "name": "Generate Excel Export",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/generate-excel-export",
+      "memory": 1024,
+      "timeout": 600,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 7200,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true,
+        "EXCEL_GENERATION_TIMEOUT": 300
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 600,
+      "enabled": true
+    },
+    "generate-csv-export": {
+      "name": "Generate CSV Export",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/generate-csv-export",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 50000,
+        "ENABLE_CACHING": true,
+        "CSV_GENERATION_TIMEOUT": 180
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 300,
+      "enabled": true
+    },
+    "immunization-coverage-report": {
+      "name": "Immunization Coverage Report",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/immunization-coverage-report",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 300,
+      "enabled": true
+    },
+    "facility-performance-metrics": {
+      "name": "Facility Performance Metrics",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/facility-performance-metrics",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 300,
+      "enabled": true
+    },
+    "age-distribution-analysis": {
+      "name": "Age Distribution Analysis",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/age-distribution-analysis",
+      "memory": 512,
+      "timeout": 300,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "",
+      "timeout": 300,
+      "enabled": true
+    },
+    "scheduled-weekly-reports": {
+      "name": "Scheduled Weekly Reports",
+      "runtime": "node-18.0",
+      "entrypoint": "src/main.js",
+      "path": "appwrite-backend/functions/reports/scheduled-weekly-reports",
+      "memory": 512,
+      "timeout": 600,
+      "variables": {
+        "APPWRITE_ENDPOINT": "https://cloud.appwrite.io/v1",
+        "APPWRITE_PROJECT_ID": "your-project-id",
+        "APPWRITE_API_KEY": "your-api-key",
+        "CACHE_TTL": 3600,
+        "MAX_RECORDS": 10000,
+        "ENABLE_CACHING": true,
+        "SCHEDULE_TIME": "0 9 * * 1"
+      },
+      "permissions": ["users"],
+      "events": [],
+      "schedule": "0 9 * * 1",
+      "timeout": 600,
+      "enabled": true
+    }
+  },
+  "caching": {
+    "default_ttl": 3600,
+    "max_ttl": 86400,
+    "cache_prefix": "report_cache_",
+    "compression_enabled": true,
+    "compression_threshold": 1024
+  },
+  "performance": {
+    "batch_size": 1000,
+    "max_concurrent_queries": 5,
+    "memory_limit_mb": 512,
+    "query_timeout_ms": 30000,
+    "retry_attempts": 3,
+    "retry_delay_ms": 1000
+  },
+  "monitoring": {
+    "enable_metrics": true,
+    "log_level": "info",
+    "performance_tracking": true,
+    "error_reporting": true
+  }
+}

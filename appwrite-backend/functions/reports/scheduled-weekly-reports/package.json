@@ -1,0 +1,31 @@
+{
+  "name": "scheduled-weekly-reports",
+  "version": "1.0.0",
+  "description": "Automated scheduled report generation for Appwrite",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "node test/test.js",
+    "dev": "node --watch src/main.js"
+  },
+  "keywords": ["appwrite", "reports", "scheduled", "automation"],
+  "author": "ImmuneMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^14.0.0",
+    "nodemailer": "^6.9.0",
+    "pdfkit": "^0.15.0",
+    "exceljs": "^4.4.0",
+    "csv-parser": "^3.0.0",
+    "json2csv": "^6.1.0",
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.3",
+    "winston": "^3.11.0",
+    "archiver": "^6.0.0",
+    "fs-extra": "^11.1.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

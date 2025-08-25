@@ -1,359 +1,204 @@
-# Utility Functions and Helpers
+# Report Utilities
 
-This directory contains shared utility functions, helper modules, and common code used across the Appwrite backend implementation.
+This package contains shared utilities for all report functions in the ImmuneMe system.
 
 ## Overview
 
-Utilities provide reusable functionality that supports the core business logic, data processing, and system operations. These modules help maintain code consistency, reduce duplication, and provide common patterns for the Appwrite backend.
+The report utilities provide a comprehensive set of tools for:
+- **Caching**: Multi-tier caching with memory and database storage
+- **Performance**: Query optimization and parallel processing
+- **Memory**: Efficient handling of large datasets
+- **Monitoring**: Comprehensive logging and metrics
+- **Validation**: Parameter validation and sanitization
+- **Error Handling**: Robust error handling and recovery
 
-## Utility Categories
+## Installation
 
-### Database Utilities (`database/`)
-- **Query Builders**: Helper functions for constructing Appwrite queries
-- **Data Transformers**: Functions to convert between data formats
-- **Validation Helpers**: Common validation functions for database operations
-- **Pagination Utilities**: Functions for handling paginated results
-
-### Authentication Utilities (`auth/`)
-- **Permission Helpers**: Functions for checking user permissions and roles
-- **Token Utilities**: JWT token generation and validation helpers
-- **Session Management**: Functions for managing user sessions
-- **Role Validators**: Functions to validate user roles and access levels
-
-### Notification Utilities (`notifications/`)
-- **Message Formatters**: Functions to format notification messages
-- **Channel Handlers**: Utilities for different notification channels (email, SMS, push)
-- **Template Processors**: Functions to process notification templates
-- **Delivery Trackers**: Utilities for tracking notification delivery status
-
-### Data Processing (`data/`)
-- **Date Utilities**: Functions for date manipulation and formatting
-- **Validation Functions**: Common data validation and sanitization
-- **Format Converters**: Functions to convert between data formats
-- **Calculation Helpers**: Utilities for immunization calculations and schedules
-
-### Integration Utilities (`integrations/`)
-- **API Clients**: Wrapper functions for external API calls
-- **Webhook Handlers**: Utilities for processing incoming webhooks
-- **Data Sync Helpers**: Functions for synchronizing with external systems
-- **Error Handlers**: Common error handling patterns for integrations
-
-### Reporting Utilities (`reports/`)
-- **Data Aggregators**: Functions for aggregating and summarizing data
-- **Chart Generators**: Utilities for generating chart data
-- **Export Helpers**: Functions for exporting data to various formats
-- **Statistical Calculators**: Utilities for calculating coverage and performance metrics
-
-## Common Utility Functions
-
-### Database Query Helpers
-```typescript
-// Query builder utilities
-export const buildPatientQuery = (filters: PatientFilters) => {
-  const queries = [];
-  if (filters.facilityId) {
-    queries.push(Query.equal('facilityId', filters.facilityId));
-  }
-  if (filters.ageRange) {
-    queries.push(Query.between('birthDate', filters.ageRange.start, filters.ageRange.end));
-  }
-  return queries;
-};
-
-// Pagination helper
-export const paginateResults = async (
-  database: Databases,
-  collectionId: string,
-  queries: string[],
-  page: number = 1,
-  limit: number = 25
-) => {
-  const offset = (page - 1) * limit;
-  const paginatedQueries = [
-    ...queries,
-    Query.limit(limit),
-    Query.offset(offset)
-  ];
-  
-  return await database.listDocuments(DATABASE_ID, collectionId, paginatedQueries);
-};
+```bash
+npm install
 ```
 
-### Date and Time Utilities
-```typescript
-// Date formatting and manipulation
-export const formatDate = (date: Date, format: string = 'YYYY-MM-DD'): string => {
-  // Implementation for date formatting
-};
+## Usage
 
-export const calculateAge = (birthDate: Date): number => {
-  const today = new Date();
-  const birth = new Date(birthDate);
-  let age = today.getFullYear() - birth.getFullYear();
-  const monthDiff = today.getMonth() - birth.getMonth();
-  
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-    age--;
-  }
-  
-  return age;
-};
+### Basic Setup
 
-export const addDays = (date: Date, days: number): Date => {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-};
+```javascript
+const { ReportUtils } = require('./utils');
+
+// Initialize utilities
+const cache = new ReportUtils.cache(databases, databaseId);
+const optimizer = new ReportUtils.performance(databases, databaseId);
+const monitor = new ReportUtils.monitoring(databases, databaseId);
 ```
 
-### Validation Utilities
-```typescript
-// Common validation functions
-export const validateEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+### Caching Example
 
-export const validatePhoneNumber = (phone: string): boolean => {
-  const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
-  return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
-};
+```javascript
+// Set up cache manager
+const cache = new ReportUtils.cache(databases, databaseId);
 
-export const validatePatientId = (patientId: string): boolean => {
-  // Implement patient ID format validation
-  return /^PAT-\d{6}$/.test(patientId);
-};
+// Cache data
+await cache.set('report_key', data, { ttl: 3600 });
 
-export const sanitizeInput = (input: string): string => {
-  return input.trim().replace(/[<>]/g, '');
-};
+// Retrieve cached data
+const cachedData = await cache.get('report_key');
 ```
 
-### Permission Utilities
-```typescript
-// Role and permission checking
-export const hasRole = (user: any, role: string): boolean => {
-  return user.labels?.includes(role) || false;
-};
+### Performance Optimization
 
-export const canAccessFacility = (user: any, facilityId: string): boolean => {
-  return hasRole(user, 'admin') || user.facilityId === facilityId;
-};
+```javascript
+// Process large datasets efficiently
+const optimizer = new ReportUtils.performance(databases, databaseId);
 
-export const canModifyPatient = (user: any, patient: any): boolean => {
-  return hasRole(user, 'admin') || 
-         hasRole(user, 'healthcare_worker') && 
-         canAccessFacility(user, patient.facilityId);
-};
+const result = await optimizer.processLargeDataset({
+  collectionId: 'patients',
+  queries: [Query.equal('status', 'active')],
+  batchSize: 1000
+}, processorFunction);
 ```
 
-### Error Handling Utilities
-```typescript
-// Standardized error handling
-export class AppwriteError extends Error {
-  constructor(
-    message: string,
-    public code: string,
-    public statusCode: number = 500
-  ) {
-    super(message);
-    this.name = 'AppwriteError';
-  }
+### Validation
+
+```javascript
+// Validate report parameters
+const validation = ReportUtils.validation.validate(params, 'dueImmunizationsList');
+
+if (!validation.valid) {
+  throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
 }
-
-export const handleDatabaseError = (error: any): AppwriteError => {
-  if (error.code === 404) {
-    return new AppwriteError('Document not found', 'DOCUMENT_NOT_FOUND', 404);
-  }
-  if (error.code === 401) {
-    return new AppwriteError('Unauthorized access', 'UNAUTHORIZED', 401);
-  }
-  return new AppwriteError('Database operation failed', 'DATABASE_ERROR', 500);
-};
-
-export const logError = (error: Error, context: any = {}) => {
-  console.error('Error occurred:', {
-    message: error.message,
-    stack: error.stack,
-    context,
-    timestamp: new Date().toISOString()
-  });
-};
 ```
 
-### Notification Utilities
-```typescript
-// Notification formatting and sending
-export const formatNotificationMessage = (
-  template: string,
-  variables: Record<string, any>
-): string => {
-  return template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-    return variables[key] || match;
-  });
-};
+## Components
 
-export const sendEmail = async (
-  to: string,
-  subject: string,
-  body: string,
-  isHtml: boolean = false
-) => {
-  // Implementation for sending emails via Appwrite
-};
+### 1. CacheManager (`cache-manager.js`)
+- Multi-tier caching (memory + database)
+- Automatic compression for large data
+- Cache warming and cleanup
+- Statistics and monitoring
 
-export const sendSMS = async (to: string, message: string) => {
-  // Implementation for sending SMS
-};
+### 2. PerformanceOptimizer (`performance-optimizer.js`)
+- Query optimization strategies
+- Parallel processing with concurrency control
+- Memory-efficient batch processing
+- Streaming data processing
+
+### 3. MemoryOptimizer (`memory-optimizer.js`)
+- Memory usage monitoring
+- Automatic garbage collection
+- Data compression and sampling
+- Memory-efficient aggregation
+
+### 4. MonitoringService (`monitoring.js`)
+- Comprehensive logging
+- Performance metrics tracking
+- Health checks and alerts
+- Dashboard data aggregation
+
+### 5. ValidationSchemas (`validation-schemas.js`)
+- Joi-based validation schemas
+- Report-specific validation rules
+- Parameter sanitization
+- Custom validators
+
+### 6. ErrorHandler (`error-handler.js`)
+- Standardized error types
+- Retry mechanisms with backoff
+- Circuit breaker pattern
+- Error recovery strategies
+
+### 7. ReportConfig (`../config/report-config.js`)
+- Centralized configuration
+- Environment variable management
+- Function-specific settings
+
+## Environment Variables
+
+```bash
+# Database
+APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+APPWRITE_PROJECT_ID=your-project-id
+APPWRITE_API_KEY=your-api-key
+APPWRITE_DATABASE_ID=default
+
+# Performance
+BATCH_SIZE=1000
+MAX_CONCURRENT_QUERIES=5
+MEMORY_LIMIT_MB=512
+
+# Caching
+CACHE_TTL=3600
+ENABLE_CACHING=true
+ENABLE_COMPRESSION=true
+
+# Monitoring
+LOG_LEVEL=info
+ENABLE_METRICS=true
 ```
 
-### Data Transformation Utilities
-```typescript
-// Data format conversion
-export const transformPatientData = (appwritePatient: any) => {
-  return {
-    id: appwritePatient.$id,
-    patientId: appwritePatient.patientId,
-    firstName: appwritePatient.firstName,
-    lastName: appwritePatient.lastName,
-    birthDate: appwritePatient.birthDate,
-    age: calculateAge(new Date(appwritePatient.birthDate)),
-    facilityId: appwritePatient.facilityId,
-    createdAt: appwritePatient.$createdAt,
-    updatedAt: appwritePatient.$updatedAt
-  };
-};
+## API Reference
 
-export const transformImmunizationRecord = (record: any) => {
-  return {
-    id: record.$id,
-    patientId: record.patientId,
-    vaccineId: record.vaccineId,
-    administeredDate: record.administeredDate,
-    doseNumber: record.doseNumber,
-    administeredBy: record.administeredBy,
-    facilityId: record.facilityId,
-    notes: record.notes,
-    createdAt: record.$createdAt
-  };
-};
+### CacheManager
+
+#### Methods
+- `get(key, options)` - Retrieve cached data
+- `set(key, data, options)` - Store data in cache
+- `delete(key)` - Remove cache entry
+- `clearPrefix(prefix)` - Clear cache entries by prefix
+- `getStats()` - Get cache statistics
+
+### PerformanceOptimizer
+
+#### Methods
+- `optimizeQuery(collectionId, queries, options)` - Optimize database queries
+- `executeParallelQueries(queries, options)` - Execute queries in parallel
+- `processLargeDataset(config, processor)` - Process large datasets efficiently
+- `getPerformanceMetrics()` - Get performance statistics
+
+### MemoryOptimizer
+
+#### Methods
+- `getMemoryUsage()` - Get current memory usage
+- `processInBatches(data, processor, options)` - Process data in memory-efficient batches
+- `compressData(data)` - Compress data for storage
+- `getMemoryStats()` - Get memory statistics
+
+### MonitoringService
+
+#### Methods
+- `log(level, message, context)` - Log messages
+- `trackMetric(type, value, tags)` - Track custom metrics
+- `getHealthStatus(functionName)` - Get function health status
+- `getDashboardData(timeRange, functionName)` - Get dashboard data
+
+## Development
+
+### Running Tests
+```bash
+npm test
 ```
 
-## File Organization
-
-### Directory Structure
-```
-utils/
-├── auth/
-│   ├── permissions.ts
-│   ├── tokens.ts
-│   └── sessions.ts
-├── database/
-│   ├── queries.ts
-│   ├── pagination.ts
-│   └── transformers.ts
-├── notifications/
-│   ├── formatters.ts
-│   ├── channels.ts
-│   └── templates.ts
-├── data/
-│   ├── validators.ts
-│   ├── dates.ts
-│   └── calculations.ts
-├── integrations/
-│   ├── api-clients.ts
-│   ├── webhooks.ts
-│   └── sync.ts
-├── reports/
-│   ├── aggregators.ts
-│   ├── exporters.ts
-│   └── calculators.ts
-├── errors/
-│   ├── handlers.ts
-│   └── types.ts
-└── index.ts
+### Linting
+```bash
+npm run lint
 ```
 
-### Export Pattern
-```typescript
-// utils/index.ts - Central export file
-export * from './auth';
-export * from './database';
-export * from './notifications';
-export * from './data';
-export * from './integrations';
-export * from './reports';
-export * from './errors';
+### Formatting
+```bash
+npm run format
 ```
 
-## Best Practices
+## Deployment
 
-### Code Organization
-1. **Single Responsibility**: Each utility function should have a single, clear purpose
-2. **Pure Functions**: Prefer pure functions that don't have side effects
-3. **Type Safety**: Use TypeScript for type safety and better developer experience
-4. **Documentation**: Document complex utility functions with JSDoc comments
+The utilities are designed to be used across all report functions. Each function should:
 
-### Error Handling
-1. **Consistent Errors**: Use standardized error types and messages
-2. **Graceful Degradation**: Handle errors gracefully without breaking the application
-3. **Logging**: Log errors with sufficient context for debugging
-4. **User-Friendly Messages**: Provide clear error messages for end users
+1. Import the required utilities
+2. Initialize them with appropriate configuration
+3. Use the utilities for caching, validation, and error handling
+4. Monitor performance and memory usage
 
-### Performance
-1. **Caching**: Implement caching for expensive operations
-2. **Lazy Loading**: Load utilities only when needed
-3. **Memory Management**: Avoid memory leaks in long-running functions
-4. **Optimization**: Profile and optimize frequently used utilities
+## Contributing
 
-### Testing
-1. **Unit Tests**: Write comprehensive unit tests for all utility functions
-2. **Mock Dependencies**: Mock external dependencies in tests
-3. **Edge Cases**: Test edge cases and error conditions
-4. **Performance Tests**: Test performance of critical utilities
-
-## Usage Examples
-
-### In Appwrite Functions
-```typescript
-import { validateEmail, formatNotificationMessage, logError } from '../utils';
-
-export default async ({ req, res, log, error }) => {
-  try {
-    const { email, name } = JSON.parse(req.body);
-    
-    if (!validateEmail(email)) {
-      return res.json({ error: 'Invalid email format' }, 400);
-    }
-    
-    const message = formatNotificationMessage(
-      'Welcome {{name}}! Your account has been created.',
-      { name }
-    );
-    
-    // Send notification logic here
-    
-    return res.json({ success: true });
-  } catch (err) {
-    logError(err, { function: 'welcome-notification' });
-    return res.json({ error: 'Internal server error' }, 500);
-  }
-};
-```
-
-### In Schema Validation
-```typescript
-import { validatePatientId, sanitizeInput } from '../utils';
-
-export const validatePatientData = (data: any) => {
-  const errors = [];
-  
-  if (!validatePatientId(data.patientId)) {
-    errors.push('Invalid patient ID format');
-  }
-  
-  data.firstName = sanitizeInput(data.firstName);
-  data.lastName = sanitizeInput(data.lastName);
-  
-  return { isValid: errors.length === 0, errors };
-};
+1. Add new utilities to the appropriate module
+2. Update the index.js exports
+3. Add tests for new functionality
+4. Update this README with usage examples

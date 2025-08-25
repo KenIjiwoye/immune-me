@@ -1,0 +1,42 @@
+{
+  "runtime": "node-18.0",
+  "entrypoint": "src/main.js",
+  "commands": {
+    "install": "npm install",
+    "start": "npm start"
+  },
+  "events": [],
+  "schedule": "",
+  "timeout": 300,
+  "enabled": true,
+  "logging": true,
+  "scopes": [
+    "databases.read",
+    "storage.write",
+    "files.write"
+  ],
+  "variables": {
+    "APPWRITE_ENDPOINT": {
+      "description": "Appwrite server endpoint",
+      "required": true
+    },
+    "APPWRITE_PROJECT_ID": {
+      "description": "Appwrite project ID",
+      "required": true
+    },
+    "APPWRITE_API_KEY": {
+      "description": "Appwrite API key with appropriate permissions",
+      "required": true
+    },
+    "STORAGE_BUCKET_ID": {
+      "description": "Storage bucket ID for reports",
+      "required": false,
+      "default": "reports"
+    },
+    "DATABASE_ID": {
+      "description": "Database ID for immunization data",
+      "required": false,
+      "default": "immunization-db"
+    }
+  }
+}
