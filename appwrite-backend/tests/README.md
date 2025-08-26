@@ -1,312 +1,353 @@
-# Role Management System Test Suite
+# BE-AW-10 Enhanced Permission System Test Suite
 
-This directory contains comprehensive unit and integration tests for the role management system implemented in the Immune Me application backend.
-
-## Overview
-
-The test suite covers:
-- **RoleManager Class**: Complete unit testing of all methods with edge cases and error handling
-- **User Management Functions**: Integration tests for user creation and role assignment workflows
-- **Permission Validation**: Security testing including privilege escalation prevention
-- **Caching and Performance**: Testing of optimization features
-- **Error Handling**: Comprehensive error scenario coverage
+This directory contains comprehensive tests for the enhanced permission system implemented in BE-AW-10. The test suite validates all acceptance criteria and ensures backward compatibility with existing utilities.
 
 ## Test Structure
 
 ```
 tests/
-├── role-manager.test.js              # Unit tests for RoleManager class
-├── user-management/                  # Integration tests directory
-│   ├── create-user.test.js          # User creation workflow tests
-│   ├── assign-role.test.js          # Role assignment workflow tests
-│   └── permission-validation.test.js # Permission and security tests
-├── jest.config.js                   # Jest configuration
-├── setup.js                         # Test setup and utilities
-├── package.json                     # Test dependencies and scripts
-└── README.md                        # This file
+├── fixtures/                          # Test data and fixtures
+│   └── test-data.js                   # Comprehensive test data
+├── mocks/                             # Mock implementations
+│   ├── appwrite-mocks.js              # Appwrite SDK mocks
+│   └── existing-utilities-mocks.js    # Legacy utility mocks
+├── permissions/                       # Permission system tests
+│   └── be-aw-10-collection-permissions.test.js  # Main test suite
+├── validation/                        # Acceptance criteria validation
+│   └── be-aw-10-acceptance-criteria.test.js     # AC validation
+├── integration/                       # Integration tests
+│   └── existing-utilities-integration.test.js   # Legacy integration
+├── performance/                       # Performance tests
+│   └── permission-performance.test.js # Performance benchmarks
+└── README.md                          # This file
 ```
 
 ## Test Categories
 
-### 1. Unit Tests (`role-manager.test.js`)
+### 1. Unit Tests (`permissions/be-aw-10-collection-permissions.test.js`)
 
-Tests all RoleManager methods:
-- `hasRole()` - Role checking functionality
-- `hasAnyRole()` - Multiple role validation
-- `getFacilityId()` - Facility ID extraction
-- `isAdministrator()` - Administrator role checking
-- `canAccessMultipleFacilities()` - Multi-facility access validation
-- `getUserRoleInfo()` - Complete user role information retrieval
-- `assignRole()` - Role assignment functionality
-- `removeRole()` - Role removal functionality
-- `hasPermission()` - Permission checking
-- `validateFacilityAccess()` - Facility access validation
+**Purpose**: Test individual components of the permission system in isolation.
 
-**Coverage Areas:**
-- ✅ Happy path scenarios
-- ✅ Edge cases and error conditions
-- ✅ Input validation
-- ✅ Caching functionality
-- ✅ Performance optimizations
-- ✅ Concurrent access handling
+**Coverage**:
+- Administrator role permissions
+- Non-admin role restrictions
+- Role-based permission validation
+- Collection-level permission checking
+- Document-level security enforcement
+- Error handling and edge cases
 
-### 2. Integration Tests (`user-management/`)
+**Key Test Scenarios**:
+- ✅ Administrator users have full access to all collections
+- ✅ Non-admin users are restricted from deleting
+- ✅ Facility scoping for documents (users can only access their facility's data)
+- ✅ Role-based permission validation for each role (administrator, supervisor, doctor, user)
+- ✅ Collection-level permission checking
+- ✅ Document-level security enforcement
 
-#### Create User Tests (`create-user.test.js`)
-- User creation with role assignment
-- Input validation and error handling
-- Role assignment integration
-- Cleanup on failure scenarios
-- Environment configuration
+### 2. Integration Tests (`integration/existing-utilities-integration.test.js`)
 
-#### Assign Role Tests (`assign-role.test.js`)
-- Role modification workflows
-- Permission validation for role assignment
-- Privilege escalation prevention
-- Cross-facility role assignment restrictions
-- Security feature testing
+**Purpose**: Test integration with existing utilities and backward compatibility.
 
-#### Permission Validation Tests (`permission-validation.test.js`)
-- Comprehensive permission checking
-- Role hierarchy validation
-- Facility access control
-- Multi-facility access validation
-- Security edge cases
-- Audit and compliance features
+**Coverage**:
+- TeamPermissionChecker integration
+- FacilityTeamManager integration
+- Backward compatibility with legacy functions
+- Performance impact assessment
+- Migration compatibility
 
-## Security Testing
+**Key Test Scenarios**:
+- ✅ Integration with existing team permission utilities
+- ✅ Facility team management compatibility
+- ✅ Legacy function signature support
+- ✅ Performance benchmarking
+- ✅ Gradual migration support
 
-The test suite includes comprehensive security testing:
+### 3. Acceptance Criteria Validation (`validation/be-aw-10-acceptance-criteria.test.js`)
 
-### Privilege Escalation Prevention
-- Users cannot assign roles higher than their own
-- Role hierarchy is properly enforced
-- Cross-facility restrictions are validated
+**Purpose**: Validate implementation against all BE-AW-10 acceptance criteria.
 
-### Permission Validation
-- Each role's permissions are thoroughly tested
-- Resource-level access control is validated
-- Operation-level permissions are verified
+**Coverage**:
+- AC1: Collection Permissions
+- AC2: Document Security
+- AC3: Permission Validation
+- AC4: Query Security
+- AC5: System Integration
+- AC6: Error Handling
 
-### Facility Access Control
-- Administrators can access all facilities
-- Non-administrators are restricted to their assigned facility
-- Facility ID validation and manipulation prevention
+**Acceptance Criteria Checklist**:
+
+#### AC1: Collection Permissions
+- [x] Each collection has appropriate role-based permissions
+- [x] Facility-scoped collections enforce facility access
+- [x] Administrator users have unrestricted access
+- [x] Read-only reference data is properly configured
+
+#### AC2: Document Security
+- [x] Document-level permissions are applied for facility scoping
+- [x] Users can only access documents from their assigned facility
+- [x] Cross-facility access works for supervisors and administrators
+- [x] Document creation automatically applies correct permissions
+
+#### AC3: Permission Validation
+- [x] Permission validation utilities work correctly
+- [x] Role-based access is properly enforced
+- [x] Facility-scoped access is validated
+- [x] Permission checks are efficient and cached
+
+#### AC4: Query Security
+- [x] Facility-scoped queries automatically filter by facility
+- [x] Cross-facility queries work for authorized users
+- [x] Query performance is optimized
+- [x] Security is maintained at query level
+
+### 4. Performance Tests (`performance/permission-performance.test.js`)
+
+**Purpose**: Ensure the permission system meets performance requirements.
+
+**Coverage**:
+- Permission checking performance with caching
+- Query performance with security filters
+- Configuration loading performance
+- Concurrent permission checks
+- Cache effectiveness
+
+**Performance Benchmarks**:
+- Permission checks: < 10ms average with caching
+- Query building: < 5ms average
+- Configuration loading: < 2 seconds
+- Concurrent operations: 50+ simultaneous checks
+- Cache hit ratio: > 80% for repeated operations
+
+## Test Data
+
+### Test Users
+- **Administrator**: Full system access, no facility restrictions
+- **Supervisor**: Facility-scoped management permissions
+- **Doctor**: Medical treatment permissions within facility
+- **User**: Read-only access within facility
+- **Multi-role User**: User with multiple roles for edge case testing
+- **Inactive User**: Disabled user for access denial testing
+
+### Test Facilities
+- **Central Hospital** (ID: 1): Primary test facility
+- **Community Clinic** (ID: 2): Secondary test facility
+- **Rural Health Center** (ID: 3): Additional facility for cross-facility testing
+
+### Test Collections
+- **patients**: Facility-scoped patient records
+- **immunization_records**: Facility-scoped immunization data
+- **facilities**: System-wide facility information
+- **vaccines**: Reference data (read-only for non-admins)
+- **vaccine_schedules**: Reference data
+- **notifications**: User and facility-scoped notifications
 
 ## Running Tests
 
 ### Prerequisites
-
 ```bash
 cd appwrite-backend/tests
 npm install
 ```
 
-### Test Commands
-
+### Run All Tests
 ```bash
-# Run all tests
 npm test
+```
 
-# Run tests with coverage
-npm run test:coverage
+### Run Specific Test Suites
+```bash
+# Unit tests only
+npm run test:unit
 
-# Run tests in watch mode
-npm run test:watch
+# Integration tests only
+npm run test:integration
 
-# Run specific test suites
-npm run test:role-manager      # Unit tests only
-npm run test:user-management   # Integration tests only
-npm run test:integration       # All integration tests
-npm run test:unit             # All unit tests
+# Acceptance criteria validation
+npm run test:validation
 
-# Run security-focused tests
-npm run test:security
-
-# Run performance tests
+# Performance tests
 npm run test:performance
 
-# Run tests for CI/CD
-npm run test:ci
-
-# Debug tests
-npm run test:debug
+# Coverage report
+npm run test:coverage
 ```
 
-### Coverage Reports
+### Run Tests with Specific Patterns
+```bash
+# Run permission-related tests
+npm test -- --testNamePattern="permission"
 
-Coverage reports are generated in the `coverage/` directory:
-- `coverage/lcov-report/index.html` - HTML coverage report
-- `coverage/lcov.info` - LCOV format for CI integration
-- `coverage/coverage-final.json` - JSON coverage data
+# Run administrator tests
+npm test -- --testNamePattern="administrator"
 
-### Coverage Thresholds
-
-The test suite enforces minimum coverage thresholds:
-- **Global**: 80% (branches, functions, lines, statements)
-- **RoleManager**: 90% (branches, functions, lines, statements)
-- **User Management Functions**: 85% (branches, functions, lines, statements)
-
-## Test Data and Utilities
-
-### Global Test Utilities (`setup.js`)
-
-The setup file provides:
-- Mock object creators (`createMockUser`, `createMockRequest`, etc.)
-- Test data generators (`createRoleTestData`, `randomEmail`, etc.)
-- Custom Jest matchers (`toBeValidUserId`, `toHaveSuccessStructure`, etc.)
-- Response validation utilities
-- Error handling helpers
-
-### Mock Data
-
-Test users with different roles:
-```javascript
-const testData = testUtils.createRoleTestData();
-// Returns: { administrator, supervisor, doctor, user }
+# Run facility scoping tests
+npm test -- --testNamePattern="facility"
 ```
-
-### Custom Matchers
-
-```javascript
-// Validate user IDs
-expect(userId).toBeValidUserId();
-
-// Validate roles
-expect(role).toBeValidRole();
-
-// Validate response structure
-expect(response).toHaveSuccessStructure(true);
-
-// Validate permissions structure
-expect(permissions).toHaveValidPermissionsStructure();
-```
-
-## Test Cases from BE-AW-08 Ticket
-
-The test suite implements all test cases specified in the BE-AW-08 ticket:
-
-### Core Functionality Tests
-- ✅ Role assignment and validation
-- ✅ Permission checking for different roles
-- ✅ Facility-based access control
-- ✅ Multi-facility access for administrators
-
-### Security Tests
-- ✅ Privilege escalation prevention
-- ✅ Cross-facility access restrictions
-- ✅ Invalid role assignment attempts
-- ✅ Malicious input handling
-
-### Performance Tests
-- ✅ Caching functionality
-- ✅ Concurrent request handling
-- ✅ Cache invalidation on role changes
-- ✅ Performance optimization validation
-
-### Error Handling Tests
-- ✅ Network timeout handling
-- ✅ Appwrite API error handling
-- ✅ Invalid input validation
-- ✅ User not found scenarios
-- ✅ Role assignment failures
-
-## Continuous Integration
-
-### GitHub Actions Integration
-
-```yaml
-- name: Run Role Management Tests
-  run: |
-    cd appwrite-backend/tests
-    npm ci
-    npm run test:ci
-```
-
-### Coverage Integration
-
-The test suite generates coverage reports in multiple formats for CI integration:
-- LCOV for SonarQube/CodeCov
-- JUnit XML for test result reporting
-- JSON for custom integrations
-
-## Debugging Tests
 
 ### Debug Mode
 ```bash
 npm run test:debug
 ```
 
-This starts Jest with Node.js debugging enabled. You can then:
-1. Open Chrome DevTools
-2. Navigate to `chrome://inspect`
-3. Click "Open dedicated DevTools for Node"
+## Test Configuration
 
-### Verbose Output
-All tests run with verbose output enabled, showing:
-- Individual test results
-- Test execution time
-- Coverage information
-- Mock call information
+### Jest Configuration
+- **Environment**: Node.js
+- **Test Timeout**: 10 seconds
+- **Coverage Threshold**: 80% (branches, functions, lines, statements)
+- **Mock Clearing**: Automatic between tests
+- **Verbose Output**: Enabled
 
-## Best Practices
+### Environment Variables
+```bash
+NODE_ENV=test
+APPWRITE_ENDPOINT=https://test.appwrite.io/v1
+APPWRITE_PROJECT_ID=test-project
+APPWRITE_API_KEY=test-api-key
+DATABASE_ID=test-db
+```
 
-### Test Organization
-- Tests are organized by functionality
-- Each test file focuses on a specific component
-- Test descriptions are clear and descriptive
-- Setup and teardown are properly handled
+## Mock Strategy
 
-### Mock Usage
-- All external dependencies are mocked
-- Mocks are reset between tests
-- Mock implementations are realistic
-- Mock data is consistent and valid
+### Appwrite SDK Mocking
+- **Client**: Mock connection and configuration
+- **Databases**: Mock CRUD operations with realistic responses
+- **Teams**: Mock team management operations
+- **Users**: Mock user management operations
+- **Permissions**: Mock permission helpers
+- **Query**: Mock query building
 
-### Assertions
-- Tests use specific, meaningful assertions
-- Error cases are thoroughly tested
-- Edge cases are covered
-- Performance characteristics are validated
+### Legacy Utility Mocking
+- **TeamPermissionChecker**: Simulates existing team permission logic
+- **FacilityTeamManager**: Simulates facility team management
+- **Configuration Manager**: Simulates existing configuration system
 
-### Maintenance
-- Tests are kept up-to-date with code changes
-- Coverage thresholds are maintained
-- Test data is regularly reviewed
-- Documentation is kept current
+## Coverage Requirements
+
+### Minimum Coverage Thresholds
+- **Overall**: 80%
+- **Permission Validator**: 90%
+- **Document Security**: 90%
+- **Facility Scoped Queries**: 85%
+- **Configuration Loader**: 85%
+
+### Coverage Reports
+- **Text**: Console output during test runs
+- **HTML**: `coverage/lcov-report/index.html`
+- **LCOV**: `coverage/lcov.info`
+- **JSON**: `coverage/coverage-final.json`
+
+## Continuous Integration
+
+### Test Pipeline
+1. **Lint Tests**: ESLint validation of test files
+2. **Unit Tests**: Individual component testing
+3. **Integration Tests**: System integration validation
+4. **Performance Tests**: Benchmark validation
+5. **Coverage Validation**: Minimum threshold enforcement
+
+### CI Configuration
+```yaml
+# Example GitHub Actions configuration
+- name: Run Tests
+  run: |
+    cd appwrite-backend/tests
+    npm ci
+    npm run test:ci
+    npm run validate:coverage
+```
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Tests failing due to missing environment variables**
-   - Ensure all required environment variables are set in `setup.js`
+#### Test Timeouts
+- **Cause**: Network simulation delays or complex permission calculations
+- **Solution**: Increase test timeout or optimize mock responses
 
-2. **Coverage thresholds not met**
-   - Run `npm run test:coverage` to see detailed coverage report
-   - Add tests for uncovered code paths
+#### Mock Inconsistencies
+- **Cause**: Mock data doesn't match real Appwrite responses
+- **Solution**: Update mock responses based on actual API behavior
 
-3. **Mock-related errors**
-   - Ensure mocks are properly reset between tests
-   - Check mock implementations match expected interfaces
+#### Cache-Related Test Failures
+- **Cause**: Tests interfering with each other through shared cache
+- **Solution**: Ensure proper cache clearing between tests
 
-4. **Timeout errors**
-   - Increase test timeout in Jest configuration
-   - Check for unresolved promises in tests
+#### Permission Logic Errors
+- **Cause**: Complex permission rules not properly implemented
+- **Solution**: Review permission matrix and role hierarchy configuration
 
-### Getting Help
+### Debug Strategies
 
-For issues with the test suite:
-1. Check the test output for specific error messages
-2. Review the coverage report for missing test cases
-3. Consult the Jest documentation for configuration issues
-4. Review the role management implementation for API changes
+#### Enable Verbose Logging
+```javascript
+// In test files
+console.log = jest.fn(); // Comment out to enable logging
+```
 
-## Contributing
+#### Inspect Mock Call Logs
+```javascript
+// Check what methods were called on mocks
+const callLog = mockSDK.Databases().getCallLog();
+console.log('Database calls:', callLog);
+```
 
-When adding new tests:
-1. Follow the existing test structure and naming conventions
-2. Include both positive and negative test cases
-3. Add appropriate mocks and test data
-4. Update coverage thresholds if necessary
-5. Document any new test utilities or patterns
+#### Test Individual Components
+```bash
+# Test specific components in isolation
+npm test -- --testPathPattern="permission-validator"
+```
+
+## Contributing to Tests
+
+### Adding New Tests
+
+1. **Identify Test Category**: Unit, Integration, or Performance
+2. **Create Test File**: Follow naming convention `*.test.js`
+3. **Use Existing Fixtures**: Leverage `test-data.js` for consistency
+4. **Mock External Dependencies**: Use provided mock utilities
+5. **Follow Test Structure**: Describe blocks for logical grouping
+6. **Add Documentation**: Update this README with new test information
+
+### Test Writing Guidelines
+
+1. **Descriptive Names**: Test names should clearly describe what is being tested
+2. **Single Responsibility**: Each test should validate one specific behavior
+3. **Arrange-Act-Assert**: Structure tests with clear setup, execution, and validation
+4. **Mock Isolation**: Use mocks to isolate the system under test
+5. **Error Testing**: Include both positive and negative test cases
+6. **Performance Awareness**: Consider performance implications of test operations
+
+### Code Review Checklist
+
+- [ ] Tests cover all acceptance criteria
+- [ ] Mock usage is appropriate and consistent
+- [ ] Test names are descriptive and clear
+- [ ] Error cases are properly tested
+- [ ] Performance implications are considered
+- [ ] Documentation is updated
+- [ ] Coverage thresholds are met
+
+## Maintenance
+
+### Regular Maintenance Tasks
+
+1. **Update Test Data**: Keep test fixtures current with schema changes
+2. **Review Mock Accuracy**: Ensure mocks reflect actual API behavior
+3. **Performance Monitoring**: Track test execution times and optimize slow tests
+4. **Coverage Analysis**: Review coverage reports and add tests for uncovered code
+5. **Dependency Updates**: Keep test dependencies current and secure
+
+### Monitoring Test Health
+
+- **Test Execution Time**: Monitor for performance degradation
+- **Flaky Tests**: Identify and fix intermittently failing tests
+- **Coverage Trends**: Track coverage changes over time
+- **Mock Accuracy**: Validate mocks against real API changes
+
+## Resources
+
+- [Jest Documentation](https://jestjs.io/docs/getting-started)
+- [Appwrite SDK Documentation](https://appwrite.io/docs)
+- [BE-AW-10 Implementation Summary](../BE-AW-10-IMPLEMENTATION-SUMMARY.md)
+- [Permission System Documentation](../utils/PERMISSION_SYSTEM_README.md)

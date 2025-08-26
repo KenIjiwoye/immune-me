@@ -1,19 +1,54 @@
 {
-  "version": "1.0",
-  "description": "Security rules and permissions framework for Immune Me healthcare application",
+  "version": "2.0",
+  "description": "Enhanced security rules and permissions framework for BE-AW-10 implementation",
+  "lastUpdated": "2025-08-26T10:52:00Z",
+  
   "roles": {
-    "admin": {
-      "description": "System administrators with full access",
+    "administrator": {
+      "description": "System administrators with full cross-facility access",
       "permissions": [
         "users.*",
         "databases.*",
         "storage.*",
         "functions.*",
         "teams.*"
+      ],
+      "specialPermissions": [
+        "cross_facility_access",
+        "system_configuration",
+        "audit_access",
+        "data_export",
+        "user_management"
       ]
     },
-    "healthcare_worker": {
-      "description": "Healthcare workers with patient data access",
+    "supervisor": {
+      "description": "Facility supervisors with administrative access to their facility",
+      "permissions": [
+        "databases.main.collections.patients.documents.read",
+        "databases.main.collections.patients.documents.create",
+        "databases.main.collections.patients.documents.update",
+        "databases.main.collections.immunization_records.documents.*",
+        "databases.main.collections.vaccines.documents.read",
+        "databases.main.collections.facilities.documents.read",
+        "databases.main.collections.facilities.documents.update",
+        "databases.main.collections.notifications.documents.*",
+        "databases.main.collections.vaccine_schedules.documents.read",
+        "databases.main.collections.vaccine_schedules.documents.update",
+        "databases.main.collections.vaccine_schedule_items.documents.read",
+        "databases.main.collections.vaccine_schedule_items.documents.update",
+        "databases.main.collections.supplementary_immunizations.documents.*",
+        "storage.patient-documents.files.*",
+        "storage.reports.files.*"
+      ],
+      "specialPermissions": [
+        "facility_user_management",
+        "facility_reports",
+        "team_management",
+        "facility_configuration"
+      ]
+    },
+    "doctor": {
+      "description": "Medical doctors with clinical access to patient data",
       "permissions": [
         "databases.main.collections.patients.documents.read",
         "databases.main.collections.patients.documents.create",
@@ -22,26 +57,42 @@
         "databases.main.collections.vaccines.documents.read",
         "databases.main.collections.facilities.documents.read",
         "databases.main.collections.notifications.documents.read",
+        "databases.main.collections.notifications.documents.update",
+        "databases.main.collections.vaccine_schedules.documents.read",
+        "databases.main.collections.vaccine_schedule_items.documents.read",
+        "databases.main.collections.supplementary_immunizations.documents.*",
         "storage.patient-documents.files.*",
         "storage.reports.files.read"
+      ],
+      "specialPermissions": [
+        "patient_care",
+        "immunization_management",
+        "clinical_reports",
+        "medical_history_access"
       ]
     },
-    "facility_manager": {
-      "description": "Facility managers with facility-specific access",
+    "user": {
+      "description": "Regular healthcare workers and data entry personnel",
       "permissions": [
         "databases.main.collections.patients.documents.read",
+        "databases.main.collections.patients.documents.create",
+        "databases.main.collections.patients.documents.update",
         "databases.main.collections.immunization_records.documents.read",
+        "databases.main.collections.immunization_records.documents.create",
         "databases.main.collections.vaccines.documents.read",
-        "databases.main.collections.facilities.documents.update",
-        "databases.main.collections.notifications.documents.*",
-        "storage.reports.files.*"
-      ]
-    },
-    "read_only": {
-      "description": "Read-only access for reporting and analytics",
-      "permissions": [
-        "databases.main.collections.*.documents.read",
+        "databases.main.collections.facilities.documents.read",
+        "databases.main.collections.notifications.documents.read",
+        "databases.main.collections.vaccine_schedules.documents.read",
+        "databases.main.collections.vaccine_schedule_items.documents.read",
+        "databases.main.collections.supplementary_immunizations.documents.read",
+        "storage.patient-documents.files.read",
+        "storage.patient-documents.files.create",
         "storage.reports.files.read"
+      ],
+      "specialPermissions": [
+        "data_entry",
+        "basic_reports",
+        "patient_registration"
       ]
     },
     "system": {
@@ -51,127 +102,122 @@
         "storage.*",
         "functions.execute",
         "users.read"
+      ],
+      "specialPermissions": [
+        "automated_processing",
+        "system_integration"
       ]
     }
   },
   "collections": {
     "patients": {
       "documentSecurity": true,
+      "facilityScoped": true,
       "permissions": {
         "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "create": [
-          "role:admin",
-          "role:healthcare_worker"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "update": [
-          "role:admin",
-          "role:healthcare_worker"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "delete": [
-          "role:admin"
+          "role:administrator"
         ]
       },
       "documentPermissions": {
         "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "update": [
-          "role:admin",
-          "role:healthcare_worker"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "delete": [
-          "role:admin"
+          "role:administrator"
         ]
       },
       "fieldLevelSecurity": {
         "medical_history": {
-          "read": ["role:admin", "role:healthcare_worker"],
-          "write": ["role:admin", "role:healthcare_worker"]
+          "read": ["role:administrator", "role:supervisor", "role:doctor"],
+          "write": ["role:administrator", "role:supervisor", "role:doctor"]
         },
         "contact_info": {
-          "read": ["role:admin", "role:healthcare_worker", "role:facility_manager"],
-          "write": ["role:admin", "role:healthcare_worker"]
+          "read": ["role:administrator", "role:supervisor", "role:doctor", "role:user"],
+          "write": ["role:administrator", "role:supervisor", "role:doctor", "role:user"]
+        },
+        "guardian_info": {
+          "read": ["role:administrator", "role:supervisor", "role:doctor", "role:user"],
+          "write": ["role:administrator", "role:supervisor", "role:doctor", "role:user"]
+        },
+        "emergency_contact": {
+          "read": ["role:administrator", "role:supervisor", "role:doctor"],
+          "write": ["role:administrator", "role:supervisor", "role:doctor"]
         }
+      },
+      "securityRules": {
+        "facilityIsolation": true,
+        "auditRequired": true,
+        "encryptionRequired": true,
+        "dataClassification": "sensitive"
       }
     },
-    "facilities": {
-      "documentSecurity": true,
-      "permissions": {
-        "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
-        ],
-        "create": [
-          "role:admin"
-        ],
-        "update": [
-          "role:admin",
-          "role:facility_manager"
-        ],
-        "delete": [
-          "role:admin"
-        ]
-      }
-    },
-    "vaccines": {
-      "documentSecurity": false,
-      "permissions": {
-        "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager",
-          "role:read_only"
-        ],
-        "create": [
-          "role:admin"
-        ],
-        "update": [
-          "role:admin"
-        ],
-        "delete": [
-          "role:admin"
-        ]
-      }
-    },
+    
     "immunization_records": {
       "documentSecurity": true,
+      "facilityScoped": true,
       "permissions": {
         "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "create": [
-          "role:admin",
-          "role:healthcare_worker"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "update": [
-          "role:admin",
-          "role:healthcare_worker"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
         ],
         "delete": [
-          "role:admin"
+          "role:administrator"
         ]
       },
       "documentPermissions": {
         "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "update": [
-          "role:admin",
-          "role:healthcare_worker"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
         ],
         "delete": [
-          "role:admin"
+          "role:administrator"
         ]
       },
       "auditRequired": true,
@@ -179,29 +225,248 @@
         "patient_id",
         "vaccine_id",
         "administered_date",
-        "administered_by"
-      ]
+        "administered_by",
+        "batch_number",
+        "lot_number"
+      ],
+      "securityRules": {
+        "facilityIsolation": true,
+        "auditRequired": true,
+        "encryptionRequired": true,
+        "dataClassification": "sensitive",
+        "retentionPolicy": "permanent"
+      }
     },
+    
     "notifications": {
       "documentSecurity": true,
+      "facilityScoped": true,
       "permissions": {
         "read": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
         ],
         "create": [
-          "role:admin",
+          "role:administrator",
+          "role:supervisor",
           "role:system"
         ],
         "update": [
-          "role:admin",
-          "role:healthcare_worker",
-          "role:facility_manager"
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
         ],
         "delete": [
-          "role:admin"
+          "role:administrator"
         ]
+      },
+      "documentPermissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "securityRules": {
+        "facilityIsolation": true,
+        "auditRequired": false,
+        "encryptionRequired": false,
+        "dataClassification": "internal",
+        "retentionPolicy": "1_year"
+      }
+    },
+    
+    "facilities": {
+      "documentSecurity": true,
+      "facilityScoped": false,
+      "permissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "create": [
+          "role:administrator"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "documentPermissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "securityRules": {
+        "facilityIsolation": false,
+        "auditRequired": true,
+        "encryptionRequired": false,
+        "dataClassification": "internal",
+        "retentionPolicy": "permanent"
+      }
+    },
+    
+    "vaccines": {
+      "documentSecurity": false,
+      "facilityScoped": false,
+      "permissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "create": [
+          "role:administrator"
+        ],
+        "update": [
+          "role:administrator"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "securityRules": {
+        "facilityIsolation": false,
+        "auditRequired": false,
+        "encryptionRequired": false,
+        "dataClassification": "public",
+        "retentionPolicy": "permanent"
+      }
+    },
+    
+    "vaccine_schedules": {
+      "documentSecurity": false,
+      "facilityScoped": false,
+      "permissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "create": [
+          "role:administrator"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "securityRules": {
+        "facilityIsolation": false,
+        "auditRequired": false,
+        "encryptionRequired": false,
+        "dataClassification": "public",
+        "retentionPolicy": "permanent"
+      }
+    },
+    
+    "vaccine_schedule_items": {
+      "documentSecurity": false,
+      "facilityScoped": false,
+      "permissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "create": [
+          "role:administrator"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "securityRules": {
+        "facilityIsolation": false,
+        "auditRequired": false,
+        "encryptionRequired": false,
+        "dataClassification": "public",
+        "retentionPolicy": "permanent"
+      }
+    },
+    
+    "supplementary_immunizations": {
+      "documentSecurity": true,
+      "facilityScoped": true,
+      "permissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "create": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "documentPermissions": {
+        "read": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:user"
+        ],
+        "update": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor"
+        ],
+        "delete": [
+          "role:administrator"
+        ]
+      },
+      "securityRules": {
+        "facilityIsolation": true,
+        "auditRequired": true,
+        "encryptionRequired": true,
+        "dataClassification": "sensitive",
+        "retentionPolicy": "permanent"
       }
     }
   },

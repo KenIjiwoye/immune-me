@@ -78,10 +78,18 @@
     }
   ],
   "permissions": {
-    "read": ["role:admin", "role:healthcare_worker"],
-    "create": ["role:admin"],
-    "update": ["role:admin"],
-    "delete": ["role:admin"]
+    "read": [
+      "users"
+    ],
+    "create": [
+      "label:role:administrator"
+    ],
+    "update": [
+      "label:role:administrator"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
   },
   "validation": {
     "rules": {

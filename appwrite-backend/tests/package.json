@@ -16,7 +16,16 @@
     "test:performance": "jest --testNamePattern='Performance|Cache|Concurrent'",
     "lint:tests": "eslint **/*.test.js **/*.spec.js",
     "validate:coverage": "jest --coverage --coverageThreshold='{\"global\":{\"branches\":80,\"functions\":80,\"lines\":80,\"statements\":80}}'",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:be-aw-10": "node run-be-aw-10-tests.js",
+    "test:be-aw-10:all": "node run-be-aw-10-tests.js all",
+    "test:be-aw-10:unit": "node run-be-aw-10-tests.js unit",
+    "test:be-aw-10:integration": "node run-be-aw-10-tests.js integration",
+    "test:be-aw-10:validation": "node run-be-aw-10-tests.js validation",
+    "test:be-aw-10:performance": "node run-be-aw-10-tests.js performance",
+    "test:be-aw-10:coverage": "node run-be-aw-10-tests.js coverage",
+    "test:be-aw-10:watch": "node run-be-aw-10-tests.js watch",
+    "test:be-aw-10:ci": "node run-be-aw-10-tests.js ci"
   },
   "keywords": [
     "appwrite",

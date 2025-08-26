@@ -205,10 +205,26 @@
     }
   ],
   "permissions": {
-    "read": ["role:admin", "role:healthcare_worker"],
-    "create": ["role:admin"],
-    "update": ["role:admin"],
-    "delete": ["role:admin"]
+    "read": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "label:role:user",
+      "team:facility-*-team/member"
+    ],
+    "create": [
+      "label:role:administrator",
+      "label:role:doctor",
+      "label:role:user"
+    ],
+    "update": [
+      "label:role:administrator",
+      "label:role:doctor",
+      "label:role:user"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
   },
   "validation": {
     "rules": {

@@ -1,32 +1,417 @@
 {
-  "patients": {
-    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
-    "create": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
-    "update": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
-    "delete": ["role:admin"]
+  "version": "2.0.0",
+  "description": "Enhanced collection permissions configuration for BE-AW-10 implementation",
+  "lastUpdated": "2025-08-26T10:51:00Z",
+  
+  "rolePermissions": {
+    "administrator": {
+      "description": "System administrators with full cross-facility access",
+      "collections": {
+        "patients": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "immunization_records": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "notifications": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "facilities": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "vaccines": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "vaccine_schedules": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "vaccine_schedule_items": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supplementary_immunizations": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "users": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "teams": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "reports": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        }
+      },
+      "specialPermissions": [
+        "cross_facility_access",
+        "user_management",
+        "system_configuration",
+        "audit_access",
+        "team_management",
+        "global_reports",
+        "data_export",
+        "system_maintenance"
+      ]
+    },
+    
+    "supervisor": {
+      "description": "Facility supervisors with administrative access to their facility",
+      "collections": {
+        "patients": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "immunization_records": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "notifications": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "facilities": {
+          "operations": ["read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "vaccines": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "vaccine_schedules": {
+          "operations": ["read", "update"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "vaccine_schedule_items": {
+          "operations": ["read", "update"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "supplementary_immunizations": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "users": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "teams": {
+          "operations": ["read", "update"],
+          "scope": "facility_only",
+          "conditions": ["team_match", "active_facility"]
+        },
+        "reports": {
+          "operations": ["create", "read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        }
+      },
+      "specialPermissions": [
+        "facility_user_management",
+        "facility_reports",
+        "team_management",
+        "facility_configuration",
+        "staff_oversight",
+        "facility_analytics"
+      ]
+    },
+    
+    "doctor": {
+      "description": "Medical doctors with clinical access to patient data",
+      "collections": {
+        "patients": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "clinical_access"]
+        },
+        "immunization_records": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "clinical_access"]
+        },
+        "notifications": {
+          "operations": ["read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "facilities": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "vaccines": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "vaccine_schedules": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "vaccine_schedule_items": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "supplementary_immunizations": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "clinical_access"]
+        },
+        "users": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "reports": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        }
+      },
+      "specialPermissions": [
+        "patient_care",
+        "immunization_management",
+        "clinical_reports",
+        "medical_history_access",
+        "prescription_management",
+        "clinical_decision_support"
+      ]
+    },
+    
+    "user": {
+      "description": "Regular healthcare workers and data entry personnel",
+      "collections": {
+        "patients": {
+          "operations": ["create", "read", "update"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "assigned_patients"]
+        },
+        "immunization_records": {
+          "operations": ["create", "read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "assigned_patients"]
+        },
+        "notifications": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "user_notifications"]
+        },
+        "facilities": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "vaccines": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "vaccine_schedules": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "vaccine_schedule_items": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "supplementary_immunizations": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "users": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["self_only"]
+        },
+        "reports": {
+          "operations": ["read"],
+          "scope": "facility_only",
+          "conditions": ["basic_reports_only"]
+        }
+      },
+      "specialPermissions": [
+        "data_entry",
+        "basic_reports",
+        "patient_registration",
+        "immunization_recording"
+      ]
+    }
   },
-  "immunization_records": {
-    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
-    "create": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
-    "update": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
-    "delete": ["role:admin"]
+  
+  "permissionConditions": {
+    "facility_match": {
+      "description": "User must belong to the same facility as the resource",
+      "implementation": "Check if user's facility_id matches resource facility_id",
+      "validation": "required"
+    },
+    "active_facility": {
+      "description": "Facility must be active and operational",
+      "implementation": "Check if facility status is 'active'",
+      "validation": "required"
+    },
+    "clinical_access": {
+      "description": "User must have clinical privileges",
+      "implementation": "Check if user has clinical_access flag set to true",
+      "validation": "optional"
+    },
+    "assigned_patients": {
+      "description": "User can only access patients assigned to them or their team",
+      "implementation": "Check patient assignment or team membership",
+      "validation": "required"
+    },
+    "user_notifications": {
+      "description": "User can only access notifications intended for them",
+      "implementation": "Check notification recipient or role targeting",
+      "validation": "required"
+    },
+    "self_only": {
+      "description": "User can only access their own user record",
+      "implementation": "Check if resource user_id matches current user",
+      "validation": "required"
+    },
+    "basic_reports_only": {
+      "description": "User can only access basic, non-sensitive reports",
+      "implementation": "Check report classification and sensitivity level",
+      "validation": "required"
+    },
+    "team_match": {
+      "description": "User must belong to the team being accessed",
+      "implementation": "Check if user is member of the team",
+      "validation": "required"
+    }
   },
-  "facilities": {
-    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
-    "create": ["role:admin"],
-    "update": ["role:admin", "role:facility_manager"],
-    "delete": ["role:admin"]
+  
+  "collectionSpecificRules": {
+    "patients": {
+      "facilityScoped": true,
+      "auditRequired": true,
+      "encryptionRequired": true,
+      "dataClassification": "sensitive",
+      "retentionPolicy": "7_years",
+      "accessLogging": true
+    },
+    "immunization_records": {
+      "facilityScoped": true,
+      "auditRequired": true,
+      "encryptionRequired": true,
+      "dataClassification": "sensitive",
+      "retentionPolicy": "permanent",
+      "accessLogging": true,
+      "immutableFields": ["patient_id", "vaccine_id", "administered_date", "administered_by"]
+    },
+    "notifications": {
+      "facilityScoped": true,
+      "auditRequired": false,
+      "encryptionRequired": false,
+      "dataClassification": "internal",
+      "retentionPolicy": "1_year",
+      "accessLogging": false
+    },
+    "facilities": {
+      "facilityScoped": false,
+      "auditRequired": true,
+      "encryptionRequired": false,
+      "dataClassification": "internal",
+      "retentionPolicy": "permanent",
+      "accessLogging": true
+    },
+    "vaccines": {
+      "facilityScoped": false,
+      "auditRequired": false,
+      "encryptionRequired": false,
+      "dataClassification": "public",
+      "retentionPolicy": "permanent",
+      "accessLogging": false
+    },
+    "vaccine_schedules": {
+      "facilityScoped": false,
+      "auditRequired": false,
+      "encryptionRequired": false,
+      "dataClassification": "public",
+      "retentionPolicy": "permanent",
+      "accessLogging": false
+    },
+    "vaccine_schedule_items": {
+      "facilityScoped": false,
+      "auditRequired": false,
+      "encryptionRequired": false,
+      "dataClassification": "public",
+      "retentionPolicy": "permanent",
+      "accessLogging": false
+    },
+    "supplementary_immunizations": {
+      "facilityScoped": true,
+      "auditRequired": true,
+      "encryptionRequired": true,
+      "dataClassification": "sensitive",
+      "retentionPolicy": "permanent",
+      "accessLogging": true
+    }
   },
-  "vaccines": {
-    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
-    "create": ["role:admin"],
-    "update": ["role:admin"],
-    "delete": ["role:admin"]
+  
+  "teamBasedPermissions": {
+    "globalAdminTeam": {
+      "teamId": "global-admin-team",
+      "permissions": "administrator",
+      "scope": "all_facilities",
+      "overrides": []
+    },
+    "facilityTeams": {
+      "owner": {
+        "permissions": "supervisor",
+        "scope": "facility_only",
+        "overrides": ["facility_configuration", "team_management"]
+      },
+      "admin": {
+        "permissions": "doctor",
+        "scope": "facility_only",
+        "overrides": ["clinical_reports", "staff_coordination"]
+      },
+      "member": {
+        "permissions": "user",
+        "scope": "facility_only",
+        "overrides": []
+      }
+    }
   },
-  "notifications": {
-    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
-    "create": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
-    "update": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
-    "delete": ["role:admin"]
+  
+  "legacyRoleMapping": {
+    "role:admin": "administrator",
+    "role:facility_manager": "supervisor",
+    "role:healthcare_worker": "doctor",
+    "role:data_entry_clerk": "user"
   }
 }

@@ -1,0 +1,577 @@
+{
+  "version": "2.0.0",
+  "description": "Comprehensive role-based access control configuration for BE-AW-10",
+  "lastUpdated": "2025-08-26T10:52:00Z",
+  
+  "permissionMatrix": {
+    "collections": {
+      "patients": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "doctor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "clinical_access"]
+        },
+        "user": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "assigned_patients"]
+        }
+      },
+      
+      "immunization_records": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "doctor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "clinical_access"]
+        },
+        "user": {
+          "create": true,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "assigned_patients"]
+        }
+      },
+      
+      "notifications": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "doctor": {
+          "create": false,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "user_notifications"]
+        }
+      },
+      
+      "facilities": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": false,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "doctor": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        }
+      },
+      
+      "vaccines": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "doctor": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        }
+      },
+      
+      "vaccine_schedules": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": false,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "doctor": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        }
+      },
+      
+      "vaccine_schedule_items": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": false,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "doctor": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["active_facility"]
+        }
+      },
+      
+      "supplementary_immunizations": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "supervisor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        },
+        "doctor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility", "clinical_access"]
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only",
+          "conditions": ["facility_match", "active_facility"]
+        }
+      }
+    },
+    
+    "storage": {
+      "patient_documents": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities"
+        },
+        "supervisor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only"
+        },
+        "doctor": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": false,
+          "scope": "facility_only"
+        },
+        "user": {
+          "create": true,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only"
+        }
+      },
+      
+      "reports": {
+        "administrator": {
+          "create": true,
+          "read": true,
+          "update": true,
+          "delete": true,
+          "scope": "all_facilities"
+        },
+        "supervisor": {
+          "create": true,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only"
+        },
+        "doctor": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only"
+        },
+        "user": {
+          "create": false,
+          "read": true,
+          "update": false,
+          "delete": false,
+          "scope": "facility_only"
+        }
+      }
+    },
+    
+    "functions": {
+      "notifications": {
+        "administrator": ["execute"],
+        "supervisor": ["execute"],
+        "doctor": [],
+        "user": []
+      },
+      
+      "reports": {
+        "administrator": ["execute"],
+        "supervisor": ["execute"],
+        "doctor": ["execute"],
+        "user": ["execute"]
+      },
+      
+      "data_sync": {
+        "administrator": ["execute"],
+        "supervisor": [],
+        "doctor": [],
+        "user": []
+      },
+      
+      "user_management": {
+        "administrator": ["execute"],
+        "supervisor": ["execute"],
+        "doctor": [],
+        "user": []
+      },
+      
+      "team_management": {
+        "administrator": ["execute"],
+        "supervisor": ["execute"],
+        "doctor": [],
+        "user": []
+      }
+    }
+  },
+  
+  "roleHierarchy": {
+    "administrator": {
+      "level": 4,
+      "inherits": [],
+      "canManage": ["supervisor", "doctor", "user"],
+      "restrictions": []
+    },
+    "supervisor": {
+      "level": 3,
+      "inherits": [],
+      "canManage": ["doctor", "user"],
+      "restrictions": ["facility_scoped"]
+    },
+    "doctor": {
+      "level": 2,
+      "inherits": [],
+      "canManage": ["user"],
+      "restrictions": ["facility_scoped", "clinical_only"]
+    },
+    "user": {
+      "level": 1,
+      "inherits": [],
+      "canManage": [],
+      "restrictions": ["facility_scoped", "assigned_data_only"]
+    }
+  },
+  
+  "teamBasedPermissions": {
+    "globalAdminTeam": {
+      "name": "global-admin-team",
+      "defaultRole": "administrator",
+      "permissions": {
+        "crossFacilityAccess": true,
+        "systemConfiguration": true,
+        "userManagement": true,
+        "auditAccess": true,
+        "dataExport": true
+      }
+    },
+    
+    "facilityTeams": {
+      "teamNaming": "facility-{facilityId}-team",
+      "roles": {
+        "owner": {
+          "mappedRole": "supervisor",
+          "additionalPermissions": [
+            "facility_configuration",
+            "team_management",
+            "staff_oversight"
+          ]
+        },
+        "admin": {
+          "mappedRole": "doctor",
+          "additionalPermissions": [
+            "clinical_reports",
+            "staff_coordination"
+          ]
+        },
+        "member": {
+          "mappedRole": "user",
+          "additionalPermissions": []
+        }
+      }
+    }
+  },
+  
+  "permissionInheritance": {
+    "enabled": true,
+    "rules": {
+      "facility_based": {
+        "description": "Permissions are inherited based on facility membership",
+        "implementation": "Users inherit base permissions from their facility team role"
+      },
+      "role_based": {
+        "description": "Higher roles inherit permissions from lower roles",
+        "implementation": "Administrators inherit all permissions from lower roles"
+      },
+      "team_based": {
+        "description": "Team members inherit permissions from team configuration",
+        "implementation": "Team role determines base permission set"
+      }
+    }
+  },
+  
+  "securityPolicies": {
+    "dataClassification": {
+      "public": {
+        "encryption": false,
+        "audit": false,
+        "retention": "permanent"
+      },
+      "internal": {
+        "encryption": false,
+        "audit": true,
+        "retention": "7_years"
+      },
+      "sensitive": {
+        "encryption": true,
+        "audit": true,
+        "retention": "permanent"
+      },
+      "restricted": {
+        "encryption": true,
+        "audit": true,
+        "retention": "permanent",
+        "additionalControls": ["mfa_required", "ip_restriction"]
+      }
+    },
+    
+    "accessControls": {
+      "mfa_required": {
+        "roles": ["administrator"],
+        "collections": ["users", "teams"],
+        "operations": ["create", "delete"]
+      },
+      "ip_restriction": {
+        "roles": ["administrator"],
+        "collections": ["all"],
+        "operations": ["delete"],
+        "allowedIPs": ["facility_networks"]
+      },
+      "time_based": {
+        "roles": ["user"],
+        "collections": ["all"],
+        "operations": ["all"],
+        "allowedHours": "06:00-22:00"
+      }
+    }
+  },
+  
+  "auditConfiguration": {
+    "enabled": true,
+    "events": {
+      "authentication": ["login", "logout", "failed_login"],
+      "authorization": ["permission_denied", "role_change"],
+      "data_access": ["create", "read", "update", "delete"],
+      "administration": ["user_create", "user_delete", "role_assign", "team_modify"]
+    },
+    "retention": {
+      "authentication": "1_year",
+      "authorization": "2_years",
+      "data_access": "7_years",
+      "administration": "permanent"
+    }
+  },
+  
+  "complianceSettings": {
+    "hipaa": {
+      "enabled": true,
+      "requirements": {
+        "minimum_necessary": true,
+        "access_logging": true,
+        "data_encryption": true,
+        "user_training": true,
+        "incident_response": true
+      }
+    },
+    "gdpr": {
+      "enabled": true,
+      "requirements": {
+        "consent_management": true,
+        "right_to_erasure": true,
+        "data_portability": true,
+        "privacy_by_design": true,
+        "data_minimization": true
+      }
+    }
+  },
+  
+  "runtimeConfiguration": {
+    "caching": {
+      "enabled": true,
+      "ttl": 300,
+      "invalidation": ["role_change", "team_update", "permission_update"]
+    },
+    "performance": {
+      "lazy_loading": true,
+      "batch_operations": true,
+      "query_optimization": true
+    },
+    "monitoring": {
+      "permission_checks": true,
+      "access_patterns": true,
+      "performance_metrics": true
+    }
+  }
+}
