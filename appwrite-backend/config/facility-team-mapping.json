@@ -1,0 +1,219 @@
+{
+  "version": "1.0.0",
+  "description": "Facility to team mapping configuration for facility-based access control",
+  "lastUpdated": "2024-01-01T00:00:00Z",
+  
+  "mappingRules": {
+    "facilityTeamNaming": {
+      "pattern": "facility-{facilityId}-team",
+      "description": "Standard naming convention for facility teams",
+      "examples": [
+        "facility-FAC001-team",
+        "facility-FAC002-team",
+        "facility-central-hospital-team"
+      ]
+    },
+    
+    "globalAdminTeam": {
+      "name": "global-admin-team",
+      "description": "Global administrators team with cross-facility access",
+      "facilityScope": "all"
+    }
+  },
+  
+  "facilityTeamDefaults": {
+    "teamSettings": {
+      "name": null,
+      "description": "Healthcare facility team for access control and collaboration",
+      "preferences": {
+        "allowInvites": false,
+        "allowJoinRequests": false,
+        "requireApproval": true
+      }
+    },
+    
+    "membershipDefaults": {
+      "defaultRole": "member",
+      "autoAssignRole": true,
+      "inheritFromUserRole": true
+    },
+    
+    "permissions": {
+      "inheritFromFacility": true,
+      "customPermissions": {},
+      "restrictedOperations": []
+    }
+  },
+  
+  "roleMapping": {
+    "description": "Mapping between user role labels and team roles",
+    "mappings": {
+      "admin": {
+        "teamRole": "owner",
+        "targetTeam": "global-admin-team",
+        "facilityTeamRole": "owner",
+        "description": "System administrators get owner role in global admin team and facility teams"
+      },
+      "facility_manager": {
+        "teamRole": "owner",
+        "targetTeam": "facility-{facilityId}-team",
+        "description": "Facility managers get owner role in their facility team"
+      },
+      "healthcare_worker": {
+        "teamRole": "admin",
+        "targetTeam": "facility-{facilityId}-team",
+        "description": "Healthcare workers get admin role in their facility team"
+      },
+      "data_entry_clerk": {
+        "teamRole": "member",
+        "targetTeam": "facility-{facilityId}-team",
+        "description": "Data entry clerks get member role in their facility team"
+      }
+    }
+  },
+  
+  "multiFacilityUsers": {
+    "description": "Configuration for users who belong to multiple facilities",
+    "allowMultipleMemberships": true,
+    "maxFacilities": 5,
+    "roleResolution": {
+      "strategy": "highest_privilege",
+      "description": "When user belongs to multiple teams, use the highest privilege role"
+    },
+    
+    "conflictResolution": {
+      "sameRoleDifferentFacilities": "allow",
+      "differentRolesMultipleFacilities": "use_highest",
+      "globalAdminOverride": true
+    }
+  },
+  
+  "teamCreationRules": {
+    "autoCreateForNewFacility": true,
+    "requireApprovalForCreation": false,
+    "createdBy": "system",
+    
+    "initialMembers": {
+      "includeCreator": true,
+      "includeSystemAdmin": true,
+      "includeFacilityManager": true
+    },
+    
+    "defaultPermissions": {
+      "useTemplatePermissions": true,
+      "templateName": "standard_facility_team",
+      "customizations": []
+    }
+  },
+  
+  "membershipManagement": {
+    "addMember": {
+      "requiredPermissions": ["team_management"],
+      "allowedRoles": ["owner", "global_admin"],
+      "approvalRequired": false,
+      "notifyExistingMembers": true
+    },
+    
+    "removeMember": {
+      "requiredPermissions": ["team_management"],
+      "allowedRoles": ["owner", "global_admin"],
+      "selfRemovalAllowed": true,
+      "notifyExistingMembers": true
+    },
+    
+    "changeRole": {
+      "requiredPermissions": ["team_management"],
+      "allowedRoles": ["owner", "global_admin"],
+      "roleHierarchyCheck": true,
+      "notifyMember": true
+    }
+  },
+  
+  "accessControlRules": {
+    "facilityDataAccess": {
+      "rule": "team_membership_required",
+      "exceptions": ["global_admin_team"],
+      "enforcement": "strict"
+    },
+    
+    "crossFacilityAccess": {
+      "allowedTeams": ["global-admin-team"],
+      "allowedRoles": ["owner"],
+      "requireSpecialPermission": true
+    },
+    
+    "resourceSharing": {
+      "betweenFacilities": false,
+      "exceptions": ["vaccines", "system_notifications"],
+      "approvalRequired": true
+    }
+  },
+  
+  "auditAndLogging": {
+    "logTeamChanges": true,
+    "logMembershipChanges": true,
+    "logPermissionChanges": true,
+    "logAccessAttempts": true,
+    
+    "retentionPeriod": "365d",
+    "logLevel": "info",
+    "includeMetadata": true
+  },
+  
+  "caching": {
+    "teamMembershipCache": {
+      "enabled": true,
+      "ttl": 300,
+      "maxSize": 1000
+    },
+    
+    "permissionCache": {
+      "enabled": true,
+      "ttl": 600,
+      "maxSize": 500
+    },
+    
+    "facilityTeamCache": {
+      "enabled": true,
+      "ttl": 1800,
+      "maxSize": 100
+    }
+  },
+  
+  "validation": {
+    "teamNameValidation": {
+      "pattern": "^facility-[a-zA-Z0-9_-]+-team$",
+      "maxLength": 50,
+      "minLength": 10
+    },
+    
+    "facilityIdValidation": {
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "maxLength": 20,
+      "minLength": 3
+    },
+    
+    "membershipValidation": {
+      "maxTeamsPerUser": 5,
+      "requireActiveFacility": true,
+      "preventDuplicateMembership": true
+    }
+  },
+  
+  "errorHandling": {
+    "teamNotFound": {
+      "action": "create_if_facility_exists",
+      "fallback": "assign_to_default_team"
+    },
+    
+    "membershipConflict": {
+      "action": "resolve_using_hierarchy",
+      "notifyAdmin": true
+    },
+    
+    "permissionDenied": {
+      "action": "log_and_deny",
+      "notifyUser": false
+    }
+  }
+}

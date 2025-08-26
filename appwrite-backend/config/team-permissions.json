@@ -1,0 +1,356 @@
+{
+  "version": "1.0.0",
+  "description": "Team-based permissions configuration for facility access control",
+  "lastUpdated": "2024-01-01T00:00:00Z",
+  
+  "globalAdminTeam": {
+    "name": "global-admin-team",
+    "description": "Global administrators with cross-facility access",
+    "permissions": {
+      "collections": {
+        "patients": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "immunization_records": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "facilities": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "vaccines": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "notifications": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "users": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "reports": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        },
+        "teams": {
+          "operations": ["create", "read", "update", "delete"],
+          "scope": "all_facilities",
+          "conditions": []
+        }
+      },
+      "specialPermissions": [
+        "cross_facility_access",
+        "user_management",
+        "system_configuration",
+        "audit_access",
+        "team_management",
+        "global_reports"
+      ]
+    }
+  },
+  
+  "facilityTeams": {
+    "roles": {
+      "owner": {
+        "description": "Facility administrators with full facility access",
+        "permissions": {
+          "collections": {
+            "patients": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "immunization_records": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "facilities": {
+              "operations": ["read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "vaccines": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": []
+            },
+            "notifications": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "users": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "reports": {
+              "operations": ["create", "read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "teams": {
+              "operations": ["read", "update"],
+              "scope": "facility_only",
+              "conditions": ["team_match"]
+            }
+          },
+          "specialPermissions": [
+            "facility_user_management",
+            "facility_reports",
+            "team_management",
+            "facility_configuration"
+          ]
+        }
+      },
+      
+      "admin": {
+        "description": "Supervisors and doctors with patient care access",
+        "permissions": {
+          "collections": {
+            "patients": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "immunization_records": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "facilities": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "vaccines": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": []
+            },
+            "notifications": {
+              "operations": ["read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "users": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "reports": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            }
+          },
+          "specialPermissions": [
+            "patient_care",
+            "immunization_management",
+            "clinical_reports"
+          ]
+        }
+      },
+      
+      "member": {
+        "description": "Regular users with basic access",
+        "permissions": {
+          "collections": {
+            "patients": {
+              "operations": ["create", "read", "update"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "immunization_records": {
+              "operations": ["create", "read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "facilities": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "vaccines": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": []
+            },
+            "notifications": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": ["facility_match"]
+            },
+            "users": {
+              "operations": ["read"],
+              "scope": "facility_only",
+              "conditions": ["self_only"]
+            }
+          },
+          "specialPermissions": [
+            "data_entry",
+            "basic_reports"
+          ]
+        }
+      }
+    }
+  },
+  
+  "permissionConditions": {
+    "facility_match": {
+      "description": "User must belong to the same facility as the resource",
+      "implementation": "Check if user's facility matches resource facility"
+    },
+    "team_match": {
+      "description": "User must belong to the team being accessed",
+      "implementation": "Check if user is member of the team"
+    },
+    "self_only": {
+      "description": "User can only access their own resources",
+      "implementation": "Check if resource belongs to the user"
+    }
+  },
+  
+  "collectionTeamRules": {
+    "patients": {
+      "readPermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:facility-{facilityId}-team/member",
+        "team:global-admin-team/owner"
+      ],
+      "writePermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:global-admin-team/owner"
+      ],
+      "deletePermissions": [
+        "team:global-admin-team/owner"
+      ]
+    },
+    
+    "immunization_records": {
+      "readPermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:facility-{facilityId}-team/member",
+        "team:global-admin-team/owner"
+      ],
+      "writePermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:global-admin-team/owner"
+      ],
+      "deletePermissions": [
+        "team:global-admin-team/owner"
+      ]
+    },
+    
+    "facilities": {
+      "readPermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:facility-{facilityId}-team/member",
+        "team:global-admin-team/owner"
+      ],
+      "writePermissions": [
+        "team:facility-{facilityId}-team/owner",
+        "team:global-admin-team/owner"
+      ],
+      "deletePermissions": [
+        "team:global-admin-team/owner"
+      ]
+    },
+    
+    "vaccines": {
+      "readPermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:facility-{facilityId}-team/member",
+        "team:global-admin-team/owner"
+      ],
+      "writePermissions": [
+        "team:global-admin-team/owner"
+      ],
+      "deletePermissions": [
+        "team:global-admin-team/owner"
+      ]
+    },
+    
+    "notifications": {
+      "readPermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:facility-{facilityId}-team/member",
+        "team:global-admin-team/owner"
+      ],
+      "writePermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:global-admin-team/owner"
+      ],
+      "deletePermissions": [
+        "team:global-admin-team/owner"
+      ]
+    },
+    
+    "reports": {
+      "readPermissions": [
+        "team:facility-{facilityId}-team/admin",
+        "team:facility-{facilityId}-team/owner",
+        "team:global-admin-team/owner"
+      ],
+      "writePermissions": [
+        "team:facility-{facilityId}-team/owner",
+        "team:global-admin-team/owner"
+      ],
+      "deletePermissions": [
+        "team:global-admin-team/owner"
+      ]
+    }
+  },
+  
+  "teamManagementRules": {
+    "createTeam": {
+      "allowedRoles": ["global-admin-team/owner"],
+      "conditions": ["system_admin_only"]
+    },
+    "deleteTeam": {
+      "allowedRoles": ["global-admin-team/owner"],
+      "conditions": ["system_admin_only"]
+    },
+    "addMember": {
+      "allowedRoles": [
+        "global-admin-team/owner",
+        "facility-{facilityId}-team/owner"
+      ],
+      "conditions": ["facility_match_or_global_admin"]
+    },
+    "removeMember": {
+      "allowedRoles": [
+        "global-admin-team/owner",
+        "facility-{facilityId}-team/owner"
+      ],
+      "conditions": ["facility_match_or_global_admin"]
+    },
+    "updateMemberRole": {
+      "allowedRoles": [
+        "global-admin-team/owner",
+        "facility-{facilityId}-team/owner"
+      ],
+      "conditions": ["facility_match_or_global_admin", "role_hierarchy_check"]
+    }
+  }
+}

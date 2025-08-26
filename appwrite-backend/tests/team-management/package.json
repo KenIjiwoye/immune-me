@@ -1,0 +1,41 @@
+{
+  "name": "team-management-tests",
+  "version": "1.0.0",
+  "description": "Unit and integration tests for BE-AW-09 team management functionality",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:facility-manager": "jest facility-team-manager.test.js",
+    "test:permission-checker": "jest team-permission-checker.test.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "../../utils/facility-team-manager.js",
+      "../../utils/team-permission-checker.js",
+      "../../functions/team-management/**/*.js"
+    ],
+    "coverageDirectory": "./coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "testMatch": [
+      "**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ],
+    "verbose": true
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "node-appwrite": "^14.0.0"
+  }
+}
