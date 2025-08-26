@@ -1,0 +1,9 @@
+{
+  "name": "assign-user-role",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  }
+}

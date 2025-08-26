@@ -1,0 +1,21 @@
+{
+  "name": "get-user-info",
+  "version": "1.0.0",
+  "description": "Appwrite function for retrieving comprehensive user information including roles and permissions",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  },
+  "keywords": [
+    "appwrite",
+    "function",
+    "user-info",
+    "roles",
+    "permissions"
+  ],
+  "author": "Immune Me System",
+  "license": "MIT"
+}

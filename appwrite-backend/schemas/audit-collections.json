@@ -1,0 +1,37 @@
+{
+  "access_audit_log": {
+    "attributes": [
+      {"key": "userId", "type": "string", "size": 36, "required": true},
+      {"key": "userRole", "type": "string", "size": 50, "required": true},
+      {"key": "collection", "type": "string", "size": 100, "required": true},
+      {"key": "documentId", "type": "string", "size": 36},
+      {"key": "operation", "type": "enum", "elements": ["read", "create", "update", "delete"], "required": true},
+      {"key": "granted", "type": "boolean", "required": true},
+      {"key": "timestamp", "type": "datetime", "required": true},
+      {"key": "ipAddress", "type": "string", "size": 45},
+      {"key": "userAgent", "type": "string", "size": 500}
+    ],
+    "indexes": [
+      {"key": "userId", "type": "key"},
+      {"key": "timestamp", "type": "key"},
+      {"key": "granted", "type": "key"},
+      {"key": "operation", "type": "key"}
+    ]
+  },
+  "role_change_log": {
+    "attributes": [
+      {"key": "targetUserId", "type": "string", "size": 36, "required": true},
+      {"key": "previousRole", "type": "string", "size": 50},
+      {"key": "newRole", "type": "string", "size": 50, "required": true},
+      {"key": "facilityId", "type": "string", "size": 36},
+      {"key": "assignedBy", "type": "string", "size": 36, "required": true},
+      {"key": "timestamp", "type": "datetime", "required": true},
+      {"key": "reason", "type": "string", "size": 500}
+    ],
+    "indexes": [
+      {"key": "targetUserId", "type": "key"},
+      {"key": "assignedBy", "type": "key"},
+      {"key": "timestamp", "type": "key"}
+    ]
+  }
+}

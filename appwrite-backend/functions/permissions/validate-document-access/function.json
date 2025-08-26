@@ -1,0 +1,9 @@
+{
+  "name": "validate-document-access",
+  "runtime": "node-18.0",
+  "entrypoint": "src/main.js",
+  "events": [],
+  "schedule": "",
+  "timeout": 60,
+  "ignore": ["node_modules", "test", "tests", ".git", ".vscode"]
+}

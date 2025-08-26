@@ -1,0 +1,213 @@
+{
+  "version": "1.0.0",
+  "description": "User label definitions for Appwrite Auth role management system",
+  "lastUpdated": "2025-08-26T08:20:00.000Z",
+  
+  "roleLabels": {
+    "administrator": {
+      "name": "Administrator",
+      "description": "System administrators with full access to all facilities and system configuration",
+      "color": "#dc2626",
+      "icon": "shield-check",
+      "priority": 4,
+      "capabilities": [
+        "Full system access",
+        "User management across all facilities",
+        "System configuration",
+        "Audit log access",
+        "Cross-facility data access"
+      ]
+    },
+    
+    "supervisor": {
+      "name": "Supervisor",
+      "description": "Facility supervisors with administrative access to their assigned facility",
+      "color": "#ea580c",
+      "icon": "user-check",
+      "priority": 3,
+      "capabilities": [
+        "Facility administration",
+        "User management within facility",
+        "Patient record management",
+        "Facility reporting",
+        "Staff supervision"
+      ]
+    },
+    
+    "doctor": {
+      "name": "Doctor",
+      "description": "Healthcare professionals managing patient care and medical records",
+      "color": "#0891b2",
+      "icon": "user-md",
+      "priority": 2,
+      "capabilities": [
+        "Patient care management",
+        "Medical record access",
+        "Immunization administration",
+        "Clinical reporting",
+        "Patient consultation"
+      ]
+    },
+    
+    "user": {
+      "name": "User",
+      "description": "Basic users with limited read-only access to assigned facility data",
+      "color": "#059669",
+      "icon": "user",
+      "priority": 1,
+      "capabilities": [
+        "View patient records",
+        "View immunization records",
+        "View facility information",
+        "Basic reporting access"
+      ]
+    }
+  },
+  
+  "facilityLabels": {
+    "prefix": "facility_",
+    "description": "Facility-specific labels for user access control",
+    "format": "facility_{facilityId}",
+    "examples": [
+      "facility_001",
+      "facility_hospital_main",
+      "facility_clinic_north"
+    ],
+    "validation": {
+      "pattern": "^facility_[a-zA-Z0-9_-]+$",
+      "maxLength": 50,
+      "minLength": 10
+    }
+  },
+  
+  "specialLabels": {
+    "multi_facility_access": {
+      "name": "Multi-Facility Access",
+      "description": "Allows access to multiple facilities",
+      "applicableRoles": ["administrator"],
+      "color": "#7c3aed"
+    },
+    
+    "emergency_access": {
+      "name": "Emergency Access",
+      "description": "Emergency access to critical patient data",
+      "applicableRoles": ["administrator", "supervisor", "doctor"],
+      "color": "#dc2626"
+    },
+    
+    "audit_access": {
+      "name": "Audit Access",
+      "description": "Access to system audit logs and security reports",
+      "applicableRoles": ["administrator"],
+      "color": "#374151"
+    },
+    
+    "system_config": {
+      "name": "System Configuration",
+      "description": "Access to system configuration and settings",
+      "applicableRoles": ["administrator"],
+      "color": "#6b7280"
+    },
+    
+    "user_management": {
+      "name": "User Management",
+      "description": "Ability to create, modify, and manage user accounts",
+      "applicableRoles": ["administrator", "supervisor"],
+      "color": "#0891b2"
+    },
+    
+    "reporting_advanced": {
+      "name": "Advanced Reporting",
+      "description": "Access to advanced reporting and analytics features",
+      "applicableRoles": ["administrator", "supervisor"],
+      "color": "#059669"
+    }
+  },
+  
+  "labelCategories": {
+    "role": {
+      "description": "Primary role assignment labels",
+      "required": true,
+      "exclusive": true,
+      "labels": ["administrator", "supervisor", "doctor", "user"]
+    },
+    
+    "facility": {
+      "description": "Facility access assignment labels",
+      "required": true,
+      "exclusive": false,
+      "pattern": "facility_*"
+    },
+    
+    "special": {
+      "description": "Special permission and access labels",
+      "required": false,
+      "exclusive": false,
+      "labels": [
+        "multi_facility_access",
+        "emergency_access", 
+        "audit_access",
+        "system_config",
+        "user_management",
+        "reporting_advanced"
+      ]
+    }
+  },
+  
+  "labelRules": {
+    "assignment": {
+      "maxLabelsPerUser": 20,
+      "requiredCategories": ["role", "facility"],
+      "conflictRules": [
+        {
+          "description": "Users cannot have multiple role labels",
+          "type": "exclusive",
+          "category": "role"
+        },
+        {
+          "description": "Basic users cannot have special permissions",
+          "type": "conditional",
+          "condition": "role:user",
+          "forbidden": ["emergency_access", "audit_access", "system_config", "user_management"]
+        }
+      ]
+    },
+    
+    "validation": {
+      "labelFormat": "^[a-z][a-z0-9_]*[a-z0-9]$",
+      "maxLabelLength": 50,
+      "reservedPrefixes": ["system_", "internal_", "temp_"],
+      "allowedCharacters": "abcdefghijklmnopqrstuvwxyz0123456789_"
+    }
+  },
+  
+  "defaultAssignments": {
+    "newUser": {
+      "role": "user",
+      "facilityRequired": true,
+      "specialLabels": []
+    },
+    
+    "roleUpgrade": {
+      "preserveExisting": true,
+      "requireApproval": true,
+      "notifyAdministrators": true
+    }
+  },
+  
+  "metadata": {
+    "supportedAppwriteVersion": "1.4.x",
+    "compatibilityNotes": [
+      "Labels are stored in user.labels array",
+      "Maximum 100 labels per user (Appwrite limit)",
+      "Labels are case-sensitive",
+      "Use snake_case for consistency"
+    ],
+    
+    "migrationNotes": [
+      "Existing role data in user.prefs should be migrated to labels",
+      "Facility assignments should be converted to facility_ labels",
+      "Legacy permission structures need label mapping"
+    ]
+  }
+}

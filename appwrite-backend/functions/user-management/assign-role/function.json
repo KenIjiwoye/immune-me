@@ -1,0 +1,22 @@
+{
+  "functionId": "assign-role",
+  "name": "Assign Role to User",
+  "runtime": "node-18.0",
+  "execute": ["role:authenticated"],
+  "events": [],
+  "schedule": "",
+  "timeout": 30,
+  "enabled": true,
+  "logging": true,
+  "entrypoint": "src/main.js",
+  "commands": "npm install",
+  "ignore": [
+    "node_modules",
+    ".npm"
+  ],
+  "variables": {
+    "APPWRITE_ENDPOINT": "$APPWRITE_ENDPOINT",
+    "APPWRITE_PROJECT_ID": "$APPWRITE_PROJECT_ID",
+    "APPWRITE_API_KEY": "$APPWRITE_API_KEY"
+  }
+}

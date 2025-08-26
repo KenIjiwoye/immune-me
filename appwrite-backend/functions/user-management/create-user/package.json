@@ -1,0 +1,21 @@
+{
+  "name": "create-user",
+  "version": "1.0.0",
+  "description": "Appwrite function for creating users with role assignment",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-appwrite": "^13.0.0"
+  },
+  "keywords": [
+    "appwrite",
+    "function",
+    "user-management",
+    "roles",
+    "authentication"
+  ],
+  "author": "Immune Me System",
+  "license": "MIT"
+}

@@ -1,0 +1,32 @@
+{
+  "patients": {
+    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
+    "create": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
+    "update": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
+    "delete": ["role:admin"]
+  },
+  "immunization_records": {
+    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
+    "create": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
+    "update": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
+    "delete": ["role:admin"]
+  },
+  "facilities": {
+    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
+    "create": ["role:admin"],
+    "update": ["role:admin", "role:facility_manager"],
+    "delete": ["role:admin"]
+  },
+  "vaccines": {
+    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker", "role:data_entry_clerk"],
+    "create": ["role:admin"],
+    "update": ["role:admin"],
+    "delete": ["role:admin"]
+  },
+  "notifications": {
+    "read": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
+    "create": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
+    "update": ["role:admin", "role:facility_manager", "role:healthcare_worker"],
+    "delete": ["role:admin"]
+  }
+}
