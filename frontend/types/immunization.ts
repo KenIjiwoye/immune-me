@@ -29,6 +29,7 @@ export interface Vaccine {
 // API response types
 export interface ImmunizationRecord {
   id: number;
+  patientId: number;
   administeredDate: string;
   returnDate: string | null;
   batchNumber: string;
@@ -39,6 +40,18 @@ export interface ImmunizationRecord {
   administeredBy: {
     id: number;
     fullName: string;
+  };
+  patient: {
+    id: number;
+    fullName: string;
+    dateOfBirth: string;
+    sex: 'M' | 'F';
+    district: string;
+    contactPhone?: string;
+    motherName?: string;
+    fatherName?: string;
+    townVillage?: string;
+    address?: string;
   };
   notes?: string;
 }

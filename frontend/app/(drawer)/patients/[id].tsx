@@ -146,7 +146,7 @@ export default function PatientDetailsScreen() {
                 <TouchableOpacity
                   key={record.id}
                   style={styles.immunizationCard}
-                  // onPress={() => router.push(`/immunizations/${record.id}` as any)}
+                  onPress={() => router.push(`/immunizations/${record.id}/edit` as any)}
                 >
                   <View style={styles.immunizationHeader}>
                     <Text style={styles.vaccineName}>{record.vaccine.name}</Text>
