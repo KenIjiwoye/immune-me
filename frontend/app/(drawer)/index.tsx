@@ -138,35 +138,29 @@ export default function DashboardScreen() {
           value={stats?.totalPatients || 0}
           icon="people-outline"
           color="#4CAF50"
+          onPress={() => router.push('/patients')}
         />
         <StatCard
           title="Total Immunizations"
           value={stats?.totalImmunizations || 0}
           icon="medical-outline"
           color="#2196F3"
+          onPress={() => router.push('/immunizations')}
         />
-        {/* <TouchableOpacity
-          style={styles.statTouchable}
+        <StatCard
+          title="Pending"
+          value={stats?.pendingImmunizations || 0}
+          icon="time-outline"
+          color="#FF9800"
           onPress={() => router.push('/notifications?filter=pending')}
-        > */}
-          <StatCard
-            title="Pending"
-            value={stats?.pendingImmunizations || 0}
-            icon="time-outline"
-            color="#FF9800"
-          />
-        {/* </TouchableOpacity> */}
-        {/* <TouchableOpacity
-          style={styles.statTouchable}
+        />
+        <StatCard
+          title="Overdue"
+          value={stats?.overdueImmunizations || 0}
+          icon="alert-circle-outline"
+          color="#F44336"
           onPress={() => router.push('/notifications?filter=overdue')}
-        > */}
-          <StatCard
-            title="Overdue"
-            value={stats?.overdueImmunizations || 0}
-            icon="alert-circle-outline"
-            color="#F44336"
-          />
-        {/* </TouchableOpacity> */}
+        />
       </View>
 
       <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -341,9 +335,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     color: '#6c757d',
-  },
-  statTouchable: {
-    width: '48%',
   },
 });
 

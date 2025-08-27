@@ -14,6 +14,7 @@
 - [x] Quick action cards
 - [x] Recent activity display
 - [x] Navigation drawer setup
+- [x] **Tappable StatCards** - All overview StatCards (Total Patients, Total Immunizations, Pending, Overdue) are now tappable and navigate to respective list screens (/patients, /immunizations, /notifications?filter=pending, /notifications?filter=overdue)
 
 ### ✅ Patient Management (FE-03)
 - [x] Patient list with search and pagination

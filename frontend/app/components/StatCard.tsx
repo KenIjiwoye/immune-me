@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 type StatCardProps = {
@@ -7,10 +7,11 @@ type StatCardProps = {
   value: number;
   icon: string;
   color: string;
+  onPress?: () => void;
 };
 
-export default function StatCard({ title, value, icon, color }: StatCardProps) {
-  return (
+export default function StatCard({ title, value, icon, color, onPress }: StatCardProps) {
+  const cardContent = (
     <View style={[styles.card, { borderLeftColor: color }]}>
       <View style={styles.iconContainer}>
         <Ionicons name={icon as any} size={24} color={color} />
@@ -21,6 +22,16 @@ export default function StatCard({ title, value, icon, color }: StatCardProps) {
       </View>
     </View>
   );
+
+  if (onPress) {
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        {cardContent}
+      </TouchableWithoutFeedback>
+    );
+  }
+
+  return cardContent;
 }
 
 const styles = StyleSheet.create({
