@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { immunizationSchema, ImmunizationFormData, ImmunizationRecord } from '../../../types/immunization';
 import { Vaccine } from '../../../types/immunization';
 import { Patient } from '../../../types/patient';
+import { patientKeys } from '../../../hooks/usePatients';
 import api from '../../../services/api';
 import VaccineSelector from '../../components/VaccineSelector';
 import PatientCard from '../../components/PatientCard';
@@ -105,7 +106,7 @@ export default function EditImmunizationScreen() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['immunization-records'] });
       if (immunizationRecord?.patientId) {
-        queryClient.invalidateQueries({ queryKey: ['patients', immunizationRecord.patientId, 'immunizations'] });
+        queryClient.invalidateQueries({ queryKey: [...patientKeys.detail(immunizationRecord.patientId), 'immunizations'] });
       }
       Alert.alert(
         'Success',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import { router, useLocalSearchParams, Stack } from 'expo-router';
+import { router, useLocalSearchParams, Stack, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { format, differenceInYears } from 'date-fns';
 import { useAuth } from '../../../context/auth';
@@ -27,7 +27,16 @@ export default function PatientDetailsScreen() {
   const {
     data: immunizations,
     isLoading: isImmunizationsLoading,
+    refetch: refetchImmunizations,
   } = usePatientImmunizations(patientId);
+
+  // Refetch immunizations when screen comes back into focus
+  // This ensures data is refreshed after returning from edit screen
+  useFocusEffect(
+    useCallback(() => {
+      refetchImmunizations();
+    }, [refetchImmunizations])
+  );
 
   if (isPatientLoading) {
     return (
