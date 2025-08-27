@@ -27,6 +27,13 @@ export default function AdminLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="users"
+        options={{
+          headerTitle: 'User Management',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
