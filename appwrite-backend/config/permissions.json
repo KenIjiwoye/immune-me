@@ -351,39 +351,232 @@
     },
     
     "functions": {
+      "data_sync": {
+        "administrator": {
+          "execute": ["*"],
+          "conditions": [],
+          "rateLimit": {
+            "requests": 50,
+            "duration": 3600
+          }
+        },
+        "supervisor": {
+          "execute": ["offline-queue-processor", "sync-status-monitor"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 20,
+            "duration": 3600
+          }
+        },
+        "doctor": {
+          "execute": ["sync-status-monitor"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 10,
+            "duration": 3600
+          }
+        },
+        "user": {
+          "execute": ["sync-status-monitor"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 5,
+            "duration": 3600
+          }
+        }
+      },
+      
       "notifications": {
-        "administrator": ["execute"],
-        "supervisor": ["execute"],
-        "doctor": [],
-        "user": []
+        "administrator": {
+          "execute": ["*"],
+          "conditions": [],
+          "rateLimit": {
+            "requests": 200,
+            "duration": 3600
+          }
+        },
+        "supervisor": {
+          "execute": [
+            "due-immunization-reminders",
+            "email-sender",
+            "sms-sender",
+            "push-notification-sender",
+            "process-notification-queue",
+            "schedule-notifications"
+          ],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 100,
+            "duration": 3600
+          }
+        },
+        "doctor": {
+          "execute": ["due-immunization-reminders", "schedule-notifications"],
+          "conditions": ["facility_match", "active_facility", "clinical_access"],
+          "rateLimit": {
+            "requests": 50,
+            "duration": 3600
+          }
+        },
+        "user": {
+          "execute": ["due-immunization-reminders"],
+          "conditions": ["facility_match", "active_facility", "assigned_patients"],
+          "rateLimit": {
+            "requests": 20,
+            "duration": 3600
+          }
+        }
       },
       
       "reports": {
-        "administrator": ["execute"],
-        "supervisor": ["execute"],
-        "doctor": ["execute"],
-        "user": ["execute"]
-      },
-      
-      "data_sync": {
-        "administrator": ["execute"],
-        "supervisor": [],
-        "doctor": [],
-        "user": []
+        "administrator": {
+          "execute": ["*"],
+          "conditions": [],
+          "rateLimit": {
+            "requests": 100,
+            "duration": 3600
+          }
+        },
+        "supervisor": {
+          "execute": ["*"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 50,
+            "duration": 3600
+          }
+        },
+        "doctor": {
+          "execute": [
+            "immunization-coverage-report",
+            "vaccine-usage-statistics",
+            "age-distribution-analysis",
+            "due-immunizations-list",
+            "generate-pdf-report"
+          ],
+          "conditions": ["facility_match", "active_facility", "clinical_access"],
+          "rateLimit": {
+            "requests": 30,
+            "duration": 3600
+          }
+        },
+        "user": {
+          "execute": ["due-immunizations-list", "generate-pdf-report"],
+          "conditions": ["facility_match", "active_facility", "assigned_patients"],
+          "rateLimit": {
+            "requests": 10,
+            "duration": 3600
+          }
+        }
       },
       
       "user_management": {
-        "administrator": ["execute"],
-        "supervisor": ["execute"],
-        "doctor": [],
-        "user": []
+        "administrator": {
+          "execute": ["*"],
+          "conditions": [],
+          "rateLimit": {
+            "requests": 50,
+            "duration": 3600
+          }
+        },
+        "supervisor": {
+          "execute": ["create-user", "assign-role", "get-user-info", "check-permissions"],
+          "conditions": ["facility_match", "active_facility", "role_hierarchy"],
+          "rateLimit": {
+            "requests": 30,
+            "duration": 3600
+          }
+        },
+        "doctor": {
+          "execute": ["get-user-info", "check-permissions"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 20,
+            "duration": 3600
+          }
+        },
+        "user": {
+          "execute": ["get-user-info", "check-permissions"],
+          "conditions": ["facility_match", "active_facility", "self_only"],
+          "rateLimit": {
+            "requests": 10,
+            "duration": 3600
+          }
+        }
       },
       
       "team_management": {
-        "administrator": ["execute"],
-        "supervisor": ["execute"],
-        "doctor": [],
-        "user": []
+        "administrator": {
+          "execute": ["*"],
+          "conditions": [],
+          "rateLimit": {
+            "requests": 50,
+            "duration": 3600
+          }
+        },
+        "supervisor": {
+          "execute": [
+            "create-facility-team",
+            "assign-user-to-team",
+            "remove-user-from-team",
+            "get-team-members"
+          ],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 30,
+            "duration": 3600
+          }
+        },
+        "doctor": {
+          "execute": ["get-team-members"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 20,
+            "duration": 3600
+          }
+        },
+        "user": {
+          "execute": ["get-team-members"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 10,
+            "duration": 3600
+          }
+        }
+      },
+      
+      "permissions": {
+        "administrator": {
+          "execute": ["*"],
+          "conditions": [],
+          "rateLimit": {
+            "requests": 100,
+            "duration": 3600
+          }
+        },
+        "supervisor": {
+          "execute": ["assign-user-role", "validate-document-access", "audit-access-log"],
+          "conditions": ["facility_match", "active_facility", "role_hierarchy"],
+          "rateLimit": {
+            "requests": 50,
+            "duration": 3600
+          }
+        },
+        "doctor": {
+          "execute": ["validate-document-access"],
+          "conditions": ["facility_match", "active_facility"],
+          "rateLimit": {
+            "requests": 30,
+            "duration": 3600
+          }
+        },
+        "user": {
+          "execute": ["validate-document-access"],
+          "conditions": ["facility_match", "active_facility", "self_only"],
+          "rateLimit": {
+            "requests": 20,
+            "duration": 3600
+          }
+        }
       }
     }
   },

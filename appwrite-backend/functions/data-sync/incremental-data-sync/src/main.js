@@ -1,6 +1,8 @@
 'use strict';
 
 const { Client, Databases, Query } = require('node-appwrite');
+const FunctionMiddleware = require('../../../../utils/function-middleware');
+const FacilityScopedQueries = require('../../../../utils/facility-scoped-queries');
 
 const {
   nowIso,
@@ -15,53 +17,112 @@ const {
 const SYNC_CONFIG = require('../../../../config/sync-configuration.json');
 
 module.exports = async ({ req, res, log, error }) => {
-  const client = new Client()
-    .setEndpoint(process.env.APPWRITE_ENDPOINT)
-    .setProject(process.env.APPWRITE_PROJECT_ID)
-    .setKey(process.env.APPWRITE_API_KEY);
-
-  const databases = new Databases(client);
-
+  const startTime = Date.now();
+  
+  // Initialize middleware and scoped queries
+  const middleware = new FunctionMiddleware();
+  const scopedQueries = new FacilityScopedQueries();
+  
   try {
+    // 1. Validate function execution permissions
+    const validationResult = await middleware.validateFunctionExecution(
+      { req, res, log, error },
+      'incremental-data-sync',
+      'DATA_SYNC'
+    );
+
+    if (!validationResult.success) {
+      await logSecurityEvent('sync_access_denied', {
+        reason: validationResult.error.message,
+        userId: req.variables?.APPWRITE_FUNCTION_USER_ID,
+        timestamp: nowIso()
+      }, error);
+      
+      return res.json({
+        success: false,
+        error: validationResult.error.message,
+        code: validationResult.error.code
+      }, validationResult.error.statusCode);
+    }
+
+    const { userId, role, facilityId, permissions } = validationResult.data;
+
+    // 2. Parse and validate request payload
     const payload = parseJSONSafe(req.payload, {});
     const {
       deviceId,
       lastSyncTimestamp,
       collections,
-      userId,
-      facilityId,
       pageLimit,          // optional override
       pageCursor,         // optional: continue from a cursor
       compress            // optional: return compressed results (gzip+base64)
     } = payload;
 
-    if (!isNonEmptyString(deviceId) || !isNonEmptyString(userId)) {
-      return res.json({ success: false, error: 'Device ID and User ID required' }, 400);
+    if (!isNonEmptyString(deviceId)) {
+      return res.json({
+        success: false,
+        error: 'Device ID is required',
+        code: 'INVALID_REQUEST'
+      }, 400);
     }
 
+    // 3. Validate and sanitize sync parameters
     const syncTimestamp = nowIso();
     const lastSync = isNonEmptyString(lastSyncTimestamp) ? lastSyncTimestamp : '1970-01-01T00:00:00.000Z';
     const targetCollections = Array.isArray(collections) && collections.length > 0
-      ? collections
+      ? collections.filter(col => isValidCollection(col))
       : SYNC_CONFIG.defaultCollections || ['patients', 'immunization_records', 'notifications'];
 
-    // Get user permissions and facility access
-    const userPermissions = await getUserPermissions(databases, userId, facilityId);
+    // 4. Apply rate limiting check
+    const rateLimitKey = `sync:${userId}:${deviceId}`;
+    if (!(await checkRateLimit(rateLimitKey, role))) {
+      await logSecurityEvent('sync_rate_limit_exceeded', {
+        userId,
+        deviceId,
+        role,
+        timestamp: nowIso()
+      }, error);
+      
+      return res.json({
+        success: false,
+        error: 'Rate limit exceeded for sync operations',
+        code: 'RATE_LIMIT_EXCEEDED'
+      }, 429);
+    }
 
     const syncResults = {};
+    const securityContext = {
+      userId,
+      role,
+      facilityId,
+      deviceId,
+      allowedCollections: targetCollections
+    };
 
-    // Sync each requested collection
+    // 5. Sync each requested collection with proper access control
     for (const collectionName of targetCollections) {
       try {
-        const collectionSync = await syncCollection(
-          databases,
+        // Validate collection access
+        const canAccess = await validateCollectionAccess(userId, collectionName, 'read', scopedQueries);
+        if (!canAccess.allowed) {
+          log(`Collection access denied for ${collectionName}: ${canAccess.reason}`);
+          syncResults[collectionName] = {
+            success: false,
+            error: `Access denied: ${canAccess.reason}`,
+            code: 'COLLECTION_ACCESS_DENIED'
+          };
+          continue;
+        }
+
+        const collectionSync = await syncCollectionSecure(
+          scopedQueries,
           collectionName,
           lastSync,
-          userPermissions,
+          securityContext,
           {
-            pageLimit: pageLimit || (SYNC_CONFIG.batch && SYNC_CONFIG.batch.limit) || 100,
+            pageLimit: Math.min(pageLimit || 100, getMaxPageLimit(role)),
             deletedLimit: (SYNC_CONFIG.batch && SYNC_CONFIG.batch.deletedLimit) || 50,
-            maxPages: (SYNC_CONFIG.batch && SYNC_CONFIG.batch.maxPages) || 10,
+            maxPages: Math.min((SYNC_CONFIG.batch && SYNC_CONFIG.batch.maxPages) || 10, getMaxPages(role)),
             initialCursor: pageCursor || null
           },
           log
@@ -69,36 +130,57 @@ module.exports = async ({ req, res, log, error }) => {
         syncResults[collectionName] = collectionSync;
       } catch (collectionError) {
         error(`Failed to sync collection ${collectionName}: ${collectionError.message}`);
+        await logSecurityEvent('sync_collection_error', {
+          userId,
+          collectionName,
+          error: collectionError.message,
+          timestamp: nowIso()
+        }, error);
+        
         syncResults[collectionName] = {
           success: false,
-          error: collectionError.message
+          error: collectionError.message,
+          code: 'COLLECTION_SYNC_ERROR'
         };
       }
     }
 
-    // Record sync operation
-    await safeCreate(databases, 'immune-me-db', SYNC_CONFIG.loggingCollections.syncOperations, {
+    // 6. Record sync operation with audit trail
+    await logSyncOperation({
       device_id: deviceId,
       user_id: userId,
-      facility_id: userPermissions.facilityId || facilityId || null,
+      facility_id: facilityId,
+      role: role,
       sync_timestamp: syncTimestamp,
       last_sync_timestamp: lastSync,
       collections: Object.keys(syncResults),
       status: 'completed',
-      results: JSON.stringify(syncResults)
+      results: JSON.stringify(syncResults),
+      execution_time: Date.now() - startTime,
+      security_context: JSON.stringify(securityContext)
     }, error);
 
-    // Optional compression for optimization
+    // 7. Optional compression for optimization
     let compressedResults = null;
-    if (compress) {
+    if (compress && isCompressionAllowed(role)) {
       try {
         compressedResults = gzipCompressBase64(syncResults);
       } catch (e) {
-        // no-op if compression fails
+        log(`Compression failed: ${e.message}`);
       }
     }
 
-    log(`Incremental sync completed for device ${deviceId}, user ${userId}`);
+    // 8. Log successful sync
+    log(`Secure incremental sync completed for device ${deviceId}, user ${userId}, role ${role}`);
+    await logSecurityEvent('sync_completed', {
+      userId,
+      deviceId,
+      role,
+      facilityId,
+      collectionsCount: Object.keys(syncResults).length,
+      executionTime: Date.now() - startTime,
+      timestamp: nowIso()
+    }, error);
 
     return res.json({
       success: true,
@@ -106,12 +188,27 @@ module.exports = async ({ req, res, log, error }) => {
       results: syncResults,
       compressedResults,
       compression: compressedResults ? 'gzip+base64' : null,
-      nextSyncRecommended: new Date(Date.now() + (5 * 60 * 1000)).toISOString() // 5 minutes
+      nextSyncRecommended: new Date(Date.now() + getSyncInterval(role)).toISOString(),
+      security: {
+        facilityScoped: role !== 'administrator',
+        executionTime: Date.now() - startTime,
+        rateLimitRemaining: permissions.rateLimit?.remaining
+      }
     });
 
   } catch (err) {
-    error('Incremental data sync failed: ' + err.message);
-    return res.json({ success: false, error: err.message }, 500);
+    error('Secure incremental data sync failed: ' + err.message);
+    await logSecurityEvent('sync_system_error', {
+      error: err.message,
+      stack: err.stack,
+      timestamp: nowIso()
+    }, error);
+    
+    return res.json({
+      success: false,
+      error: 'Internal sync error',
+      code: 'SYSTEM_ERROR'
+    }, 500);
   }
 };
 
