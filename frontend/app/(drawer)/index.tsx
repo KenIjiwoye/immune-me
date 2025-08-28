@@ -148,7 +148,7 @@ export default function DashboardScreen() {
           onPress={() => router.push('/immunizations')}
         />
         <StatCard
-          title="Pending"
+          title="Upcoming"
           value={stats?.pendingImmunizations || 0}
           icon="time-outline"
           color="#FF9800"
