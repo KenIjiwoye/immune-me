@@ -14,63 +14,47 @@ import api from '../../../../services/api';
 import Toast from 'react-native-toast-message';
 import { useAuth } from '../../../../context/auth';
 
-type User = {
+type Facility = {
   id: number;
-  username: string;
-  email: string;
-  fullName: string;
-  role: string;
-  facilityId: number;
-  facility?: {
-    id: number;
-    name: string;
-  };
+  name: string;
+  district: string;
+  address: string;
+  contactPhone: string;
   createdAt: string;
   updatedAt: string;
 };
 
-export default function UserDetailsScreen() {
+export default function FacilityDetailsScreen() {
   const params = useLocalSearchParams();
-  const userId = parseInt(params.id as string, 10);
-
-  const { user: currentUser } = useAuth();
+  const facilityId = parseInt(params.id as string, 10);
+  const { user } = useAuth();
 
   const {
-    data: user,
+    data: facility,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ['user', userId],
+    queryKey: ['facility', facilityId],
     queryFn: async () => {
-      const response = await api.get(`/users/${userId}`);
+      const response = await api.get(`/facilities/${facilityId}`);
       return response.data;
     },
   });
 
   const handleDelete = async () => {
     try {
-      await api.delete(`/users/${userId}`);
+      await api.delete(`/facilities/${facilityId}`);
       Toast.show({
         type: 'success',
-        text1: 'User deleted successfully',
+        text1: 'Facility deleted successfully',
       });
       router.back();
     } catch (error: any) {
       Toast.show({
         type: 'error',
-        text1: 'Error deleting user',
+        text1: 'Error deleting facility',
         text2: error.response?.data?.message || 'Please try again',
       });
-    }
-  };
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'administrator': return '#dc3545';
-      case 'supervisor': return '#ffc107';
-      case 'healthcare_worker': return '#28a745';
-      case 'doctor': return '#007bff';
-      default: return '#6c757d';
     }
   };
 
@@ -78,16 +62,16 @@ export default function UserDetailsScreen() {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#007bff" />
-        <Text style={styles.loadingText}>Loading user data...</Text>
+        <Text style={styles.loadingText}>Loading facility data...</Text>
       </View>
     );
   }
 
-  if (isError || !user) {
+  if (isError || !facility) {
     return (
       <View style={styles.errorContainer}>
         <Ionicons name="alert-circle-outline" size={64} color="#dc3545" />
-        <Text style={styles.errorText}>User not found</Text>
+        <Text style={styles.errorText}>Facility not found</Text>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
@@ -98,71 +82,60 @@ export default function UserDetailsScreen() {
     );
   }
 
-  const formattedCreatedDate = new Date(user.createdAt).toLocaleDateString();
-  const formattedUpdatedDate = new Date(user.updatedAt).toLocaleDateString();
+  const formattedCreatedDate = new Date(facility.createdAt).toLocaleDateString();
+  const formattedUpdatedDate = new Date(facility.updatedAt).toLocaleDateString();
 
   return (
     <>
       <Stack.Screen
         options={{
-          title: user.fullName,
+          title: facility.name,
           headerRight: () => (
             <View style={styles.headerButtons}>
-              {currentUser?.role === 'administrator' && (
-                <>
-                  <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() =>
-                      router.push(`/admin/users/${user.id}/edit` as any)
-                    }
-                  >
-                    <Ionicons name="create-outline" size={24} color="#007bff" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.deleteButton}
-                    onPress={handleDelete}
-                  >
-                    <Ionicons name="trash-outline" size={24} color="#dc3545" />
-                  </TouchableOpacity>
-                </>
+              {user?.role === 'administrator' && (
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => router.push(`/admin/facilities/${facility.id}/edit` as any)}
+                >
+                  <Ionicons name="create-outline" size={24} color="#007bff" />
+                </TouchableOpacity>
               )}
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={handleDelete}
+              >
+                <Ionicons name="trash-outline" size={24} color="#dc3545" />
+              </TouchableOpacity>
             </View>
           ),
         }}
       />
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Text style={styles.name}>{user.fullName}</Text>
+          <Text style={styles.name}>{facility.name}</Text>
           <View style={styles.basicInfo}>
             <View style={styles.infoItem}>
-              <Ionicons name="person-outline" size={16} color="#6c757d" />
-              <Text style={styles.infoText}>@{user.username}</Text>
+              <Ionicons name="location-outline" size={16} color="#6c757d" />
+              <Text style={styles.infoText}>{facility.district}</Text>
             </View>
-            <View style={[styles.roleBadge, { backgroundColor: getRoleColor(user.role) }]}>
-              <Text style={styles.roleText}>{user.role}</Text>
+            <View style={styles.districtBadge}>
+              <Text style={styles.districtText}>{facility.district}</Text>
             </View>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Information</Text>
-          <View style={styles.infoCard}>
-            <InfoRow label="Username" value={user.username} />
-            <InfoRow label="Email" value={user.email} />
-            <InfoRow label="Role" value={user.role} />
           </View>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Facility Information</Text>
           <View style={styles.infoCard}>
-            <InfoRow label="Facility" value={user.facility?.name || 'Not assigned'} />
-            <InfoRow label="Facility ID" value={user.facilityId.toString()} />
+            <InfoRow label="Name" value={facility.name} />
+            <InfoRow label="District" value={facility.district} />
+            <InfoRow label="Address" value={facility.address} />
+            <InfoRow label="Contact Phone" value={facility.contactPhone} />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Details</Text>
+          <Text style={styles.sectionTitle}>Facility Details</Text>
           <View style={styles.infoCard}>
             <InfoRow label="Created" value={formattedCreatedDate} />
             <InfoRow label="Last Updated" value={formattedUpdatedDate} />
@@ -260,12 +233,13 @@ const styles = StyleSheet.create({
     color: '#6c757d',
     marginLeft: 4,
   },
-  roleBadge: {
+  districtBadge: {
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
+    backgroundColor: '#ffc107',
   },
-  roleText: {
+  districtText: {
     fontSize: 12,
     color: '#fff',
     fontWeight: 'bold',

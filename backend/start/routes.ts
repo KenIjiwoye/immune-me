@@ -39,14 +39,14 @@ authRoutes.prefix('/api/auth')
 
 // Facilities routes
 const facilitiesRoutes = router.group(() => {
-  router.get('/', '#controllers/facilities_controller.index')
-  router.get('/:id', '#controllers/facilities_controller.show')
-  router.post('/', '#controllers/facilities_controller.store')
-  router.put('/:id', '#controllers/facilities_controller.update')
-  router.delete('/:id', '#controllers/facilities_controller.destroy')
+   router.get('/', '#controllers/facilities_controller.index')
+   router.get('/:id', '#controllers/facilities_controller.show')
+   router.post('/', '#controllers/facilities_controller.store')
+   router.put('/:id', '#controllers/facilities_controller.update')
+   router.delete('/:id', '#controllers/facilities_controller.destroy')
 })
   .prefix('/api/facilities')
-  .use(middleware.auth())
+  .use(middleware.auth({ roles: ['administrator'] }))
 
 // Vaccines routes
 const vaccinesRoutes = router.group(() => {

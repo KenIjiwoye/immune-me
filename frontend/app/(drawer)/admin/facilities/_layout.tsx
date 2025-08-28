@@ -1,34 +1,34 @@
 import React from 'react';
 import { Stack } from 'expo-router';
 
-export default function UserManagementLayout() {
+export default function FacilitiesLayout() {
   return (
     <Stack>
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: 'User Management',
+          headerTitle: 'Facilities',
           headerShown: false,
         }}
       />
       <Stack.Screen
         name="add"
         options={{
-          headerTitle: 'Add User',
+          headerTitle: 'Add Facility',
           headerShown: false,
         }}
       />
       <Stack.Screen
         name="[id]"
         options={{
-          headerTitle: 'User Details',
+          headerTitle: 'Facility Details',
           headerShown: true,
         }}
       />
       <Stack.Screen
         name="[id]/edit"
         options={{
-          headerTitle: 'Edit User',
+          headerTitle: 'Edit Facility',
           headerShown: false,
         }}
       />
