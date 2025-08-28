@@ -27,7 +27,28 @@ export default class NotificationsController {
     
     const notifications = await query.paginate(page, limit)
     
-    return response.json(notifications)
+    // Transform the data to include flat properties for frontend compatibility
+    const transformedData = {
+      ...notifications.toJSON(),
+      data: notifications.toJSON().data.map((notification: any) => ({
+        id: notification.id,
+        patientId: notification.patientId,
+        vaccineId: notification.vaccineId,
+        patientName: notification.patient?.fullName || 'Unknown Patient',
+        vaccineName: notification.vaccine?.name || 'Unknown Vaccine',
+        dueDate: notification.dueDate,
+        status: notification.status,
+        facilityId: notification.facilityId,
+        createdAt: notification.createdAt,
+        updatedAt: notification.updatedAt,
+        // Keep original nested objects for backward compatibility
+        patient: notification.patient,
+        vaccine: notification.vaccine,
+        facility: notification.facility
+      }))
+    }
+    
+    return response.json(transformedData)
   }
 
   /**
@@ -39,7 +60,25 @@ export default class NotificationsController {
     await notification.load('vaccine')
     await notification.load('facility')
     
-    return response.json(notification)
+    // Transform the data to include flat properties for frontend compatibility
+    const transformedNotification = {
+      id: notification.id,
+      patientId: notification.patientId,
+      vaccineId: notification.vaccineId,
+      patientName: notification.patient?.fullName || 'Unknown Patient',
+      vaccineName: notification.vaccine?.name || 'Unknown Vaccine',
+      dueDate: notification.dueDate,
+      status: notification.status,
+      facilityId: notification.facilityId,
+      createdAt: notification.createdAt,
+      updatedAt: notification.updatedAt,
+      // Keep original nested objects for backward compatibility
+      patient: notification.patient,
+      vaccine: notification.vaccine,
+      facility: notification.facility
+    }
+    
+    return response.json(transformedNotification)
   }
 
   /**
@@ -137,7 +176,28 @@ export default class NotificationsController {
     
     const notifications = await query.paginate(page, limit)
     
-    return response.json(notifications)
+    // Transform the data to include flat properties for frontend compatibility
+    const transformedData = {
+      ...notifications.toJSON(),
+      data: notifications.toJSON().data.map((notification: any) => ({
+        id: notification.id,
+        patientId: notification.patientId,
+        vaccineId: notification.vaccineId,
+        patientName: notification.patient?.fullName || 'Unknown Patient',
+        vaccineName: notification.vaccine?.name || 'Unknown Vaccine',
+        dueDate: notification.dueDate,
+        status: notification.status,
+        facilityId: notification.facilityId,
+        createdAt: notification.createdAt,
+        updatedAt: notification.updatedAt,
+        // Keep original nested objects for backward compatibility
+        patient: notification.patient,
+        vaccine: notification.vaccine,
+        facility: notification.facility
+      }))
+    }
+    
+    return response.json(transformedData)
   }
 
   /**
