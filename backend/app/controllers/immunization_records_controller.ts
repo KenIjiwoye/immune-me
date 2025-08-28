@@ -1,8 +1,10 @@
 // backend/app/controllers/immunization_records_controller.ts
 import { HttpContext } from '@adonisjs/core/http'
 import ImmunizationRecord from '#models/immunization_record'
+import Notification from '#models/notification'
 import { immunizationRecordStoreValidator } from '#validators/immunization_record/store'
 import { immunizationRecordUpdateValidator } from '#validators/immunization_record/update'
+import { DateTime } from 'luxon'
 
 export default class ImmunizationRecordsController {
   /**
@@ -61,6 +63,36 @@ export default class ImmunizationRecordsController {
     }
     
     const record = await ImmunizationRecord.create(recordData)
+    
+    // If a return date is provided, create a notification immediately
+    if (data.returnDate) {
+      try {
+        // Convert returnDate to DateTime if it's a string
+        const dueDate = typeof data.returnDate === 'string'
+          ? DateTime.fromISO(data.returnDate)
+          : DateTime.fromJSDate(data.returnDate)
+        
+        // Check if notification already exists for this patient, vaccine, and due date
+        const existingNotification = await Notification.query()
+          .where('patientId', record.patientId)
+          .where('vaccineId', record.vaccineId)
+          .where('dueDate', dueDate.toSQLDate() || '')
+          .first()
+        
+        if (!existingNotification) {
+          await Notification.create({
+            patientId: record.patientId,
+            vaccineId: record.vaccineId,
+            dueDate: dueDate,
+            status: 'pending',
+            facilityId: record.facilityId
+          })
+        }
+      } catch (error) {
+        // Log error but don't fail the immunization record creation
+        console.error('Failed to create notification for immunization record:', error)
+      }
+    }
     
     return response.created(record)
   }

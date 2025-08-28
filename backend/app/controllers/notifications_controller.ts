@@ -123,7 +123,7 @@ export default class NotificationsController {
     
     // Create a query builder - get notifications due today or within the next 7 days
     const query = Notification.query()
-      .where('status', 'pending')
+      .whereIn('status', ['pending', 'overdue'])
       .where('dueDate', '>=', today)  // Due today or later
       .where('dueDate', '<=', dueWithinDays)  // But within 7 days
       .preload('patient')

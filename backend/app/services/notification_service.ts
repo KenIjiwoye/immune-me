@@ -4,17 +4,15 @@ import { DateTime } from 'luxon'
 
 export default class NotificationService {
   /**
-   * Generate notifications for immunizations due in the next 7 days
+   * Generate notifications for all immunizations with future return dates
    */
   public async generateDueNotifications() {
-    // Find immunization records with return dates in the next 7 days
+    // Find immunization records with return dates in the future (no 7-day limit)
     const now = DateTime.now()
-    const sevenDaysLater = now.plus({ days: 7 })
     
     const records = await ImmunizationRecord.query()
       .whereNotNull('returnDate')
       .where('returnDate', '>=', now.toSQLDate() || '')
-      .where('returnDate', '<=', sevenDaysLater.toSQLDate() || '')
       .preload('patient')
       .preload('vaccine')
     
