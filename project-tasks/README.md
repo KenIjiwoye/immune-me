@@ -29,6 +29,29 @@ project-tasks/
 │   ├── FE-05-summary.md      # Concise summary of FE-05
 │   ├── FE-06-settings-profile.md
 │   └── FE-06-summary.md      # Concise summary of FE-06
+├── sms-integration/          # SMS integration task documentation
+│   ├── README.md             # SMS integration overview
+│   ├── 01-api-specifications.md
+│   ├── 02-integration-requirements.md
+│   ├── 03-message-constraints.md
+│   ├── 04-delivery-tracking.md
+│   ├── 05-healthcare-compliance.md
+│   ├── 06-geographic-constraints.md
+│   ├── SMS-01-database-schema.md
+│   ├── SMS-01-summary.md     # Concise summary of SMS-01
+│   ├── SMS-02-sms-service-layer.md
+│   ├── SMS-02-summary.md     # Concise summary of SMS-02
+│   ├── SMS-03-orange-network-api.md
+│   ├── SMS-03-summary.md     # Concise summary of SMS-03
+│   ├── SMS-04-enhanced-scheduler.md
+│   ├── SMS-04-summary.md     # Concise summary of SMS-04
+│   ├── SMS-05-webhook-tracking.md
+│   ├── SMS-05-summary.md     # Concise summary of SMS-05
+│   ├── SMS-06-message-templates.md
+│   ├── SMS-07-patient-consent.md
+│   ├── SMS-08-frontend-integration.md
+│   ├── SMS-09-monitoring-analytics.md
+│   └── SMS-10-testing-qa.md
 ├── integration/              # Integration task documentation
 └── deployment/               # Deployment task documentation
 ```
@@ -45,7 +68,38 @@ To address potential token limit issues that might cause truncation of detailed 
    - Requirements
    - Code Examples
 
-3. **Summary Files**: For all frontend tasks, we've created summary files (e.g., `FE-01-summary.md`) that contain the most critical information in a concise format. This ensures that even if detailed task files are truncated due to token limits, the essential details are preserved and accessible.
+3. **Summary Files**: For complex tasks, we've created summary files (e.g., `FE-01-summary.md`, `SMS-01-summary.md`) that contain the most critical information in a concise format. This ensures that even if detailed task files are truncated due to token limits, the essential details are preserved and accessible.
+
+## SMS Integration Tasks
+
+The SMS integration extends the existing notification system to support automated SMS reminders for immunization appointments using the Orange Network SMS API. This comprehensive integration includes:
+
+### Key Features
+- **Three Reminder Types**: 7-day advance, 1-day advance, and overdue reminders
+- **Orange Network API**: Direct integration with Orange Network SMS services
+- **Patient Consent Management**: HIPAA-compliant consent tracking and opt-out functionality
+- **Real-time Status Tracking**: Webhook-based delivery status updates
+- **Healthcare Compliance**: Complete audit trails and patient data protection
+- **Multi-language Support**: Message templates in multiple languages
+- **Cost Monitoring**: SMS cost tracking and budget management
+- **Performance Analytics**: Comprehensive monitoring and reporting
+
+### Implementation Phases
+The SMS integration is structured as a 10-phase implementation:
+
+1. **SMS-01**: Database Schema Extensions - Foundation tables and data structures
+2. **SMS-02**: SMS Service Layer Development - Core business logic and services
+3. **SMS-03**: Orange Network API Integration - Direct API communication layer
+4. **SMS-04**: Enhanced Scheduler Implementation - Automated message scheduling
+5. **SMS-05**: Webhook & Status Tracking - Real-time delivery status processing
+6. **SMS-06**: Message Templates & Optimization - Template management and character optimization
+7. **SMS-07**: Patient Consent & Preferences - HIPAA-compliant consent management
+8. **SMS-08**: Frontend SMS Integration - Mobile UI for SMS management
+9. **SMS-09**: Monitoring & Analytics - Performance monitoring and cost tracking
+10. **SMS-10**: Testing & Quality Assurance - Comprehensive testing suite
+
+### Documentation Structure
+The SMS integration documentation includes both research documents (01-06) covering API specifications, requirements, and constraints, and implementation tasks (SMS-01 through SMS-10) with detailed technical specifications and code examples.
 
 ## How to Use This Documentation
 

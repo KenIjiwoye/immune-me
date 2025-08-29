@@ -15,6 +15,7 @@ Tasks are organized into the following categories:
 
 - **Backend (BE)**: Server-side implementation
 - **Frontend (FE)**: Mobile application implementation
+- **SMS Integration (SMS)**: Orange Network SMS API integration for automated reminders
 - **Integration**: Tasks that connect frontend and backend
 - **Deployment**: Tasks related to deployment and infrastructure
 
@@ -125,6 +126,87 @@ Tasks are organized into the following categories:
   - Implements form validation for profile editing
   - Provides secure password change functionality
   - Includes theme and notification preferences
+
+## SMS Integration Tasks
+
+The SMS integration extends the existing notification system with automated SMS reminders using the Orange Network SMS API. This comprehensive integration provides three types of reminders (7-day advance, 1-day advance, and overdue) with full healthcare compliance and real-time tracking.
+
+### SMS-00: OAuth Token Management
+- **Priority**: High
+- **Description**: OAuth 2.0 client credentials flow implementation for Orange Network API authentication
+- **Dependencies**: None (foundation task)
+- **Key Components**: OAuthTokenService, OrangeAuthService, token caching and refresh
+- **Features**: Access token generation, secure credential storage, token lifecycle management, healthcare compliance
+
+### SMS-01: Database Schema Extensions
+- **Priority**: High
+- **Description**: Create database tables for SMS tracking, patient consent, templates, and webhook logging
+- **Dependencies**: SMS-00, BE-02
+- **Key Tables**: sms_messages, sms_consent, sms_templates, sms_webhook_logs
+- **Features**: Complete audit trails, consent tracking, delivery status management
+
+### SMS-02: SMS Service Layer Development
+- **Priority**: High
+- **Description**: Implement core SMS business logic and service architecture
+- **Dependencies**: SMS-00, SMS-01, BE-04, BE-06
+- **Key Services**: SMSService, SMSConsentService, SMSTemplateService
+- **Features**: Message scheduling, consent validation, template rendering, error handling
+
+### SMS-03: Orange Network API Integration
+- **Priority**: High
+- **Description**: Direct integration with Orange Network SMS API with OAuth 2.0 authentication
+- **Dependencies**: SMS-00, SMS-02
+- **Key Components**: OrangeSMSProvider, OAuth integration, rate limiting
+- **Features**: Message sending, delivery status queries, bulk operations, health checks
+
+### SMS-04: Enhanced Scheduler Implementation
+- **Priority**: High
+- **Description**: Automated SMS scheduling with three reminder types
+- **Dependencies**: SMS-00, SMS-02, SMS-03, BE-06
+- **Key Features**: Cron jobs, batch processing, retry logic, performance monitoring
+- **Scheduling**: 7-day (9 AM), 1-day (9 AM), overdue (2 PM) reminders
+
+### SMS-05: Webhook & Status Tracking
+- **Priority**: Medium
+- **Description**: Real-time delivery status updates and inbound message handling
+- **Dependencies**: SMS-00, SMS-03, SMS-01
+- **Key Features**: Webhook endpoints, delivery status processing, STOP request handling
+- **Components**: SMSWebhooksController, status synchronization, audit logging
+
+### SMS-06: Message Templates & Optimization
+- **Priority**: Medium
+- **Description**: Template management with 160-character optimization
+- **Dependencies**: SMS-00, SMS-01, SMS-02
+- **Key Features**: Template CRUD, character optimization, multi-language support
+- **Components**: Template validation, abbreviation systems, dynamic content substitution
+
+### SMS-07: Patient Consent & Preferences
+- **Priority**: High
+- **Description**: HIPAA-compliant consent management and patient preferences
+- **Dependencies**: SMS-00, SMS-01, SMS-02, SMS-05
+- **Key Features**: Consent tracking, opt-out handling, preference management
+- **Compliance**: Complete audit trails, patient rights management, data protection
+
+### SMS-08: Frontend SMS Integration
+- **Priority**: Medium
+- **Description**: Mobile UI for SMS status display and consent management
+- **Dependencies**: SMS-00, SMS-07, SMS-05, FE-01
+- **Key Components**: SMSStatusCard, ConsentForm, AnalyticsDashboard
+- **Features**: Real-time status updates, consent interfaces, administrative controls
+
+### SMS-09: Monitoring & Analytics
+- **Priority**: Medium
+- **Description**: Performance monitoring, cost tracking, and analytics
+- **Dependencies**: SMS-00, SMS-05, SMS-08
+- **Key Features**: Delivery metrics, cost analysis, health monitoring, alerting
+- **Components**: Analytics service, monitoring dashboard, automated reporting
+
+### SMS-10: Testing & Quality Assurance
+- **Priority**: High
+- **Description**: Comprehensive testing suite for SMS functionality
+- **Dependencies**: All previous SMS tasks (SMS-00 through SMS-09)
+- **Key Features**: Unit tests, integration tests, performance tests, security tests
+- **Coverage**: >90% code coverage, HIPAA compliance validation, end-to-end workflows
 
 ## Integration Tasks
 
