@@ -39,14 +39,14 @@ authRoutes.prefix('/api/auth')
 
 // Facilities routes
 const facilitiesRoutes = router.group(() => {
-  router.get('/', '#controllers/facilities_controller.index')
-  router.get('/:id', '#controllers/facilities_controller.show')
-  router.post('/', '#controllers/facilities_controller.store')
-  router.put('/:id', '#controllers/facilities_controller.update')
-  router.delete('/:id', '#controllers/facilities_controller.destroy')
+   router.get('/', '#controllers/facilities_controller.index')
+   router.get('/:id', '#controllers/facilities_controller.show')
+   router.post('/', '#controllers/facilities_controller.store')
+   router.put('/:id', '#controllers/facilities_controller.update')
+   router.delete('/:id', '#controllers/facilities_controller.destroy')
 })
   .prefix('/api/facilities')
-  .use(middleware.auth())
+  .use(middleware.auth({ roles: ['administrator'] }))
 
 // Vaccines routes
 const vaccinesRoutes = router.group(() => {
@@ -99,13 +99,15 @@ const notificationsRoutes = router.group(() => {
   .prefix('/api/notifications')
   .use(middleware.auth())
 
-// Example of role-based route protection
-router.group(() => {
-  router.get('/users', async ({ response }) => {
-    return response.json({ message: 'Admin users list would be here' })
-  })
+// Users routes
+const usersRoutes = router.group(() => {
+  router.get('/', '#controllers/users_controller.index')
+  router.get('/:id', '#controllers/users_controller.show')
+  router.post('/', '#controllers/users_controller.store')
+  router.put('/:id', '#controllers/users_controller.update')
+  router.delete('/:id', '#controllers/users_controller.destroy')
 })
-  .prefix('/api/admin')
+  .prefix('/api/users')
   .use(middleware.auth({ roles: ['administrator'] }))
 
 // Dashboard routes

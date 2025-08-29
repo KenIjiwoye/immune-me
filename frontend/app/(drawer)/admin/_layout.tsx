@@ -27,6 +27,20 @@ export default function AdminLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="users"
+        options={{
+          headerTitle: 'User Management',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="facilities"
+        options={{
+          headerTitle: 'Facility Management',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

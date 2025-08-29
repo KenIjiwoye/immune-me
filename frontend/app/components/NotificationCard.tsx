@@ -45,6 +45,21 @@ export default function NotificationCard({ notification, onPress }: Notification
     }
   };
 
+  const getStatusDisplayText = (status: string) => {
+    switch (status) {
+      case 'pending':
+        return 'Upcoming';
+      case 'viewed':
+        return 'Viewed';
+      case 'completed':
+        return 'Completed';
+      case 'overdue':
+        return 'Overdue';
+      default:
+        return status.charAt(0).toUpperCase() + status.slice(1);
+    }
+  };
+
   const formattedDate = format(new Date(notification.dueDate), 'MMM d, yyyy');
   const statusColor = getStatusColor(notification.status);
   const statusIcon = getStatusIcon(notification.status);
@@ -62,7 +77,7 @@ export default function NotificationCard({ notification, onPress }: Notification
           <View style={[styles.statusContainer, { backgroundColor: `${statusColor}20` }]}>
             <Ionicons name={statusIcon as any} size={14} color={statusColor} />
             <Text style={[styles.status, { color: statusColor }]}>
-              {notification.status.charAt(0).toUpperCase() + notification.status.slice(1)}
+              {getStatusDisplayText(notification.status)}
             </Text>
           </View>
         </View>

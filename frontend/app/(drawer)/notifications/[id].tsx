@@ -97,7 +97,7 @@ export default function NotificationDetailScreen() {
         <View style={styles.statusContainer}>
           <View style={[styles.statusBadge, { backgroundColor: getStatusColor(notification.status) + '20' }]}>
             <Text style={[styles.statusText, { color: getStatusColor(notification.status) }]}>
-              {notification.status.charAt(0).toUpperCase() + notification.status.slice(1)}
+              {getStatusDisplayText(notification.status)}
             </Text>
           </View>
         </View>
@@ -184,6 +184,16 @@ const getStatusColor = (status: string) => {
     case 'completed': return '#4CAF50';
     case 'overdue': return '#F44336';
     default: return '#6c757d';
+  }
+};
+
+const getStatusDisplayText = (status: string) => {
+  switch (status) {
+    case 'pending': return 'Upcoming';
+    case 'viewed': return 'Viewed';
+    case 'completed': return 'Completed';
+    case 'overdue': return 'Overdue';
+    default: return status.charAt(0).toUpperCase() + status.slice(1);
   }
 };
 
