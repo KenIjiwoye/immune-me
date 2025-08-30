@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Immune Me",
+    "name": "Vaccinate Me",
     "slug": "immune-me",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "immune-me",
+    "scheme": "vaccinate-me",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.kenwoye.vaccinate_me"
     },
     "web": {
       "bundler": "metro",
