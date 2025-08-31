@@ -92,7 +92,8 @@ const notificationsRoutes = router.group(() => {
   router.put('/:id', '#controllers/notifications_controller.update')
   router.delete('/:id', '#controllers/notifications_controller.destroy')
   
-  // Admin-only route to manually trigger notification generation
+  // DEPRECATED: Admin-only route to manually trigger notification generation
+  // This route is deprecated as notifications are now created immediately when immunization records are created
   router.post('/generate', '#controllers/notifications_controller.generateNotifications')
     .use(middleware.auth({ roles: ['administrator'] }))
 })

@@ -9,7 +9,7 @@ export default class VaccinesController {
    */
   async index({ request, response }: HttpContext) {
     const page = request.input('page', 1)
-    const limit = request.input('limit', 20)
+    const limit = request.input('limit', 100)
     
     const vaccines = await Vaccine.query()
       .paginate(page, limit)

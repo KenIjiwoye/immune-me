@@ -201,17 +201,21 @@ export default class NotificationsController {
   }
 
   /**
-   * Manually trigger notification generation (admin only)
+   * DEPRECATED: Manually trigger notification generation (admin only)
+   * This method has been deprecated in favor of immediate notification creation.
    */
-  async generateNotifications({ response }: HttpContext) {
+  async generateNotifications({ response, logger }: HttpContext) {
+    logger.warn('Deprecated generateNotifications endpoint called - notifications are now created immediately')
+    
     const notificationService = new NotificationService()
     
-    const dueResult = await notificationService.generateDueNotifications()
+    // Only update overdue notifications, as due notifications are now created immediately
     const overdueResult = await notificationService.updateOverdueNotifications()
     
     return response.json({
-      due: dueResult,
-      overdue: overdueResult
+      message: 'This endpoint is deprecated. Notifications are now created immediately when immunization records are created.',
+      overdue: overdueResult,
+      due: { processed: 0, created: 0, message: 'Due notifications are now created immediately' }
     })
   }
 }
