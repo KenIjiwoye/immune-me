@@ -1,19 +1,26 @@
 import { BaseCommand } from '@adonisjs/core/ace'
-import NotificationService from '#services/notification_service'
 
+/**
+ * DEPRECATED: This command has been deprecated in favor of immediate notification creation.
+ * 
+ * Previously, this command was used to generate notifications for due immunizations
+ * in batch mode. This approach has been removed to prevent race conditions and
+ * ensure notifications are created immediately when immunization records are created.
+ * 
+ * If you need to manually create notifications for existing records, consider
+ * creating a one-time migration or manual script instead.
+ */
 export default class GenerateNotifications extends BaseCommand {
   static commandName = 'notifications:generate'
-  static description = 'Generate notifications for due immunizations'
+  static description = '[DEPRECATED] Generate notifications for due immunizations - use immediate creation instead'
 
   async run() {
-    const notificationService = new NotificationService()
+    this.logger.error('This command has been deprecated.')
+    this.logger.error('Notifications are now created immediately when immunization records are created.')
+    this.logger.error('This prevents race conditions and ensures consistency.')
+    this.logger.error('')
+    this.logger.error('If you need to create notifications for existing records, please create a custom migration.')
     
-    this.logger.info('Generating due notifications...')
-    const dueResult = await notificationService.generateDueNotifications()
-    this.logger.info(`Processed ${dueResult.processed} records, created ${dueResult.created} notifications`)
-    
-    this.logger.info('Updating overdue notifications...')
-    const overdueResult = await notificationService.updateOverdueNotifications()
-    this.logger.info(`Updated ${overdueResult.updated} notifications to overdue status`)
+    process.exit(1)
   }
 }

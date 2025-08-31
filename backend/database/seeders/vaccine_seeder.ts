@@ -295,6 +295,92 @@ export default class extends BaseSeeder {
         standardScheduleAge: '1 year after TT4',
         isSupplementary: true,
         isActive: true
+      },
+
+      // RTS,S/AS01 Malaria Vaccine
+      {
+        name: 'RTSS 1 (5 months)',
+        description: 'RTS,S/AS01 malaria vaccine - 5 months for malaria prevention',
+        vaccineCode: 'RTSS0',
+        sequenceNumber: 1,
+        vaccineSeries: 'RTSS',
+        standardScheduleAge: 'At 5 months',
+        isSupplementary: true,
+        isActive: true
+      },
+      {
+        name: 'RTSS 2 Dose (6 months)',
+        description: 'RTS,S/AS01 malaria vaccine - 6 months for malaria prevention',
+        vaccineCode: 'RTSS1',
+        sequenceNumber: 2,
+        vaccineSeries: 'RTSS',
+        standardScheduleAge: 'At 6 months',
+        isSupplementary: true,
+        isActive: true
+      },
+      {
+        name: 'RTSS 3 Dose (7 months)',
+        description: 'RTS,S/AS01 malaria vaccine - 7 months for malaria prevention',
+        vaccineCode: 'RTSS2',
+        sequenceNumber: 3,
+        vaccineSeries: 'RTSS',
+        standardScheduleAge: 'At 7 months',
+        isSupplementary: true,
+        isActive: true
+      },
+      {
+        name: 'RTSS 4 Dose (15 months)',
+        description: 'RTS,S/AS01 malaria vaccine - 15 months for malaria prevention',
+        vaccineCode: 'RTSS3',
+        sequenceNumber: 4,
+        vaccineSeries: 'RTSS',
+        standardScheduleAge: 'At 15 months',
+        isSupplementary: true,
+        isActive: true
+      },
+
+      // Deworming
+      {
+        name: 'Deworming 1 (12 months)',
+        description: 'Deworming - first dose for intestinal worm prevention',
+        vaccineCode: 'Deworm1',
+        sequenceNumber: 1,
+        vaccineSeries: 'Deworming',
+        standardScheduleAge: 'At 12 months',
+        isSupplementary: true,
+        isActive: true
+      },
+      {
+        name: 'Deworming 2 (18 months)',
+        description: 'Deworming - second dose for intestinal worm prevention',
+        vaccineCode: 'Deworm2',
+        sequenceNumber: 2,
+        vaccineSeries: 'Deworming',
+        standardScheduleAge: 'At 18 months',
+        isSupplementary: true,
+        isActive: true
+      },
+      {
+        name: 'Deworming 3 (24 months)',
+        description: 'Deworming - third dose for intestinal worm prevention',
+        vaccineCode: 'Deworm3',
+        sequenceNumber: 3,
+        vaccineSeries: 'Deworming',
+        standardScheduleAge: 'At 24 months',
+        isSupplementary: true,
+        isActive: true
+      },
+
+      // LIIN (Long-Lasting Insecticidal Net)
+      {
+        name: 'LLIN 1 (15 months)',
+        description: 'Long-Lasting Insecticidal Net - for malaria prevention',
+        vaccineCode: 'LLIN1',
+        sequenceNumber: 1,
+        vaccineSeries: 'LLIN',
+        standardScheduleAge: '15 months',
+        isSupplementary: false,
+        isActive: true
       }
     ]
 
