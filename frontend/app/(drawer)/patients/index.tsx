@@ -26,7 +26,7 @@ export default function PatientListScreen() {
 
   const queryParams: PatientQueryParams = {
     page,
-    limit: 20,
+    limit: 999,
     search: searchQuery || undefined,
     ...params,
   };
