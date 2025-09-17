@@ -24,6 +24,31 @@ export default class Notification extends BaseModel {
   @column()
   declare facilityId: number
 
+  // SMS tracking fields
+  @column()
+  declare smsMessageId: string | null
+
+  @column()
+  declare smsStatus: 'not_sent' | 'sent' | 'delivered' | 'failed' | null
+
+  @column.dateTime()
+  declare smsSentAt: DateTime | null
+
+  @column.dateTime()
+  declare smsDeliveredAt: DateTime | null
+
+  @column()
+  declare smsErrorMessage: string | null
+
+  @column()
+  declare smsErrorCode: string | null
+
+  @column()
+  declare smsRetryCount: number
+
+  @column.dateTime()
+  declare smsLastRetryAt: DateTime | null
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
