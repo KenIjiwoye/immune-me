@@ -130,8 +130,7 @@ export default class SmsController {
       // Send SMS
       const smsResult = await this.smsService.sendSms(
         notification.patient.contactPhone,
-        messageResult.message,
-        notification.facility.name
+        messageResult.message
       )
 
       // Update notification with SMS status
@@ -231,8 +230,7 @@ export default class SmsController {
 
       const smsResult = await this.smsService.sendSms(
         notification.patient.contactPhone,
-        messageResult.message,
-        notification.facility.name
+        messageResult.message
       )
 
       // Update notification
@@ -366,7 +364,7 @@ export default class SmsController {
         })
       }
 
-      const smsResult = await this.smsService.sendSms(phoneNumber, message, 'Test')
+      const smsResult = await this.smsService.sendSms(phoneNumber, message)
 
       return response.json({
         success: smsResult.success,

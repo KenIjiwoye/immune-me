@@ -61,19 +61,46 @@ export default class SmsService {
         return this.accessToken
       }
 
-      logger.info('Requesting new OAuth access token')
+      logger.info('Requesting new OAuth access token', {
+        tokenUrl: this.tokenUrl,
+        authHeaderPresent: !!this.authorizationHeader,
+        authHeaderLength: this.authorizationHeader?.length || 0
+      })
 
       const response = await fetch(this.tokenUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': this.authorizationHeader,
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'User-Agent': 'ImmuneMe-SMS-Service/1.0'
         },
         body: 'grant_type=client_credentials'
       })
 
-      const responseData = await response.json() as any
+      const responseText = await response.text()
+      let responseData: any = {}
+      
+      try {
+        responseData = JSON.parse(responseText)
+      } catch (parseError) {
+        logger.error('Failed to parse OAuth token response as JSON', {
+          responseText,
+          parseError: parseError.message,
+          status: response.status,
+          headers: Object.fromEntries(response.headers.entries())
+        })
+        return null
+      }
+
+      logger.info('OAuth token response received', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        hasAccessToken: !!responseData.access_token,
+        expiresIn: responseData.expires_in,
+        responseKeys: Object.keys(responseData)
+      })
 
       if (response.ok && responseData.access_token) {
         this.accessToken = responseData.access_token
@@ -89,10 +116,18 @@ export default class SmsService {
 
         return this.accessToken
       } else {
-        logger.error('Failed to obtain OAuth access token', {
+        logger.error('Failed to obtain OAuth access token - detailed error', {
           status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+          responseData,
+          responseText,
           error: responseData.error,
-          errorDescription: responseData.error_description
+          errorDescription: responseData.error_description,
+          clientIdPresent: !!this.clientId,
+          clientSecretPresent: !!this.clientSecret,
+          authHeaderFormat: this.authorizationHeader?.substring(0, 20) + '...',
+          timestamp: new Date().toISOString()
         })
         return null
       }
@@ -108,7 +143,7 @@ export default class SmsService {
   /**
    * Send SMS message using Orange API
    */
-  async sendSms(recipientPhone: string, message: string, senderName?: string): Promise<SmsResult> {
+  async sendSms(recipientPhone: string, message: string): Promise<SmsResult> {
     try {
       // Validate inputs
       const validationResult = this.validateSmsInputs(recipientPhone, message)
@@ -124,12 +159,11 @@ export default class SmsService {
       const formattedRecipient = this.formatPhoneNumber(recipientPhone)
       const formattedSender = this.formatPhoneNumber(this.senderAddress)
 
-      // Prepare request payload
+      // Prepare request payload (Orange API format - no senderName field)
       const payload = {
         outboundSMSMessageRequest: {
           address: formattedRecipient,
           senderAddress: formattedSender,
-          senderName: senderName || 'HealthSystem',
           outboundSMSTextMessage: {
             message: message
           }
@@ -156,17 +190,54 @@ export default class SmsService {
         url
       })
 
+      logger.info('Making Orange API request', {
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken.substring(0, 20)}...`, // Log partial token for debugging
+          'Accept': 'application/json'
+        },
+        payload
+      })
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': accessToken,
-          'Accept': 'application/json'
+          'Authorization': `Bearer ${accessToken}`,
+          'Accept': 'application/json',
+          'User-Agent': 'ImmuneMe-SMS-Service/1.0'
         },
         body: JSON.stringify(payload)
       })
 
-      const responseData = await response.json() as any
+      const responseText = await response.text()
+      let responseData: any = {}
+      
+      try {
+        responseData = JSON.parse(responseText)
+      } catch (parseError) {
+        logger.error('Failed to parse Orange API response as JSON', {
+          responseText,
+          parseError: parseError.message,
+          status: response.status,
+          headers: Object.fromEntries(response.headers.entries())
+        })
+        
+        return {
+          success: false,
+          error: `Invalid JSON response from Orange API: ${responseText}`,
+          errorCode: 'INVALID_RESPONSE_FORMAT'
+        }
+      }
+
+      logger.info('Orange API response received', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        responseData,
+        responseText: responseText.substring(0, 500) // Log first 500 chars
+      })
 
       if (response.ok) {
         // Extract message ID from response (implementation may vary based on actual Orange API response)
@@ -185,33 +256,51 @@ export default class SmsService {
           messageId
         }
       } else {
-        // Handle API errors
+        // Handle API errors with enhanced logging
         const errorInfo = this.parseApiError(responseData)
         
-        logger.error('SMS sending failed', {
+        logger.error('SMS sending failed - Orange API error', {
           recipient: formattedRecipient,
+          sender: formattedSender,
+          url,
           status: response.status,
-          error: errorInfo.message,
-          errorCode: errorInfo.code,
-          responseData
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+          requestPayload: payload,
+          responseData,
+          responseText: responseText.substring(0, 1000),
+          parsedError: errorInfo,
+          timestamp: new Date().toISOString()
         })
 
         return {
           success: false,
-          error: errorInfo.message,
+          error: `Orange API Error (${response.status}): ${errorInfo.message}`,
           errorCode: errorInfo.code
         }
       }
     } catch (error) {
-      logger.error('SMS service error', {
+      logger.error('SMS service error - unexpected exception', {
         error: error.message,
+        errorName: error.name,
         recipient: recipientPhone,
-        stack: error.stack
+        formattedRecipient: this.formatPhoneNumber(recipientPhone),
+        formattedSender: this.formatPhoneNumber(this.senderAddress),
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+        serviceConfig: {
+          baseUrl: this.baseUrl,
+          tokenUrl: this.tokenUrl,
+          senderAddressConfigured: !!this.senderAddress,
+          clientIdConfigured: !!this.clientId,
+          clientSecretConfigured: !!this.clientSecret,
+          authHeaderConfigured: !!this.authorizationHeader
+        }
       })
 
       return {
         success: false,
-        error: 'Network or service error',
+        error: `Service error: ${error.message}`,
         errorCode: 'SERVICE_ERROR'
       }
     }
@@ -249,8 +338,9 @@ export default class SmsService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': accessToken,
-          'Accept': 'application/json'
+          'Authorization': `Bearer ${accessToken}`,
+          'Accept': 'application/json',
+          'User-Agent': 'ImmuneMe-SMS-Service/1.0'
         },
         body: JSON.stringify(payload)
       })
@@ -377,28 +467,58 @@ export default class SmsService {
   }
 
   /**
-   * Parse API error response
+   * Parse API error response with enhanced error detection
    */
   private parseApiError(responseData: any): { code: string; message: string } {
-    // Handle different error response formats
+    logger.info('Parsing API error response', { responseData })
+    
+    // Handle Orange API specific error formats
     if (responseData.requestError) {
       const error = responseData.requestError.serviceException || responseData.requestError.policyException
       return {
-        code: error?.messageId || 'UNKNOWN_ERROR',
-        message: error?.text || 'Unknown API error'
+        code: error?.messageId || error?.code || 'REQUEST_ERROR',
+        message: error?.text || error?.message || 'Orange API request error'
       }
     }
 
+    // Handle OAuth error format
     if (responseData.error) {
       return {
-        code: responseData.error.code || 'API_ERROR',
-        message: responseData.error.message || responseData.error.description || 'API error occurred'
+        code: responseData.error_code || responseData.error.code || 'API_ERROR',
+        message: responseData.error_description || responseData.error.message || responseData.error.description || responseData.error || 'API error occurred'
       }
     }
 
+    // Handle SMS API specific errors
+    if (responseData.outboundSMSMessageRequest && responseData.outboundSMSMessageRequest.error) {
+      const smsError = responseData.outboundSMSMessageRequest.error
+      return {
+        code: smsError.code || 'SMS_ERROR',
+        message: smsError.message || smsError.description || 'SMS API error'
+      }
+    }
+
+    // Handle generic error fields
+    if (responseData.message || responseData.description) {
+      return {
+        code: responseData.code || 'GENERIC_ERROR',
+        message: responseData.message || responseData.description
+      }
+    }
+
+    // Handle HTTP error responses
+    if (responseData.status && responseData.title) {
+      return {
+        code: `HTTP_${responseData.status}`,
+        message: `${responseData.title}: ${responseData.detail || 'HTTP error'}`
+      }
+    }
+
+    // Fallback for unknown error formats
+    const errorString = typeof responseData === 'string' ? responseData : JSON.stringify(responseData)
     return {
       code: 'UNKNOWN_ERROR',
-      message: 'Unknown error occurred'
+      message: `Unknown error format: ${errorString.substring(0, 200)}`
     }
   }
 

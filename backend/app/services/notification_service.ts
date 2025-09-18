@@ -232,8 +232,7 @@ export default class NotificationService {
       // Send SMS
       const smsResult = await this.smsService.sendSms(
         notification.patient.contactPhone,
-        messageResult.message,
-        notification.facility.name
+        messageResult.message
       )
 
       // Update notification with SMS status
