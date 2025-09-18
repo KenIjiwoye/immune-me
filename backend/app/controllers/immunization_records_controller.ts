@@ -109,27 +109,18 @@ export default class ImmunizationRecordsController {
         }
         
         try {
-          // Check if notification already exists for this patient, vaccine, and due date
-          const existingNotification = await Notification.query({ client: trx })
-            .where('patientId', record.patientId)
-            .where('vaccineId', record.vaccineId)
-            .where('dueDate', dueDate.toSQLDate() || '')
-            .first()
+          // Create notification service instance
+          const notificationService = new NotificationService()
           
-          if (!existingNotification) {
-            // Create new notification within the same transaction
-            const notification = await Notification.create({
-              patientId: record.patientId,
-              vaccineId: record.vaccineId,
-              dueDate: dueDate,
-              status: 'pending',
-              facilityId: record.facilityId
-            }, { client: trx })
-            
-            logger.info(`Successfully created notification ${notification.id} for immunization record ${record.id}`)
-          } else {
-            logger.info(`Notification already exists for patient ${record.patientId}, vaccine ${record.vaccineId}, due date ${dueDate.toISODate()}`)
-          }
+          // Use NotificationService to create notification with SMS sending
+          await notificationService.createNotificationForRecord(
+            record.patientId,
+            record.vaccineId,
+            dueDate,
+            record.facilityId
+          )
+          
+          logger.info(`Successfully created notification with SMS attempt for immunization record ${record.id}`)
           
         } catch (notificationError) {
           logger.error(`Failed to create notification for immunization record ${record.id}:`, notificationError)

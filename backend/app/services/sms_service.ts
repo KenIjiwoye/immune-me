@@ -29,17 +29,79 @@ export interface SmsSubscription {
 export default class SmsService {
   private baseUrl: string
   private senderAddress: string
-  private apiKey: string
+  private clientId: string
+  private clientSecret: string
+  private authorizationHeader: string
+  private tokenUrl: string
   private webhookUrl: string
+  private accessToken: string | null = null
+  private tokenExpiry: DateTime | null = null
 
   constructor() {
     this.baseUrl = env.get('ORANGE_SMS_API_URL', 'https://api.orange.com')
     this.senderAddress = env.get('ORANGE_SMS_SENDER_ADDRESS', '')
-    this.apiKey = env.get('ORANGE_SMS_API_KEY', '')
+    this.clientId = env.get('ORANGE_SMS_CLIENT_ID', '')
+    this.clientSecret = env.get('ORANGE_SMS_CLIENT_SECRET', '')
+    this.authorizationHeader = env.get('ORANGE_SMS_AUTHORIZATION_HEADER', '')
+    this.tokenUrl = env.get('ORANGE_SMS_TOKEN_URL', 'https://api.orange.com/oauth/v3/token')
     this.webhookUrl = env.get('ORANGE_SMS_WEBHOOK_URL', '')
 
-    if (!this.senderAddress || !this.apiKey) {
-      logger.warn('SMS service not properly configured. Missing sender address or API key.')
+    if (!this.senderAddress || !this.clientId || !this.clientSecret || !this.authorizationHeader) {
+      logger.warn('SMS service not properly configured. Missing sender address, client ID, client secret, or authorization header.')
+    }
+  }
+
+  /**
+   * Get access token using OAuth 2.0 Client Credentials flow
+   */
+  private async getAccessToken(): Promise<string | null> {
+    try {
+      // Check if we have a valid cached token
+      if (this.accessToken && this.tokenExpiry && DateTime.now() < this.tokenExpiry) {
+        return this.accessToken
+      }
+
+      logger.info('Requesting new OAuth access token')
+
+      const response = await fetch(this.tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': this.authorizationHeader,
+          'Accept': 'application/json'
+        },
+        body: 'grant_type=client_credentials'
+      })
+
+      const responseData = await response.json() as any
+
+      if (response.ok && responseData.access_token) {
+        this.accessToken = responseData.access_token
+        
+        // Set token expiry (default to 1 hour if not provided, with 5 minute buffer)
+        const expiresIn = responseData.expires_in || 3600
+        this.tokenExpiry = DateTime.now().plus({ seconds: expiresIn - 300 })
+
+        logger.info('OAuth access token obtained successfully', {
+          expiresIn,
+          expiryTime: this.tokenExpiry.toISO()
+        })
+
+        return this.accessToken
+      } else {
+        logger.error('Failed to obtain OAuth access token', {
+          status: response.status,
+          error: responseData.error,
+          errorDescription: responseData.error_description
+        })
+        return null
+      }
+    } catch (error) {
+      logger.error('Error obtaining OAuth access token', {
+        error: error.message,
+        stack: error.stack
+      })
+      return null
     }
   }
 
@@ -74,6 +136,16 @@ export default class SmsService {
         }
       }
 
+      // Get OAuth access token
+      const accessToken = await this.getAccessToken()
+      if (!accessToken) {
+        return {
+          success: false,
+          error: 'Failed to obtain OAuth access token',
+          errorCode: 'AUTH_ERROR'
+        }
+      }
+
       // Make API request
       const url = `${this.baseUrl}/smsmessaging/v1/outbound/${encodeURIComponent(formattedSender)}/requests`
       
@@ -88,7 +160,7 @@ export default class SmsService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+          'Authorization': accessToken,
           'Accept': 'application/json'
         },
         body: JSON.stringify(payload)
@@ -164,13 +236,20 @@ export default class SmsService {
         }
       }
 
+      // Get OAuth access token
+      const accessToken = await this.getAccessToken()
+      if (!accessToken) {
+        logger.error('Failed to obtain OAuth access token for delivery receipt subscription')
+        return null
+      }
+
       const url = `${this.baseUrl}/smsmessaging/v1/outbound/${encodeURIComponent(formattedSender)}/subscriptions`
 
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
+          'Authorization': accessToken,
           'Accept': 'application/json'
         },
         body: JSON.stringify(payload)
@@ -342,7 +421,7 @@ export default class SmsService {
    * Check if SMS service is properly configured
    */
   isConfigured(): boolean {
-    return !!(this.senderAddress && this.apiKey && this.baseUrl)
+    return !!(this.senderAddress && this.clientId && this.clientSecret && this.authorizationHeader && this.baseUrl && this.tokenUrl)
   }
 
   /**
@@ -351,14 +430,22 @@ export default class SmsService {
   getConfigurationStatus(): {
     configured: boolean
     senderAddress: boolean
-    apiKey: boolean
+    clientId: boolean
+    clientSecret: boolean
+    authorizationHeader: boolean
+    tokenUrl: boolean
     webhookUrl: boolean
+    hasValidToken: boolean
   } {
     return {
       configured: this.isConfigured(),
       senderAddress: !!this.senderAddress,
-      apiKey: !!this.apiKey,
-      webhookUrl: !!this.webhookUrl
+      clientId: !!this.clientId,
+      clientSecret: !!this.clientSecret,
+      authorizationHeader: !!this.authorizationHeader,
+      tokenUrl: !!this.tokenUrl,
+      webhookUrl: !!this.webhookUrl,
+      hasValidToken: !!(this.accessToken && this.tokenExpiry && DateTime.now() < this.tokenExpiry)
     }
   }
 }

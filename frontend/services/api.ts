@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://tricky-cooks-mate.loca.lt/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'https://short-aliens-tan.loca.lt/api';
 
 console.log('API URL configured as:', API_URL);
 
