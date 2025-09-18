@@ -129,3 +129,22 @@ router.group(() => {
 })
   .prefix('/api/reports')
   .use(middleware.auth({ roles: ['doctor', 'administrator', 'supervisor'] }))
+
+// SMS routes
+const smsRoutes = router.group(() => {
+  // Webhook endpoint for Orange SMS delivery receipts (public endpoint)
+  router.post('/delivery-receipt', '#controllers/sms_controller.handleDeliveryReceipt')
+  
+  // Protected SMS management routes
+  router.group(() => {
+    router.post('/notifications/:id/send', '#controllers/sms_controller.sendNotificationSms')
+    router.post('/notifications/:id/retry', '#controllers/sms_controller.retrySms')
+    router.get('/status', '#controllers/sms_controller.getSmsStatus')
+    router.get('/service-status', '#controllers/sms_controller.getServiceStatus')
+    
+    // Admin-only test endpoint
+    router.post('/test', '#controllers/sms_controller.testSms')
+      .use(middleware.auth({ roles: ['administrator'] }))
+  }).use(middleware.auth())
+})
+  .prefix('/api/sms')
