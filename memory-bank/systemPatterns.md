@@ -42,6 +42,9 @@ Navigation Container
       ├── Patient Detail Screen
       ├── Immunization Form Screen
       ├── Notifications Screen
+      ├── Admin Dashboard Screen (NEW)
+      ├── User Management Screen (NEW)
+      ├── SMS Management Screen (NEW)
       └── Reports Screen
           ↓
       TanStack Query Client
@@ -63,6 +66,10 @@ Middleware
 Controllers
     ↓
     ├── Services
+    │   ├── NotificationService
+    │   ├── ReportingService
+    │   ├── SmsService (NEW)
+    │   └── SmsTemplateService (NEW)
     │   ↓
     │   Models
     │   ↓
@@ -75,12 +82,12 @@ Controllers
 
 The system uses a relational database with the following key entities:
 
-- **Users**: Hospital staff with different roles
+- **Users**: Hospital staff with different roles and facility assignments
 - **Patients**: Individuals receiving immunizations
 - **Facilities**: Healthcare facilities where immunizations are administered
-- **Vaccines**: Available vaccines with recommended ages
+- **Vaccines**: Available vaccines with recommended ages and series information
 - **Immunization Records**: Records of administered vaccines
-- **Notifications**: Alerts for due immunizations
+- **Notifications**: Alerts for due immunizations with SMS tracking
 
 ## Key Technical Decisions
 
@@ -103,6 +110,10 @@ The system uses a relational database with the following key entities:
 
 6. **PostgreSQL Database**: Relational database for structured data storage with strong consistency guarantees.
    - Containerized with persistent volume for data storage
+
+7. **SMS Integration**: Orange SMS API integration for automated patient communication.
+   - OAuth 2.0 authentication with token management
+   - Webhook-based delivery receipt processing
 
 ## Design Patterns
 
@@ -179,6 +190,90 @@ The system uses a relational database with the following key entities:
 
 5. **Dependency Injection**: For loose coupling and testability.
 
+### SMS Integration Patterns
+
+#### SMS Service Architecture Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SMS Service Layer                        │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │     SMS     │     │  Template   │     │   Orange    │   │
+│  │ Controller  │────▶│   Service   │────▶│  API Client │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │  Webhook    │     │  Message    │     │  Delivery   │   │
+│  │ Processing  │     │ Generation  │     │  Tracking   │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **SMS Service Pattern**: Centralized SMS communication management
+   - **Implementation**: [`SmsService`](backend/app/services/sms_service.ts) handles Orange API integration
+   - **Features**: OAuth 2.0 authentication, message sending, delivery tracking
+   - **Benefits**: Abstracted SMS functionality with comprehensive error handling
+
+2. **Template Engine Pattern**: Healthcare-specific message generation
+   - **Implementation**: [`SmsTemplateService`](backend/app/services/sms_template_service.ts)
+   - **Features**: Template-based messages, automatic shortening, healthcare abbreviations
+   - **Benefits**: Consistent, professional healthcare communication
+
+3. **Webhook Processing Pattern**: Asynchronous delivery receipt handling
+   - **Implementation**: Webhook endpoint in [`SmsController`](backend/app/controllers/sms_controller.ts)
+   - **Features**: Delivery status updates, error handling, security validation
+   - **Benefits**: Real-time delivery tracking and status updates
+
+4. **Retry Mechanism Pattern**: Automatic failure recovery for SMS
+   - **Implementation**: Exponential backoff retry logic in SmsService
+   - **Features**: Configurable retry limits, failure tracking, rate limiting
+   - **Benefits**: Improved delivery reliability and system resilience
+
+### Admin Management Patterns
+
+#### Admin Dashboard Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   Admin Dashboard                           │
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │    User     │     │  Facility   │     │   Vaccine   │   │
+│  │ Management  │     │ Management  │     │ Management  │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│         │                   │                   │           │
+│         ▼                   ▼                   ▼           │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
+│  │   CRUD      │     │   Search    │     │   Role      │   │
+│  │ Operations  │     │ & Filter    │     │   Based     │   │
+│  └─────────────┘     └─────────────┘     └─────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+1. **Admin Dashboard Pattern**: Centralized administrative control
+   - **Implementation**: [`AdminDashboard`](frontend/app/(drawer)/admin/index.tsx)
+   - **Features**: Quick action cards, role-based access, visual organization
+   - **Benefits**: Efficient administrative workflow and system oversight
+
+2. **User Management Pattern**: Complete staff account lifecycle management
+   - **Implementation**: User management screens with CRUD operations
+   - **Features**: Role assignment, facility association, search and filtering
+   - **Benefits**: Comprehensive staff management with proper access control
+
+3. **Role-Based Access Control Pattern**: Dynamic UI and API access based on user roles
+   - **Implementation**: Role checks in components and API endpoints
+   - **Features**: Administrator, supervisor, healthcare_worker, doctor roles
+   - **Benefits**: Secure, appropriate access to system functionality
+
+4. **Form Management Pattern**: Reusable form components with validation
+   - **Implementation**: [`UserForm`](frontend/app/components/UserForm.tsx) component
+   - **Features**: React Hook Form integration, validation, error handling
+   - **Benefits**: Consistent form behavior and user experience
+
 ## Component Relationships
 
 1. **Container Communication**:
@@ -192,13 +287,16 @@ The system uses a relational database with the following key entities:
 3. **Immunization Record Creation**:
    - Immunization Form → API Service → Immunization Records Controller → Database
 
-4. **Notification Generation**:
-   - Scheduled Job → Notification Service → Notification Creation → User Dashboard
+4. **SMS Notification Flow**:
+   - Notification Creation → SMS Service → Orange API → Delivery Receipt → Status Update
 
-5. **Reporting Flow**:
+5. **Admin Management Flow**:
+   - Admin Dashboard → User Management → API Service → User Controller → Database
+
+6. **Reporting Flow**:
    - Reports Screen → Reports Controller → Data Aggregation → Formatted Response
 
-6. **Deployment Flow**:
+7. **Deployment Flow**:
    - Code Changes → Docker Image Build → Container Orchestration → Service Availability
 
 ## Critical Implementation Paths
@@ -225,224 +323,153 @@ The system uses a relational database with the following key entities:
    - Record creation
    - Return date scheduling
 
-5. **Notification System**:
+5. **SMS Communication System**:
+   - Message template generation
+   - Orange API integration
+   - Delivery receipt processing
+   - Error handling and retry
+
+6. **Admin Management System**:
+   - User account lifecycle management
+   - Role assignment and access control
+   - Facility management
+   - System oversight
+
+7. **Notification System**:
    - Due date calculation
    - Notification generation
-   - Notification delivery
+   - SMS integration
+   - Status tracking
 
-6. **Reporting and Analytics**:
+8. **Reporting and Analytics**:
    - Data aggregation
    - Visualization
    - Export functionality
 
-7. **Deployment and Operations**:
+9. **Deployment and Operations**:
    - Container health monitoring
    - Database backup and recovery
    - Service scaling
    - Environment-specific configuration
 
-## Liberia Immunization Schedule Patterns
+## Enhanced System Patterns
 
-The following patterns are required to support the Liberia immunization schedule:
-
-### Schedule Management Pattern
+### SMS Integration Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                  Schedule Management                         │
+│                 SMS Integration System                       │
 │                                                             │
 │  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │   Schedule  │     │  Schedule   │     │  Patient    │   │
-│  │  Definition │────▶│    Items    │────▶│ Assignment  │   │
+│  │ Notification│────▶│     SMS     │────▶│   Orange    │   │
+│  │   Service   │     │   Service   │     │     API     │   │
 │  └─────────────┘     └─────────────┘     └─────────────┘   │
 │         │                   │                   │           │
 │         ▼                   ▼                   ▼           │
 │  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Country    │     │   Vaccine   │     │  Schedule   │   │
-│  │  Specific   │     │  Sequence   │     │ Compliance  │   │
+│  │  Database   │     │  Template   │     │  Webhook    │   │
+│  │  Updates    │     │   Engine    │     │ Processing  │   │
 │  └─────────────┘     └─────────────┘     └─────────────┘   │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-1. **Schedule Definition**: Create and manage standardized immunization schedules with metadata (name, country, description).
-
-2. **Schedule Items**: Define specific vaccines in a schedule with recommended ages and sequence.
-
-3. **Patient Assignment**: Assign specific schedules to patients based on their country/region.
-
-4. **Country-Specific Customization**: Support for different national immunization programs, starting with Liberia.
-
-5. **Vaccine Sequence Management**: Define the correct sequence for vaccine administration, especially for series vaccines.
-
-6. **Schedule Compliance Tracking**: Monitor patient adherence to assigned schedules.
-
-### Vaccine Series Tracking Pattern
+### Admin Management Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                 Vaccine Series Tracking                      │
+│                Admin Management System                       │
 │                                                             │
 │  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │   Series    │     │   Sequence  │     │    Next     │   │
-│  │ Definition  │────▶│   Tracking  │────▶│   Vaccine   │   │
+│  │    Admin    │────▶│    User     │────▶│  Database   │   │
+│  │  Dashboard  │     │ Controller  │     │   Updates   │   │
 │  └─────────────┘     └─────────────┘     └─────────────┘   │
 │         │                   │                   │           │
 │         ▼                   ▼                   ▼           │
 │  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Related    │     │  Validation │     │ Completion  │   │
-│  │  Vaccines   │     │    Rules    │     │   Status    │   │
+│  │    Role     │     │  Facility   │     │   Access    │   │
+│  │ Management  │     │ Assignment  │     │  Control    │   │
 │  └─────────────┘     └─────────────┘     └─────────────┘   │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-1. **Series Definition**: Group related vaccines into series (e.g., "OPV", "Penta").
-
-2. **Sequence Tracking**: Track the administration sequence within a series (e.g., OPV0, OPV1, OPV2, OPV3).
-
-3. **Next Vaccine Suggestion**: Automatically suggest the next vaccine in a series based on patient history.
-
-4. **Related Vaccines Management**: Maintain relationships between vaccines in the same series.
-
-5. **Validation Rules**: Ensure correct sequence administration and prevent out-of-sequence vaccinations.
-
-6. **Completion Status**: Track and display series completion status for patients.
-
-### Schedule Compliance Monitoring Pattern
+### Enhanced Notification System
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│               Schedule Compliance Monitoring                 │
+│              Enhanced Notification System                    │
 │                                                             │
 │  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Schedule   │     │   Status    │     │ Compliance  │   │
-│  │  Tracking   │────▶│ Calculation │────▶│  Reporting  │   │
+│  │Immunization │────▶│Notification │────▶│     SMS     │   │
+│  │   Record    │     │  Creation   │     │   Sending   │   │
 │  └─────────────┘     └─────────────┘     └─────────────┘   │
 │         │                   │                   │           │
 │         ▼                   ▼                   ▼           │
 │  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │   Due Date  │     │ Notification│     │  Analytics  │   │
-│  │ Calculation │     │  Generation │     │ Generation  │   │
+│  │ Transaction │     │   Status    │     │  Delivery   │   │
+│  │   Safety    │     │  Tracking   │     │  Tracking   │   │
 │  └─────────────┘     └─────────────┘     └─────────────┘   │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-1. **Schedule Tracking**: Monitor whether immunizations follow the assigned schedule.
+## Implementation Approach
 
-2. **Status Calculation**: Determine status (on schedule, delayed, missed) for each required vaccine.
+The implementation of these patterns follows a phased approach:
 
-3. **Compliance Reporting**: Generate compliance reports at individual and facility levels.
+### Phase 1 (Completed) - Core System
+- Containerized infrastructure
+- Authentication and authorization
+- Basic CRUD operations
+- Patient and immunization management
+- Notification system foundation
 
-4. **Due Date Calculation**: Calculate when the next vaccine is due based on the schedule and patient history.
+### Phase 2 (Completed) - Enhanced Features
+- SMS integration with Orange API
+- Admin user management system
+- Enhanced vaccine database
+- Improved notification reliability
+- Comprehensive error handling
 
-5. **Notification Generation**: Create alerts for upcoming and overdue vaccines.
+### Phase 3 (Current) - Production Readiness
+- Performance optimization
+- Security hardening
+- Comprehensive testing
+- Documentation completion
+- Deployment preparation
 
-6. **Analytics Generation**: Produce insights on compliance rates and trends.
+### Phase 4 (Future) - Advanced Features
+- Multi-facility coordination
+- Advanced analytics and reporting
+- Mobile offline capabilities
+- Integration with national health systems
+- Multilingual support
 
-### Navigation and Filtering Patterns
+## Performance and Scalability Patterns
 
-#### Dashboard-to-Notifications Navigation Pattern
+### Database Optimization Patterns
+- Proper indexing for frequently queried fields
+- Connection pooling for efficient database access
+- Query optimization for complex reporting
+- Pagination for large datasets
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Dashboard-to-Notifications Flow                 │
-│                                                             │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Dashboard  │────▶│   Filter    │────▶│ Notifications│   │
-│  │   Stats     │     │ Parameters  │     │   Screen    │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│         │                   │                   │           │
-│         ▼                   ▼                   ▼           │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Clickable  │     │  URL Query  │     │  Filtered   │   │
-│  │   Stats     │     │  Parameters │     │   View      │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+### API Performance Patterns
+- Response caching for static data
+- Rate limiting for API protection
+- Bulk operations for efficiency
+- Asynchronous processing for long-running tasks
 
-1. **Clickable Statistics**: Dashboard stats cards are now interactive
-2. **URL Parameter Navigation**: Filter parameters passed via URL query strings
-3. **State Synchronization**: Filter state synchronized with URL parameters
-4. **Deep Linking**: Direct navigation to specific filtered views
+### SMS Service Patterns
+- Rate limiting compliance with Orange API
+- Queue management for bulk SMS
+- Retry mechanisms with exponential backoff
+- Delivery status caching
 
-#### Notifications Filtering Pattern
+### Frontend Performance Patterns
+- Component memoization for expensive renders
+- Lazy loading for large lists
+- Image optimization and caching
+- Efficient state management with TanStack Query
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                 Notifications Filtering                      │
-│                                                             │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │   Filter    │────▶│   Data      │────▶│   Sorted    │   │
-│  │  Controls   │     │  Filtering  │     │   Results   │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│         │                   │                   │           │
-│         ▼                   ▼                   ▼           │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │   Filter    │     │  Status     │     │  Chronology │   │
-│  │   Buttons   │     │  Filtering  │     │   Sorting   │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-1. **Filter Controls**: Visual filter buttons for All/Upcoming/Overdue
-2. **Status Filtering**: Filter notifications by pending/overdue status
-3. **Chronological Sorting**: Sort by due date (closest first)
-4. **Empty State Handling**: Context-specific empty messages
-
-### UI/UX Patterns for Liberia Schedule
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                 UI/UX for Liberia Schedule                   │
-│                                                             │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Schedule   │     │   Series    │     │ Compliance  │   │
-│  │Visualization│────▶│Presentation │────▶│ Indicators  │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│         │                   │                   │           │
-│         ▼                   ▼                   ▼           │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐   │
-│  │  Recording  │     │   History   │     │  Reporting  │   │
-│  │  Interface  │     │     View    │     │ Dashboards  │   │
-│  └─────────────┘     └─────────────┘     └─────────────┘   │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-1. **Schedule Visualization**: Visual timeline representation of the Liberia immunization schedule.
-
-2. **Series Presentation**: Group related vaccines and show sequence progress.
-
-3. **Compliance Indicators**: Visual indicators for upcoming, due, and overdue vaccines.
-
-4. **Recording Interface**: Redesigned interface organized by Liberia schedule.
-
-5. **History View**: Patient immunization history showing progress against standard schedule.
-
-6. **Reporting Dashboards**: Visualizations aligned with Liberia's reporting requirements.
-
-### Implementation Approach
-
-The implementation of these patterns will follow a phased approach:
-
-1. **Phase 1 (High Priority)**:
-   - Data model changes to support the Liberia schedule
-   - Basic schedule management functionality
-   - Enhanced vaccine tracking with series support
-   - Updated immunization recording interface
-
-2. **Phase 2 (Medium Priority)**:
-   - Schedule compliance monitoring
-   - Enhanced notification system
-   - Reporting enhancements
-   - Patient immunization history visualization
-
-3. **Phase 3 (Lower Priority)**:
-   - Supplementary immunization activities tracking
-   - Advanced data import/export
-   - Multi-facility coordination
-   - Multilingual support
+The system architecture demonstrates a mature, production-ready healthcare management platform with comprehensive SMS communication, administrative controls, and robust notification systems, all built on modern, scalable patterns and technologies.
