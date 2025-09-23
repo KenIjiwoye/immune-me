@@ -16,8 +16,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 
-import { immunizationSchema, ImmunizationFormData, ImmunizationRecord } from '../../../types/immunization';
-import { Vaccine } from '../../../types/immunization';
+import { immunizationSchema, ImmunizationFormData, ImmunizationRecord , Vaccine } from '../../../types/immunization';
 import { Patient } from '../../../types/patient';
 import { patientKeys } from '../../../hooks/usePatients';
 import api from '../../../services/api';
