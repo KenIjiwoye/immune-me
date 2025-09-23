@@ -45,7 +45,6 @@ export default function EditImmunizationScreen() {
       administeredDate: '',
       returnDate: null,
       batchNumber: '',
-      administeredBy: '',
       notes: '',
     },
   });
@@ -81,7 +80,6 @@ export default function EditImmunizationScreen() {
         administeredDate: immunizationRecord.administeredDate,
         returnDate: immunizationRecord.returnDate,
         batchNumber: immunizationRecord.batchNumber,
-        administeredBy: immunizationRecord.administeredBy.fullName,
         notes: immunizationRecord.notes || '',
       });
     }
@@ -97,7 +95,6 @@ export default function EditImmunizationScreen() {
         batchNumber: data.batchNumber,
         returnDate: data.returnDate,
         notes: data.notes,
-        // Note: administeredBy is not updated as per backend requirements
       };
       const response = await api.put(`/immunization-records/${id}`, updateData);
       return response.data;
@@ -265,26 +262,6 @@ export default function EditImmunizationScreen() {
           />
         </View>
 
-        {/* Administered By (Read-only) */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Administered By</Text>
-          <Controller
-            control={control}
-            name="administeredBy"
-            render={({ field: { value } }) => (
-              <View style={styles.inputContainer}>
-                <Ionicons name="person" size={20} color="#6c757d" style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, styles.readOnlyInput]}
-                  value={value}
-                  placeholder="Administered by"
-                  editable={false}
-                />
-              </View>
-            )}
-          />
-          <Text style={styles.readOnlyNote}>This field cannot be edited</Text>
-        </View>
 
         {/* Notes */}
         <View style={styles.formGroup}>

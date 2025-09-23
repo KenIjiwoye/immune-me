@@ -14,10 +14,6 @@ export const patientUpdateValidator = vine.compile(
     townVillage: vine.string().trim().minLength(2).maxLength(100).optional(),
     address: vine.string().trim().minLength(5).maxLength(255).optional(),
     contactPhone: vine.string().trim().minLength(5).maxLength(20).optional(),
-    healthWorkerId: vine.number().optional(),
-    healthWorkerName: vine.string().trim().minLength(2).maxLength(100).optional(),
-    healthWorkerPhone: vine.string().trim().minLength(5).maxLength(20).optional(),
-    healthWorkerAddress: vine.string().trim().minLength(5).maxLength(255).optional(),
     facilityId: vine.number().optional()
   })
 )

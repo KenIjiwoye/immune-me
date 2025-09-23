@@ -7,7 +7,6 @@ export const immunizationSchema = z.object({
   administeredDate: z.string().min(1, 'Administered date is required'),
   returnDate: z.string().nullable().optional(),
   batchNumber: z.string().min(1, 'Batch number is required'),
-  administeredBy: z.string().min(1, 'Administered by is required'),
   notes: z.string().optional(),
 });
 

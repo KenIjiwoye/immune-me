@@ -16,11 +16,6 @@ export const patientSchema = z.object({
   contactPhone: z.string()
     .min(5, 'Contact phone must be at least 5 characters')
     .regex(/^\+?[0-9\s-()]+$/, 'Please enter a valid phone number'),
-  healthWorkerName: z.string().optional(),
-  healthWorkerPhone: z.string()
-    .regex(/^\+?[0-9\s-()]+$/, 'Please enter a valid phone number')
-    .optional()
-    .or(z.literal('')),
   facilityId: z.number().optional(),
 });
 
