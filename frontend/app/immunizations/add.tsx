@@ -46,7 +46,6 @@ export default function AddImmunizationScreen() {
       administeredDate: new Date().toISOString().split('T')[0],
       returnDate: null,
       batchNumber: '',
-      administeredBy: '',
       notes: '',
     },
   });
@@ -294,31 +293,6 @@ export default function AddImmunizationScreen() {
           />
         </View>
 
-        {/* Administered By */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>Administered By *</Text>
-          <Controller
-            control={control}
-            name="administeredBy"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <View>
-                <View style={styles.inputContainer}>
-                  <Ionicons name="person" size={20} color="#6c757d" style={styles.inputIcon} />
-                  <TextInput
-                    style={[styles.input, errors.administeredBy && styles.errorInput]}
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholder="Enter health worker name"
-                  />
-                </View>
-                {errors.administeredBy && (
-                  <Text style={styles.errorText}>{errors.administeredBy.message}</Text>
-                )}
-              </View>
-            )}
-          />
-        </View>
 
         {/* Notes */}
         <View style={styles.formGroup}>

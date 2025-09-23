@@ -47,11 +47,7 @@ export default class PatientsController {
       'district',
       'townVillage',
       'address',
-      'contactPhone',
-      'healthWorkerId',
-      'healthWorkerName',
-      'healthWorkerPhone',
-      'healthWorkerAddress'
+      'contactPhone'
     ])
     
     // Set facility ID from authenticated user
@@ -84,10 +80,6 @@ export default class PatientsController {
       'townVillage',
       'address',
       'contactPhone',
-      'healthWorkerId',
-      'healthWorkerName',
-      'healthWorkerPhone',
-      'healthWorkerAddress',
       'facilityId'
     ])
     

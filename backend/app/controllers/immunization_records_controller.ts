@@ -164,8 +164,6 @@ export default class ImmunizationRecordsController {
       'patientId',
       'vaccineId',
       'administeredDate',
-      'administeredByUserId',
-      'facilityId',
       'batchNumber',
       'returnDate',
       'notes'

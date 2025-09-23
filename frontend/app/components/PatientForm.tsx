@@ -43,8 +43,6 @@ export default function PatientForm({
       townVillage: '',
       address: '',
       contactPhone: '',
-      healthWorkerName: '',
-      healthWorkerPhone: '',
       facilityId: undefined,
       ...initialData,
     },
@@ -297,23 +295,6 @@ export default function PatientForm({
             )}
           </View>
         )}
-      </View>
-
-      <View style={styles.formSection}>
-        <Text style={styles.sectionTitle}>Health Worker Information</Text>
-        
-        <FormInput
-          name="healthWorkerName"
-          label="Health Worker Name"
-          placeholder="Enter health worker name"
-        />
-
-        <FormInput
-          name="healthWorkerPhone"
-          label="Health Worker Phone"
-          placeholder="Enter health worker phone"
-          keyboardType="phone-pad"
-        />
       </View>
 
       <TouchableOpacity
