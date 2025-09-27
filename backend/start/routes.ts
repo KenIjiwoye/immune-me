@@ -41,14 +41,14 @@ authRoutes.prefix('/api/auth')
 
 // Facilities routes
 const facilitiesRoutes = router.group(() => {
-  router.get('/', '#controllers/facilities_controller.index')
-  router.get('/:id', '#controllers/facilities_controller.show')
-  router.post('/', '#controllers/facilities_controller.store')
-  router.put('/:id', '#controllers/facilities_controller.update')
-  router.delete('/:id', '#controllers/facilities_controller.destroy')
+   router.get('/', '#controllers/facilities_controller.index')
+   router.get('/:id', '#controllers/facilities_controller.show')
+   router.post('/', '#controllers/facilities_controller.store')
+   router.put('/:id', '#controllers/facilities_controller.update')
+   router.delete('/:id', '#controllers/facilities_controller.destroy')
 })
   .prefix('/api/facilities')
-  .use(middleware.auth())
+  .use(middleware.auth({ roles: ['administrator'] }))
 
 // Vaccines routes
 const vaccinesRoutes = router.group(() => {
@@ -94,20 +94,23 @@ const notificationsRoutes = router.group(() => {
   router.put('/:id', '#controllers/notifications_controller.update')
   router.delete('/:id', '#controllers/notifications_controller.destroy')
   
-  // Admin-only route to manually trigger notification generation
+  // DEPRECATED: Admin-only route to manually trigger notification generation
+  // This route is deprecated as notifications are now created immediately when immunization records are created
   router.post('/generate', '#controllers/notifications_controller.generateNotifications')
     .use(middleware.auth({ roles: ['administrator'] }))
 })
   .prefix('/api/notifications')
   .use(middleware.auth())
 
-// Example of role-based route protection
-router.group(() => {
-  router.get('/users', async ({ response }) => {
-    return response.json({ message: 'Admin users list would be here' })
-  })
+// Users routes
+const usersRoutes = router.group(() => {
+  router.get('/', '#controllers/users_controller.index')
+  router.get('/:id', '#controllers/users_controller.show')
+  router.post('/', '#controllers/users_controller.store')
+  router.put('/:id', '#controllers/users_controller.update')
+  router.delete('/:id', '#controllers/users_controller.destroy')
 })
-  .prefix('/api/admin')
+  .prefix('/api/users')
   .use(middleware.auth({ roles: ['administrator'] }))
 
 // Dashboard routes
@@ -227,3 +230,22 @@ router.group(() => {
     .use(AuthMiddleware.medicalOperation())
 })
   .prefix('/api/v2/secure')
+
+// SMS routes
+const smsRoutes = router.group(() => {
+  // Webhook endpoint for Orange SMS delivery receipts (public endpoint)
+  router.post('/delivery-receipt', '#controllers/sms_controller.handleDeliveryReceipt')
+  
+  // Protected SMS management routes
+  router.group(() => {
+    router.post('/notifications/:id/send', '#controllers/sms_controller.sendNotificationSms')
+    router.post('/notifications/:id/retry', '#controllers/sms_controller.retrySms')
+    router.get('/status', '#controllers/sms_controller.getSmsStatus')
+    router.get('/service-status', '#controllers/sms_controller.getServiceStatus')
+    
+    // Admin-only test endpoint
+    router.post('/test', '#controllers/sms_controller.testSms')
+      .use(middleware.auth({ roles: ['administrator'] }))
+  }).use(middleware.auth())
+})
+  .prefix('/api/sms')

@@ -1,0 +1,812 @@
+{
+    "swagger": "2.0",
+	"info": {
+        "description": "SMS A2P RESTful documentation based on Swagger 2.0 specification",
+        "version": "1.0",
+        "title": "SMS A2P"
+    },
+    "host": "api.orange.com",
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/smsmessaging/v1/outbound/{senderAddress}/requests": {
+            "post": {
+                "summary": "Send a SMS message to one mobile terminal",
+                "description": "The POST /smsmessaging/v1/outbound/{senderAddress}/requests URI sends a SMS message to one mobile terminal. This operation is based on GSMA OneAPI SMS RESTful NetAPI",
+                "operationId": "sendSMS",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "senderAddress",
+                        "in": "path",
+                        "description": "The MSISDN of the sender, including the 'tel:' protocol identifier and the country code prefixed by '+', must be URL-escaped.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "tel:\\+\\d{2}\\d*"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Individual outbound SMS message request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BodyOutboundSMSMessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/BodyOutboundSMSMessageRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- SVC0001: A service error occurred<br/>- SVC0002: Invalid input value for message part<br/>- SVC0003: Invalid input value for message part<br/>- SVC0004: No valid addresses provided for message part<br/>- SVC0280: Message too long",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    },
+                    "403": {
+                        "description": "List of error codes:<br/>- POL0001: A policy error occurred<br/>- POL0003: Too many addresses specified in message part<br/>- POL0007: Nested groups specified in message part not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "404": {
+                        "description": "List of error codes:<br/>- POL0010: Requested information unavailable as the retention time interval has expired",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "406": {
+                        "description": "List of error codes:<br/>- POL0011: Media type not supported",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "503": {
+                        "description": "List of error codes:<br/>- SVC1000: No resources This exception is thrown if there are no server resources available to process the request",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/smsmessaging/v1/outbound/{senderAddress}/subscriptions": {
+            "post": {
+                "summary": "Subscribe to SMS delivery receipt (DR) notification",
+                "description": "The POST /smsmessaging/v1/outbound/{senderAddress}/subscriptions URI allows the consumer to subscribe to SMS delivery receipt (DR) notification. This operation is based on GSMA OneAPI SMS RESTful NetAPI",
+                "operationId": "subscribeDR",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "senderAddress",
+                        "in": "path",
+                        "description": "The MSISDN of the sender, including the 'tel:' protocol identifier and the country code prefixed by '+', must be URL-escaped.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "tel:\\+\\d{2}\\d*"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Delivery Receipt subscription request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BodyDRSubscriptionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/BodyDRSubscriptionRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- SVC0001: A service error occurred<br/>- SVC0002: Invalid input value for message part<br/>- SVC0003: Invalid input value for message part<br/>- SVC0004: No valid addresses provided for message part<br/>- SVC0280: Message too long",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    },
+                    "403": {
+                        "description": "List of error codes:<br/>- POL0001: A policy error occurred<br/>- POL0003: Too many addresses specified in message part<br/>- POL0007: Nested groups specified in message part not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "404": {
+                        "description": "List of error codes:<br/>- POL0010: Requested information unavailable as the retention time interval has expired",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "406": {
+                        "description": "List of error codes:<br/>- POL0011: Media type not supported",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "503": {
+                        "description": "List of error codes:<br/>- SVC1000: No resources This exception is thrown if there are no server resources available to process the request",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/smsmessaging/v1/outbound/{senderAddress}/subscriptions/{subscriptionId}": {
+            "get": {
+                "summary": "Retrieve information about a SMS Delivery Receipt (DR) notification subscription",
+                "description": "The GET /smsmessaging/v1/outbound/{senderAddress}/subscriptions/{subscriptionId} URI retrieves information related to Delivery Receipt (DR) notification subscription according to a given subscription identifier",
+                "operationId": "listDR",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "senderAddress",
+                        "in": "path",
+                        "description": "The MSISDN of the sender, including the 'tel:' protocol identifier and the country code prefixed by '+', must be URL-escaped.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "tel:\\+\\d{2}\\d*"
+                    },
+                    {
+                        "in": "path",
+                        "name": "subscriptionId",
+                        "description": "Identifier of the DR notifications susbscription to retrieve",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/BodyDRSubscriptionRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- SVC0001: A service error occurred<br/>- SVC0002: Invalid input value for message part<br/>- SVC0003: Invalid input value for message part<br/>- SVC0004: No valid addresses provided for message part<br/>- SVC0280: Message too long",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    },
+                    "403": {
+                        "description": "List of error codes:<br/>- POL0001: A policy error occurred<br/>- POL0003: Too many addresses specified in message part<br/>- POL0007: Nested groups specified in message part not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "404": {
+                        "description": "List of error codes:<br/>- POL0010: Requested information unavailable as the retention time interval has expired",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "406": {
+                        "description": "List of error codes:<br/>- POL0011: Media type not supported",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "503": {
+                        "description": "List of error codes:<br/>- SVC1000: No resources This exception is thrown if there are no server resources available to process the request",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a SMS Delivery Receipt (DR) notification subscription",
+                "description": "The GET /smsmessaging/v1/outbound/{senderAddress}/subscriptions/{subscriptionId}  URI deletes information related to Delivery Receipt (DR) notification subscription according to a given subscription identifier",
+                "operationId": "unsuscribeDR",
+                "parameters": [
+                    {
+                        "name": "senderAddress",
+                        "in": "path",
+                        "description": "The MSISDN of the sender, including the 'tel:' protocol identifier and the country code prefixed by '+', must be URL-escaped.",
+                        "required": true,
+                        "type": "string",
+                        "pattern": "tel:\\+\\d{2}\\d*"
+                    },
+                    {
+                        "in": "path",
+                        "name": "subscriptionId",
+                        "description": "Identifier of the DR notifications susbscription to delete",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- SVC0001: A service error occurred<br/>- SVC0002: Invalid input value for message part<br/>- SVC0003: Invalid input value for message part<br/>- SVC0004: No valid addresses provided for message part<br/>- SVC0280: Message too long",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    },
+                    "403": {
+                        "description": "List of error codes:<br/>- POL0001: A policy error occurred<br/>- POL0003: Too many addresses specified in message part<br/>- POL0007: Nested groups specified in message part not allowed",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "404": {
+                        "description": "List of error codes:<br/>- POL0010: Requested information unavailable as the retention time interval has expired",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "406": {
+                        "description": "List of error codes:<br/>- POL0011: Media type not supported",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPolicyRequestError"
+                        }
+                    },
+                    "503": {
+                        "description": "List of error codes:<br/>- SVC1000: No resources This exception is thrown if there are no server resources available to process the request",
+                        "schema": {
+                            "$ref": "#/definitions/BodyServiceRequestError"
+                        }
+                    }
+                }
+            }
+        },
+        "/sms/admin/v1/contracts": {
+            "get": {
+                "summary": "List the contracts",
+                "description": "The GET /sms/admin/v1/contracts URI lists the contracts of the partner. It allows filtering by country.",
+                "operationId": "listContracts",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "description": "ISO 3166-1 alpha 3  country code (e.g. CIV, see https://fr.wikipedia.org/wiki/ISO_3166-1)",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "language",
+                        "description": "Language of the labels. Default value is EN. Note that in V1.0, only the default language will be supported.",
+                        "required": false,
+                        "type": "string",
+                        "default": "EN"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPartnerContracts"
+                        }
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- 232740000: Missing input<br/>- 232740001: Malformed request body<br/>- 232740002: Malformed URI<br/>- 232740003: Invalid input value",
+                        "schema": {
+                            "$ref": "#/definitions/BodyError"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not supported"
+                    },
+                    "500": {
+                        "description": "List of error codes:<br/>- 232740004: Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/BodyError"
+                        }
+                    }
+                }
+            }
+        },
+        "/sms/admin/v1/purchaseorders": {
+            "get": {
+                "summary": "List the purchase history",
+                "description": "The GET /sms/admin/v1/purchaseorders URI lists the purchase history of a partner. It allows filtering by country.",
+                "operationId": "listPurchaseOrders",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "description": "ISO 3166-1 alpha 3  country code (e.g. CIV, see https://fr.wikipedia.org/wiki/ISO_3166-1)",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPurchaseOrders"
+                        }
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- 232740000: Missing input<br/>- 232740001: Malformed request body<br/>- 232740002: Malformed URI<br/>- 232740003: Invalid input value",
+                        "schema": {
+                            "$ref": "#/definitions/BodyError"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not supported"
+                    },
+                    "500": {
+                        "description": "List of error codes:<br/>- 232740004: Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/BodyError"
+                        }
+                    }
+                }
+            }
+        },
+        "/sms/admin/v1/statistics": {
+            "get": {
+                "summary": "List the usage statistics per contract",
+                "description": "The GET /sms/admin/v1/statistics lists the usage statistics of a partner. It allows filtering by country.",
+                "operationId": "listStatistics",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "description": "ISO 3166 alpha 3  country code  (e.g. CIV, see https://fr.wikipedia.org/wiki/ISO_3166-1)",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/BodyPartnerStatistics"
+                        }
+                    },
+                    "400": {
+                        "description": "List of error codes:<br/>- 232740000: Missing input<br/>- 232740001: Malformed request body<br/>- 232740002: Malformed URI<br/>- 232740003: Invalid input value",
+                        "schema": {
+                            "$ref": "#/definitions/BodyError"
+                        }
+                    },
+                    "405": {
+                        "description": "Method not supported"
+                    },
+                    "500": {
+                        "description": "List of error codes:<br/>- 232740004: Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/BodyError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "BodyPolicyRequestError": {
+            "required": [
+                "requestError"
+            ],
+            "properties": {
+                "requestError": {
+                    "$ref": "#/definitions/PolicyRequestError"
+                }
+            }
+        },
+        "PolicyRequestError": {
+            "required": [
+                "policyException"
+            ],
+            "properties": {
+                "policyException": {
+                    "description": "means that the request syntax is valid, however an operator policy has been broken",
+                    "$ref": "#/definitions/Exception"
+                }
+            }
+        },
+        "BodyServiceRequestError": {
+            "required": [
+                "requestError"
+            ],
+            "properties": {
+                "requestError": {
+                    "$ref": "#/definitions/ServiceRequestError"
+                }
+            }
+        },
+        "ServiceRequestError": {
+            "required": [
+                "serviceException"
+            ],
+            "properties": {
+                "serviceException": {
+                    "description": "describes the reason why the service cannot accept the request",
+                    "$ref": "#/definitions/Exception"
+                }
+            }
+        },
+        "Exception": {
+            "properties": {
+                "messageId": {
+                    "type": "string",
+                    "description": "identifier of the exception"
+                },
+                "text": {
+                    "type": "string",
+                    "description": "text which describes the consistently of the exception"
+                },
+                "variables": {
+                    "type": "string",
+                    "description": "relates to the %1 placeholder(s) in the text property"
+                }
+            }
+        },
+        "BodyError": {
+            "required": [
+                "error"
+            ],
+            "properties": {
+                "error": {
+                    "$ref": "#/definitions/Error"
+                }
+            }
+        },
+        "Error": {
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "description": "Error code"
+                },
+                "message": {
+                    "type": "string",
+                    "description": "Error message"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Additional information"
+                }
+            }
+        },
+        "BodyOutboundSMSMessageRequest": {
+            "required": [
+                "outboundSMSMessageRequest"
+            ],
+            "properties": {
+                "outboundSMSMessageRequest": {
+                    "$ref": "#/definitions/OutboundSMSMessageRequest"
+                }
+            }
+        },
+        "OutboundSMSMessageRequest": {
+            "required": [
+                "address",
+                "outboundSMSTextMessage",
+                "senderAddress"
+            ],
+            "properties": {
+                "address": {
+                    "type": "string",
+                    "description": "End user ID; in this case the MSISDN including the 'tel:' protocol identifier and the country code prefixed by '+'. (i.e. tel:+16309700001)",
+                    "pattern": "tel:\\+\\d{2}\\d*"
+                },
+                "outboundSMSTextMessage": {
+                    "$ref": "#/definitions/OutboundSMSTextMessage"
+                },
+                "senderAddress": {
+                    "type": "string",
+                    "description": "The MSISDN of the sender, including the 'tel:' protocol identifier and the country code prefixed by '+'. Must be the same as the senderAddress in the URI.",
+                    "pattern": "tel:\\+\\d{2}\\d*"
+                },
+                "senderName": {
+                    "type": "string",
+                    "description": "URL-escaped name of the sender to appear on the terminal is the address to whom a responding SMS may be sent."
+                }
+            }
+        },
+        "OutboundSMSTextMessage": {
+            "required": [
+                "message"
+            ],
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "description": "Content of the SMS.",
+                    "maxLength": 160
+                }
+            }
+        },
+        "BodyDRSubscriptionRequest": {
+            "required": [
+                "deliveryReceiptSubscription"
+            ],
+            "properties": {
+                "deliveryReceiptSubscription": {
+                    "$ref": "#/definitions/DRSubscription"
+                }
+            }
+        },
+        "DRSubscription": {
+            "required": [
+                "callbackReference"
+            ],
+            "properties": {
+                "callbackReference": {
+                    "$ref": "#/definitions/DRCallbackReference"
+                },
+                "resourceURL": {
+                    "type": "string",
+                    "description": "URL of the created subscription"
+                }
+            }
+        },
+        "DRCallbackReference": {
+            "required": [
+                "notifyURL"
+            ],
+            "properties": {
+                "notifyURL": {
+                    "type": "string",
+                    "description": "URL which will be used by the API to POST the notifications to the partner Back-End"
+                }
+            }
+        },
+        "BodyPurchaseOrders": {
+            "properties": {
+                "partnerContracts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PurchaseOrders"
+                    }
+                }
+            }
+        },
+        "PurchaseOrders": {
+            "properties": {
+                "purchaseOrderId": {
+                    "type": "string",
+                    "description": "Purchase Order Identifier"
+                },
+                "mode": {
+                    "type": "string",
+                    "description": "Payment mode (e.g. OCB)"
+                },
+                "bundleId": {
+                    "type": "string",
+                    "description": "Identifier of the purchased bundle"
+                },
+                "bundleDescription": {
+                    "type": "string",
+                    "description": "Full description of the purchased bundle"
+                },
+                "partnerId": {
+                    "type": "string",
+                    "description": "Partner identifier provided by Orange Partner"
+                },
+                "inputs": {
+                    "type": "array",
+                    "description": "JSON structure containing all the necessary inputs to perform the purchase (depends on the method used).",
+                    "items": {
+                        "$ref": "#/definitions/Input"
+                    }
+                },
+                "orderExecutionInformation": {
+                    "description": "detailled informations about the purchase",
+                    "$ref": "#/definitions/OrderExecutionInformation"
+                }
+            }
+        },
+        "Input": {
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "input type"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "input value"
+                }
+            }
+        },
+        "OrderExecutionInformation": {
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "description": "Purchase date, ISO 3166 format",
+                    "pattern": "YYYY-mm-DDTHH:MM:SSZ"
+                },
+                "amount": {
+                    "type": "number",
+                    "description": "Charged amount"
+                },
+                "currency": {
+                    "type": "string",
+                    "description": "Currency used"
+                },
+                "service": {
+                    "type": "string",
+                    "description": "Technical name of the subscribed service (e.g. SMS_OCB)"
+                },
+                "country": {
+                    "type": "string",
+                    "description": "ISO 3166-1 alpha 3  country code (e.g. CIV, see https://fr.wikipedia.org/wiki/ISO_3166-1)"
+                },
+                "contractId": {
+                    "type": "string",
+                    "description": "Associated service contract identifier"
+                }
+            }
+        },
+        "BodyPartnerContracts": {
+            "properties": {
+                "purchaseOrders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PartnerContracts"
+                    }
+                }
+            }
+        },
+        "PartnerContracts": {
+            "properties": {
+                "partnerId": {
+                    "type": "string",
+                    "description": "Partner Identifier provided by Orange Partner"
+                },
+                "contracts": {
+                    "type": "array",
+                    "description": "List of contracts associated to the partner",
+                    "items": {
+                        "$ref": "#/definitions/Contract"
+                    }
+                }
+            }
+        },
+        "Contract": {
+            "properties": {
+                "service": {
+                    "type": "string",
+                    "description": "Technical name of the subscribed service (e.g. SMS_OCB)"
+                },
+                "contractDescription": {
+                    "type": "string",
+                    "description": "Overall service contract description"
+                },
+                "serviceContracts": {
+                    "type": "array",
+                    "description": "List of country-specific contracts",
+                    "items": {
+                        "$ref": "#/definitions/ServiceContract"
+                    }
+                }
+            }
+        },
+        "ServiceContract": {
+            "properties": {
+                "country": {
+                    "type": "string",
+                    "description": "ISO 3166-1 alpha 3  country code (e.g. CIV, see https://fr.wikipedia.org/wiki/ISO_3166-1)"
+                },
+                "service": {
+                    "type": "string",
+                    "description": "Technical name of the subscribed service (e.g. SMS_OCB)"
+                },
+                "contractId": {
+                    "type": "string",
+                    "description": "Contract identifier"
+                },
+                "availableUnits": {
+                    "type": "number",
+                    "description": "Available units in the contract"
+                },
+                "expires": {
+                    "type": "string",
+                    "description": "Contract expiration date, ISO 8601 format",
+                    "pattern": "YYYY-mm-DDTHH:MM:SSZ"
+                },
+                "scDescription": {
+                    "type": "string",
+                    "description": "Country-specific contract description, contains the number of units to consume and the expiration date"
+                }
+            }
+        },
+        "BodyPartnerStatistics": {
+            "properties": {
+                "partnerStatistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PartnerStatistics"
+                    }
+                }
+            }
+        },
+        "PartnerStatistics": {
+            "properties": {
+                "partnerId": {
+                    "type": "string",
+                    "description": "Partner Identifier provided by Orange Partner"
+                },
+                "statistics": {
+                    "type": "array",
+                    "description": "List of usage statistics associated to the partner",
+                    "items": {
+                        "$ref": "#/definitions/Statistics"
+                    }
+                }
+            }
+        },
+        "Statistics": {
+            "properties": {
+                "service": {
+                    "type": "string",
+                    "description": "Technical name of the subscribed service (e.g. SMS_OCB)"
+                },
+                "serviceStatistics": {
+                    "type": "array",
+                    "description": "List of statistics associated to the service",
+                    "items": {
+                        "$ref": "#/definitions/ServiceStatistics"
+                    }
+                }
+            }
+        },
+        "ServiceStatistics": {
+            "properties": {
+                "country": {
+                    "type": "string",
+                    "description": "ISO 3166-1 alpha 3  country code (e.g. CIV, see https://fr.wikipedia.org/wiki/ISO_3166-1)"
+                },
+                "countryStatistics": {
+                    "type": "array",
+                    "description": "List of statistics associated to the country",
+                    "items": {
+                        "$ref": "#/definitions/CountryStatistics"
+                    }
+                }
+            }
+        },
+        "CountryStatistics": {
+            "properties": {
+                "appid": {
+                    "type": "string",
+                    "description": "Application identifier of the partner provided by Orange Partner"
+                },
+                "usage": {
+                    "type": "integer",
+                    "description": "Number of units consumed by the application"
+                }
+            }
+        }
+    }
+}

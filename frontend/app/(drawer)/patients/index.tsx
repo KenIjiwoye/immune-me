@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -20,16 +20,16 @@ export default function PatientListScreen() {
   const { isAuthenticated } = useAuth();
   const params = useLocalSearchParams();
   
-  const [searchQuery, setSearchQuery] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
 
-  const queryParams: PatientQueryParams = {
+
+  const queryParams = useMemo<PatientQueryParams>(() => ({
     page,
-    limit: 20,
-    search: searchQuery || undefined,
+    limit: 999,
     ...params,
-  };
+  }), [page, params]);
 
   const {
     data: patientsData,
@@ -50,10 +50,17 @@ export default function PatientListScreen() {
     }
   };
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    setPage(1);
-  };
+  const filteredPatients = useMemo<PatientWithRelations[]>(() => {
+    const list = patientsData?.data || [];
+    const q = (inputValue || '').trim().toLowerCase();
+    if (!q) return list;
+    return list.filter((p: PatientWithRelations) => {
+      const name = p.fullName?.toLowerCase() || '';
+      const phone = (p.contactPhone || p.healthWorkerPhone || '').toLowerCase();
+      return name.includes(q) || phone.includes(q);
+    });
+  }, [patientsData?.data, inputValue]);
+
 
   const renderPatient = ({ item }: { item: PatientWithRelations }) => (
     <PatientCard
@@ -62,44 +69,19 @@ export default function PatientListScreen() {
     />
   );
 
-  const renderHeader = () => (
-    <View style={styles.header}>
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#6c757d" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search patients by name or phone..."
-          value={searchQuery}
-          onChangeText={handleSearch}
-          returnKeyType="search"
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => handleSearch('')}>
-            <Ionicons name="close-circle" size={20} color="#6c757d" />
-          </TouchableOpacity>
-        )}
-      </View>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => router.push('/patients/new')}
-      >
-        <Ionicons name="add" size={24} color="#fff" />
-      </TouchableOpacity>
-    </View>
-  );
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
       <Ionicons name="people" size={64} color="#e9ecef" />
       <Text style={styles.emptyText}>
-        {searchQuery ? 'No patients found' : 'No patients yet'}
+        {inputValue ? 'No patients found' : 'No patients yet'}
       </Text>
       <Text style={styles.emptySubtext}>
-        {searchQuery 
-          ? 'Try adjusting your search criteria' 
+        {inputValue
+          ? 'Try adjusting your search criteria'
           : 'Add your first patient to get started'}
       </Text>
-      {!searchQuery && (
+      {!inputValue && (
         <TouchableOpacity
           style={styles.addFirstButton}
           onPress={() => router.push('/patients/new')}
@@ -138,15 +120,38 @@ export default function PatientListScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={20} color="#6c757d" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search patients by name or phone..."
+            value={inputValue}
+            onChangeText={setInputValue}
+            returnKeyType="search"
+          />
+          {inputValue.length > 0 && (
+            <TouchableOpacity onPress={() => { setInputValue(''); setPage(1); }}>
+              <Ionicons name="close-circle" size={20} color="#6c757d" />
+            </TouchableOpacity>
+          )}
+        </View>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => router.push('/patients/new')}
+        >
+          <Ionicons name="add" size={24} color="#fff" />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
-        data={patientsData?.data || []}
+        data={filteredPatients}
         keyExtractor={(item) => item.id?.toString() || '0'}
         renderItem={renderPatient}
         contentContainerStyle={[
           styles.list,
-          patientsData?.data?.length === 0 && styles.emptyList
+          filteredPatients.length === 0 && styles.emptyList
         ]}
-        ListHeaderComponent={renderHeader}
         ListEmptyComponent={!isLoading ? renderEmpty : null}
         ListFooterComponent={renderFooter}
         refreshControl={

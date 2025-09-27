@@ -8,7 +8,6 @@ export const immunizationSchema = z.object({
   administeredDate: z.string().min(1, 'Administered date is required'),
   returnDate: z.string().nullable().optional(),
   batchNumber: z.string().min(1, 'Batch number is required'),
-  administeredBy: z.string().min(1, 'Administered by is required'),
   notes: z.string().optional(),
   // Profile-aware fields
   administeredByUserId: z.string().optional(),
@@ -33,6 +32,7 @@ export interface Vaccine {
 // API response types
 export interface ImmunizationRecord {
   id: number;
+  patientId: number;
   administeredDate: string;
   returnDate: string | null;
   batchNumber: string;
@@ -49,6 +49,18 @@ export interface ImmunizationRecord {
     employeeId?: string;
     employeeType?: string;
     department?: string;
+  };
+  patient: {
+    id: number;
+    fullName: string;
+    dateOfBirth: string;
+    sex: 'M' | 'F';
+    district: string;
+    contactPhone?: string;
+    motherName?: string;
+    fatherName?: string;
+    townVillage?: string;
+    address?: string;
   };
   notes?: string;
   // Profile-aware fields

@@ -3,9 +3,12 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Keyboa
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Ionicons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { PatientFormData, patientSchema } from '../../types/patient';
+import { useAuth } from '../../context/auth';
+import api from '../../services/api';
 
 interface PatientFormProps {
   initialData?: Partial<PatientFormData>;
@@ -20,11 +23,13 @@ export default function PatientForm({
   isLoading = false,
   submitButtonText = 'Save Patient',
 }: PatientFormProps) {
+  const { user } = useAuth();
+  const isAdmin = user?.role === 'administrator';
+
   const {
     control,
     handleSubmit,
     formState: { errors },
-    watch,
     setValue,
   } = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
@@ -38,14 +43,28 @@ export default function PatientForm({
       townVillage: '',
       address: '',
       contactPhone: '',
-      healthWorkerName: '',
-      healthWorkerPhone: '',
+      facilityId: undefined,
       ...initialData,
     },
   });
 
   const [showDatePicker, setShowDatePicker] = React.useState(false);
-  const selectedDate = watch('dateOfBirth');
+  const [facilities, setFacilities] = React.useState<{ id: number; name: string }[]>([]);
+
+  // Fetch facilities if user is admin
+  React.useEffect(() => {
+    if (isAdmin) {
+      const fetchFacilities = async () => {
+        try {
+          const response = await api.get('/facilities');
+          setFacilities(response.data.data || []);
+        } catch (error) {
+          console.error('Failed to fetch facilities:', error);
+        }
+      };
+      fetchFacilities();
+    }
+  }, [isAdmin]);
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
@@ -244,23 +263,38 @@ export default function PatientForm({
           keyboardType="phone-pad"
           required
         />
-      </View>
 
-      <View style={styles.formSection}>
-        <Text style={styles.sectionTitle}>Health Worker Information</Text>
-        
-        <FormInput
-          name="healthWorkerName"
-          label="Health Worker Name"
-          placeholder="Enter health worker name"
-        />
-
-        <FormInput
-          name="healthWorkerPhone"
-          label="Health Worker Phone"
-          placeholder="Enter health worker phone"
-          keyboardType="phone-pad"
-        />
+        {isAdmin && (
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>Facility</Text>
+            <Controller
+              control={control}
+              name="facilityId"
+              render={({ field: { onChange, value } }) => (
+                <View style={[styles.input, errors.facilityId && styles.inputError]}>
+                  <Picker
+                    selectedValue={value}
+                    onValueChange={(itemValue) => onChange(itemValue)}
+                    enabled={!isLoading}
+                    style={styles.picker}
+                  >
+                    <Picker.Item label="Select Facility" value={undefined} />
+                    {facilities.map((facility) => (
+                      <Picker.Item
+                        key={facility.id}
+                        label={facility.name}
+                        value={facility.id}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+              )}
+            />
+            {errors.facilityId && (
+              <Text style={styles.errorText}>{errors.facilityId.message}</Text>
+            )}
+          </View>
+        )}
       </View>
 
       <TouchableOpacity
@@ -372,5 +406,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#fff',
+  },
+  picker: {
+    color: '#1a1a1a',
   },
 });

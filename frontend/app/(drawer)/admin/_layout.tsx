@@ -1,7 +1,6 @@
 import React from 'react';
-import { Stack } from 'expo-router';
+import { Stack , Redirect } from 'expo-router';
 import { useAuth } from '../../../context/auth';
-import { Redirect } from 'expo-router';
 
 export default function AdminLayout() {
   const { user } = useAuth();
@@ -24,6 +23,20 @@ export default function AdminLayout() {
         name="vaccines"
         options={{
           headerTitle: 'Vaccine Management',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="users"
+        options={{
+          headerTitle: 'User Management',
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="facilities"
+        options={{
+          headerTitle: 'Facility Management',
           headerShown: false,
         }}
       />

@@ -12,7 +12,7 @@ export default class PatientsController {
    */
   async index({ request, response }: HttpContext) {
     const page = request.input('page', 1)
-    const limit = request.input('limit', 20)
+    const limit = request.input('limit', 999)
     
     const patients = await Patient.query()
       .preload('facility')
@@ -49,11 +49,7 @@ export default class PatientsController {
       'district',
       'townVillage',
       'address',
-      'contactPhone',
-      'healthWorkerId',
-      'healthWorkerName',
-      'healthWorkerPhone',
-      'healthWorkerAddress'
+      'contactPhone'
     ])
     
     // Enhanced facility ID determination using Profile data
@@ -108,10 +104,6 @@ export default class PatientsController {
       'townVillage',
       'address',
       'contactPhone',
-      'healthWorkerId',
-      'healthWorkerName',
-      'healthWorkerPhone',
-      'healthWorkerAddress',
       'facilityId'
     ])
     

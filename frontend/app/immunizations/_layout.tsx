@@ -12,6 +12,14 @@ export default function ImmunizationsLayout() {
           headerShown: true
         }}
       />
+      <Stack.Screen
+        name="[id]/edit"
+        options={{
+          headerTitle: 'Edit Immunization',
+          presentation: 'modal',
+          headerShown: true
+        }}
+      />
     </Stack>
   );
 }

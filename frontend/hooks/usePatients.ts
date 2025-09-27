@@ -8,16 +8,40 @@ import { PatientProfile } from '../types/profile';
 export const patientKeys = {
   all: ['patients'] as const,
   lists: () => [...patientKeys.all, 'list'] as const,
-  list: (filters: PatientQueryParams) => [...patientKeys.lists(), filters] as const,
+  // Ensure the query key explicitly includes page, limit, and trimmed search (plus known filters)
+  list: (filters: PatientQueryParams) => {
+    const { page, limit, search, district, sex } = filters || {};
+    const normalizedSearch = search?.trim();
+    return [
+      ...patientKeys.lists(),
+      {
+        page,
+        limit,
+        search: normalizedSearch || undefined,
+        district,
+        sex,
+      },
+    ] as const;
+  },
   details: () => [...patientKeys.all, 'detail'] as const,
   detail: (id: number) => [...patientKeys.details(), id] as const,
 };
 
 // Fetch patients with pagination and filtering (Profile-enhanced)
 const fetchPatients = async (params: PatientQueryParams): Promise<PatientListResponse> => {
-  console.log('Fetching patients with params:', params);
+  // Normalize and include only defined query params
+  const { page, limit, search, ...otherFilters } = params || {};
+  const normalizedSearch = search?.trim();
+  const requestParams: Record<string, any> = {
+    page,
+    limit,
+    ...(normalizedSearch ? { search: normalizedSearch } : {}),
+    ...otherFilters,
+  };
+
+  console.log('Fetching patients with params:', requestParams);
   try {
-    const response = await api.get('/patients', { params });
+    const response = await api.get('/patients', { params: requestParams });
     console.log('Patients fetched successfully:', response.data);
     
     // Enhance with Profile data if available
