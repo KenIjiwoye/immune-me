@@ -115,6 +115,76 @@
       "required": true,
       "array": false,
       "default": null
+    },
+    {
+      "key": "administered_by_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "administered_by_employee_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "administered_by_professional_title",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "administered_by_license_number",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "administered_by_specializations",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "supervisor_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "quality_assurance_verified",
+      "type": "boolean",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "verification_timestamp",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
     }
   ],
   "indexes": [
@@ -183,6 +253,36 @@
       "type": "fulltext",
       "status": "available",
       "attributes": ["notes"]
+    },
+    {
+      "key": "administered_by_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["administered_by_profile_id"]
+    },
+    {
+      "key": "administered_by_employee_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["administered_by_employee_id"]
+    },
+    {
+      "key": "supervisor_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["supervisor_profile_id"]
+    },
+    {
+      "key": "quality_assurance_verified_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["quality_assurance_verified"]
+    },
+    {
+      "key": "verification_timestamp_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["verification_timestamp"]
     }
   ],
   "permissions": {
@@ -224,6 +324,20 @@
       },
       "notes": {
         "max_length": 1000
+      },
+      "administered_by_employee_id": {
+        "max_length": 50,
+        "pattern": "^[A-Z0-9\\-]+$"
+      },
+      "administered_by_professional_title": {
+        "max_length": 100
+      },
+      "administered_by_license_number": {
+        "max_length": 100,
+        "pattern": "^[A-Z0-9\\-\\/]+$"
+      },
+      "administered_by_specializations": {
+        "allowed_values": ["pediatrics", "internal_medicine", "family_medicine", "nursing", "public_health", "immunization_specialist", "general_practice"]
       }
     }
   },
@@ -248,6 +362,20 @@
         "collection": "users",
         "foreign_key": "administered_by_user_id",
         "local_key": "$id"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "administered_by_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to EmployeeProfile of healthcare worker who administered the vaccine"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "supervisor_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to EmployeeProfile of supervising healthcare worker for quality assurance"
       }
     ]
   }

@@ -9,6 +9,8 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
+import AuthMiddleware from '#middleware/auth_middleware'
+import ProfileMiddleware from '#middleware/profile_middleware'
 
 router.get('/', async () => {
   return {
@@ -126,3 +128,102 @@ router.group(() => {
 })
   .prefix('/api/reports')
   .use(middleware.auth({ roles: ['doctor', 'administrator', 'supervisor'] }))
+
+// Profile routes
+router.group(() => {
+  // Get user profile information
+  router.get('/user/:userId', '#controllers/profiles_controller.show')
+  
+  // Patient profile routes
+  router.post('/patient', '#controllers/profiles_controller.createPatientProfile')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator', 'supervisor', 'doctor'] }))
+  
+  router.put('/patient/:userId', '#controllers/profiles_controller.updatePatientProfile')
+    .use(AuthMiddleware.profileAware())
+  
+  // Employee profile routes
+  router.post('/employee', '#controllers/profiles_controller.createEmployeeProfile')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator'] }))
+  
+  router.put('/employee/:userId', '#controllers/profiles_controller.updateEmployeeProfile')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator', 'supervisor'] }))
+  
+  // Admin profile routes
+  router.post('/admin', '#controllers/profiles_controller.createAdminProfile')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator'] }))
+  
+  router.put('/admin/:userId', '#controllers/profiles_controller.updateAdminProfile')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator'] }))
+  
+  // Search and discovery routes
+  router.get('/search', '#controllers/profiles_controller.search')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator', 'supervisor', 'doctor'] }))
+  
+  router.get('/facility/:facilityId', '#controllers/profiles_controller.getFacilityProfiles')
+    .use(AuthMiddleware.profileAware())
+})
+  .prefix('/api/profiles')
+  .use(middleware.auth())
+
+// Enhanced routes with Profile-aware authentication
+router.group(() => {
+  // Enhanced patients routes with Profile awareness
+  router.get('/', '#controllers/patients_controller.index')
+    .use(AuthMiddleware.profileAware())
+  
+  router.get('/search', '#controllers/patients_controller.search')
+    .use(AuthMiddleware.profileAware())
+  
+  router.get('/:id', '#controllers/patients_controller.show')
+    .use(AuthMiddleware.profileAware())
+  
+  router.post('/', '#controllers/patients_controller.store')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator', 'supervisor', 'doctor'] }))
+  
+  router.put('/:id', '#controllers/patients_controller.update')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator', 'supervisor', 'doctor'] }))
+  
+  router.delete('/:id', '#controllers/patients_controller.destroy')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator'] }))
+  
+  router.get('/:patientId/immunization-records', '#controllers/immunization_records_controller.getPatientRecords')
+    .use(AuthMiddleware.profileAware())
+})
+  .prefix('/api/v2/patients')
+
+// Enhanced immunization records routes with Profile awareness and credential validation
+router.group(() => {
+  router.get('/', '#controllers/immunization_records_controller.index')
+    .use(AuthMiddleware.profileAware())
+  
+  router.get('/:id', '#controllers/immunization_records_controller.show')
+    .use(AuthMiddleware.profileAware())
+  
+  router.post('/', '#controllers/immunization_records_controller.store')
+    .use(AuthMiddleware.medicalOperation({ roles: ['administrator', 'supervisor', 'doctor', 'nurse'] }))
+  
+  router.put('/:id', '#controllers/immunization_records_controller.update')
+    .use(AuthMiddleware.medicalOperation({ roles: ['administrator', 'supervisor', 'doctor', 'nurse'] }))
+  
+  router.delete('/:id', '#controllers/immunization_records_controller.destroy')
+    .use(AuthMiddleware.profileAware({ roles: ['administrator'] }))
+})
+  .prefix('/api/v2/immunization-records')
+
+// Profile-specific middleware examples
+router.group(() => {
+  router.get('/dashboard', '#controllers/dashboard_controller.stats')
+    .use(ProfileMiddleware.requireStaff())
+  
+  router.get('/admin-panel', async ({ response }) => {
+    return response.json({ message: 'Admin panel access granted' })
+  })
+    .use(ProfileMiddleware.requireAdmin())
+  
+  router.get('/medical-operations', async ({ response }) => {
+    return response.json({ message: 'Medical operations access granted' })
+  })
+    .use(ProfileMiddleware.requireEmployee())
+    .use(AuthMiddleware.medicalOperation())
+})
+  .prefix('/api/v2/secure')

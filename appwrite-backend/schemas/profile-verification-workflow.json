@@ -1,0 +1,480 @@
+{
+  "$id": "profile_verification_workflow",
+  "name": "Profile Verification Workflow",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "profile_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "profile_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "verification_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 30,
+      "default": null
+    },
+    {
+      "key": "verification_method",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "pending"
+    },
+    {
+      "key": "initiated_by_user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "assigned_to_user_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "facility_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "verification_data",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "documents_required",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "documents_submitted",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "verification_notes",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "rejection_reason",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "priority",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 10,
+      "default": "normal"
+    },
+    {
+      "key": "due_date",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "completed_at",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "completed_by_user_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "workflow_steps",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "current_step",
+      "type": "integer",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": 1
+    },
+    {
+      "key": "total_steps",
+      "type": "integer",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": 1
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["profile_id"]
+    },
+    {
+      "key": "profile_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["profile_type"]
+    },
+    {
+      "key": "user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_id"]
+    },
+    {
+      "key": "verification_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["verification_type"]
+    },
+    {
+      "key": "status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["status"]
+    },
+    {
+      "key": "assigned_to_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["assigned_to_user_id"]
+    },
+    {
+      "key": "facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id"]
+    },
+    {
+      "key": "priority_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["priority"]
+    },
+    {
+      "key": "due_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["due_date"]
+    },
+    {
+      "key": "completed_by_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["completed_by_user_id"]
+    },
+    {
+      "key": "facility_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id", "status"]
+    },
+    {
+      "key": "type_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["verification_type", "status"]
+    },
+    {
+      "key": "profile_type_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["profile_type", "status"]
+    },
+    {
+      "key": "assigned_priority_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["assigned_to_user_id", "priority"]
+    },
+    {
+      "key": "due_date_priority_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["due_date", "priority"]
+    }
+  ],
+  "permissions": {
+    "read": [
+      "user:self",
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "team:facility-*-team/member"
+    ],
+    "create": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "team:facility-*-team/admin"
+    ],
+    "update": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "team:facility-*-team/admin"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
+  },
+  "validation": {
+    "rules": {
+      "profile_type": {
+        "enum": ["patient", "employee", "admin"],
+        "required": true
+      },
+      "verification_type": {
+        "enum": [
+          "identity_verification",
+          "credential_verification",
+          "license_verification",
+          "employment_verification",
+          "guardian_verification",
+          "address_verification",
+          "phone_verification",
+          "email_verification"
+        ],
+        "required": true
+      },
+      "verification_method": {
+        "enum": [
+          "document_upload",
+          "in_person_review",
+          "phone_call",
+          "email_confirmation",
+          "sms_verification",
+          "third_party_verification",
+          "supervisor_approval",
+          "admin_review"
+        ],
+        "required": true
+      },
+      "status": {
+        "enum": [
+          "pending",
+          "in_progress",
+          "under_review",
+          "approved",
+          "rejected",
+          "expired",
+          "cancelled"
+        ],
+        "required": true
+      },
+      "priority": {
+        "enum": ["low", "normal", "high", "urgent"],
+        "required": true
+      },
+      "documents_required": {
+        "allowed_values": [
+          "national_id",
+          "passport",
+          "birth_certificate",
+          "medical_license",
+          "nursing_license",
+          "employment_letter",
+          "proof_of_address",
+          "guardian_consent",
+          "vaccination_record",
+          "educational_certificate"
+        ]
+      },
+      "documents_submitted": {
+        "allowed_values": [
+          "national_id",
+          "passport",
+          "birth_certificate",
+          "medical_license",
+          "nursing_license",
+          "employment_letter",
+          "proof_of_address",
+          "guardian_consent",
+          "vaccination_record",
+          "educational_certificate"
+        ]
+      },
+      "verification_data": {
+        "max_length": 2000,
+        "format": "json"
+      },
+      "verification_notes": {
+        "max_length": 1000
+      },
+      "rejection_reason": {
+        "max_length": 500
+      },
+      "workflow_steps": {
+        "max_length": 2000,
+        "format": "json"
+      },
+      "current_step": {
+        "min": 1
+      },
+      "total_steps": {
+        "min": 1
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "user_id",
+        "local_key": "$id",
+        "description": "User whose profile is being verified"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "initiated_by_user_id",
+        "local_key": "$id",
+        "description": "User who initiated the verification process"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "assigned_to_user_id",
+        "local_key": "$id",
+        "description": "User assigned to handle the verification"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "completed_by_user_id",
+        "local_key": "$id",
+        "description": "User who completed the verification"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_id",
+        "local_key": "$id",
+        "description": "Facility context for the verification"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "profile_id",
+        "local_key": "$id",
+        "description": "Patient profile being verified",
+        "condition": "profile_type = 'patient'"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "profile_id",
+        "local_key": "$id",
+        "description": "Employee profile being verified",
+        "condition": "profile_type = 'employee'"
+      },
+      {
+        "collection": "admin_profiles",
+        "foreign_key": "profile_id",
+        "local_key": "$id",
+        "description": "Admin profile being verified",
+        "condition": "profile_type = 'admin'"
+      }
+    ]
+  }
+}

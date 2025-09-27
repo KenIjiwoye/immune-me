@@ -97,6 +97,77 @@
       "required": true,
       "array": false,
       "default": null
+    },
+    {
+      "key": "recipient_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "recipient_profile_type",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "notification_channels",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "personalization_data",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "guardian_notification",
+      "type": "boolean",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "guardian_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "delivery_preferences",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "language_preference",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 10,
+      "default": "en"
     }
   ],
   "indexes": [
@@ -159,6 +230,42 @@
       "type": "fulltext",
       "status": "available",
       "attributes": ["message"]
+    },
+    {
+      "key": "recipient_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["recipient_profile_id"]
+    },
+    {
+      "key": "recipient_profile_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["recipient_profile_type"]
+    },
+    {
+      "key": "guardian_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["guardian_profile_id"]
+    },
+    {
+      "key": "guardian_notification_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["guardian_notification"]
+    },
+    {
+      "key": "language_preference_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["language_preference"]
+    },
+    {
+      "key": "profile_type_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["recipient_profile_type", "status"]
     }
   ],
   "permissions": {
@@ -198,6 +305,24 @@
       },
       "message": {
         "max_length": 500
+      },
+      "recipient_profile_type": {
+        "enum": ["patient", "employee", "admin", "guardian"]
+      },
+      "notification_channels": {
+        "allowed_values": ["email", "sms", "push", "in_app", "phone_call"]
+      },
+      "personalization_data": {
+        "max_length": 1000,
+        "format": "json"
+      },
+      "delivery_preferences": {
+        "max_length": 500,
+        "format": "json"
+      },
+      "language_preference": {
+        "enum": ["en", "fr", "es", "pt", "ar"],
+        "default": "en"
       }
     }
   },
@@ -217,6 +342,35 @@
         "collection": "facilities",
         "foreign_key": "facility_id",
         "local_key": "$id"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "recipient_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to PatientProfile for patient-specific notifications",
+        "condition": "recipient_profile_type = 'patient'"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "recipient_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to EmployeeProfile for staff notifications",
+        "condition": "recipient_profile_type = 'employee'"
+      },
+      {
+        "collection": "admin_profiles",
+        "foreign_key": "recipient_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to AdminProfile for admin notifications",
+        "condition": "recipient_profile_type = 'admin'"
+      },
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "guardian_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to guardian's PatientProfile for minor patient notifications"
       }
     ]
   }

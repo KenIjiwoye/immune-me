@@ -19,14 +19,22 @@ const CONFIG = {
   apiKey: process.env.APPWRITE_API_KEY,
   schemasDir: path.join(__dirname, '../schemas'),
   collections: [
+    'access-audit-log',
+    'admin-profiles',
+    'audit-collections',
+    'employee-profiles',
     'facilities',
-    'patients',
-    'vaccines',
-    'immunization_records',
+    'immunization-records',
     'notifications',
-    'vaccine_schedules',
-    'vaccine_schedule_items',
-    'supplementary_immunizations'
+    'patient-profiles',
+    'patients',
+    'profile-verification-workflow',
+    'role-change-log',
+    'supplementary-immunizations',
+    'sync-collections',
+    'vaccine-schedule-items',
+    'vaccine-schedules',
+    'vaccines'
   ]
 };
 

@@ -1,0 +1,254 @@
+{
+  "$id": "patient_profiles",
+  "name": "Patient Profiles",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "patient_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "profile_status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "active"
+    },
+    {
+      "key": "verification_status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "pending"
+    },
+    {
+      "key": "verification_method",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "guardian_user_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "access_permissions",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": true,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "notification_preferences",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "emergency_contact",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "facility_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "user_id_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["user_id"]
+    },
+    {
+      "key": "patient_id_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["patient_id"]
+    },
+    {
+      "key": "facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id"]
+    },
+    {
+      "key": "verification_status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["verification_status"]
+    },
+    {
+      "key": "guardian_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["guardian_user_id"]
+    },
+    {
+      "key": "profile_status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["profile_status"]
+    },
+    {
+      "key": "facility_verification_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_id", "verification_status"]
+    }
+  ],
+  "permissions": {
+    "read": [
+      "user:self",
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "team:facility-*-team/member"
+    ],
+    "create": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "team:facility-*-team/admin"
+    ],
+    "update": [
+      "user:self",
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "team:facility-*-team/admin"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
+  },
+  "validation": {
+    "rules": {
+      "profile_status": {
+        "enum": ["active", "inactive", "suspended"],
+        "required": true
+      },
+      "verification_status": {
+        "enum": ["pending", "verified", "rejected"],
+        "required": true
+      },
+      "verification_method": {
+        "enum": ["phone", "email", "in_person", "guardian"],
+        "max_length": 50
+      },
+      "access_permissions": {
+        "allowed_values": [
+          "view_own_records",
+          "receive_notifications",
+          "update_contact_info",
+          "view_immunization_history",
+          "schedule_appointments",
+          "download_certificates",
+          "manage_family_records"
+        ]
+      },
+      "notification_preferences": {
+        "max_length": 2000,
+        "format": "json"
+      },
+      "emergency_contact": {
+        "max_length": 1000,
+        "format": "json"
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "user_id",
+        "local_key": "$id",
+        "description": "Reference to Appwrite Users collection for authentication"
+      },
+      {
+        "collection": "patients",
+        "foreign_key": "patient_id",
+        "local_key": "$id",
+        "description": "Reference to existing patients collection"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_id",
+        "local_key": "$id",
+        "description": "Primary facility association"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "guardian_user_id",
+        "local_key": "$id",
+        "description": "Guardian user account for minor patients"
+      }
+    ],
+    "has_many": [
+      {
+        "collection": "notifications",
+        "foreign_key": "recipient_profile_id",
+        "local_key": "$id",
+        "description": "Patient-specific notifications"
+      }
+    ]
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "$id": "admin_profiles",
+  "name": "Admin Profiles",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "admin_level",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "system_permissions",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "facility_access_scope",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "all"
+    },
+    {
+      "key": "assigned_facilities",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "security_clearance",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "mfa_enabled",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": true
+    },
+    {
+      "key": "last_security_review",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "audit_log_access",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "system_config_access",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "user_management_scope",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "facility"
+    },
+    {
+      "key": "backup_admin_user_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "admin_notes",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "user_id_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["user_id"]
+    },
+    {
+      "key": "admin_level_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["admin_level"]
+    },
+    {
+      "key": "security_clearance_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["security_clearance"]
+    },
+    {
+      "key": "facility_access_scope_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_access_scope"]
+    },
+    {
+      "key": "last_security_review_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["last_security_review"]
+    },
+    {
+      "key": "user_management_scope_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_management_scope"]
+    },
+    {
+      "key": "mfa_enabled_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["mfa_enabled"]
+    },
+    {
+      "key": "audit_log_access_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["audit_log_access"]
+    },
+    {
+      "key": "system_config_access_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["system_config_access"]
+    },
+    {
+      "key": "level_clearance_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["admin_level", "security_clearance"]
+    }
+  ],
+  "permissions": {
+    "read": [
+      "user:self",
+      "label:role:administrator"
+    ],
+    "create": [
+      "label:role:administrator"
+    ],
+    "update": [
+      "user:self",
+      "label:role:administrator"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
+  },
+  "validation": {
+    "rules": {
+      "admin_level": {
+        "enum": ["super_admin", "system_admin", "facility_admin"],
+        "required": true
+      },
+      "system_permissions": {
+        "allowed_values": [
+          "user_management",
+          "facility_management",
+          "system_configuration",
+          "audit_log_access",
+          "backup_restore",
+          "security_management",
+          "report_generation",
+          "data_export",
+          "vaccine_management",
+          "notification_management",
+          "role_assignment",
+          "team_management"
+        ]
+      },
+      "facility_access_scope": {
+        "enum": ["all", "assigned", "single"],
+        "required": true
+      },
+      "security_clearance": {
+        "enum": ["high", "medium", "standard"],
+        "required": true
+      },
+      "user_management_scope": {
+        "enum": ["global", "facility", "department"],
+        "required": true
+      },
+      "admin_notes": {
+        "max_length": 2000
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "user_id",
+        "local_key": "$id",
+        "description": "Reference to Appwrite Users collection for authentication"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "backup_admin_user_id",
+        "local_key": "$id",
+        "description": "Backup administrator user account"
+      }
+    ],
+    "has_many": [
+      {
+        "collection": "notifications",
+        "foreign_key": "recipient_profile_id",
+        "local_key": "$id",
+        "description": "Admin-specific notifications"
+      },
+      {
+        "collection": "access_audit_log",
+        "foreign_key": "user_profile_id",
+        "local_key": "$id",
+        "description": "Admin access audit trail"
+      },
+      {
+        "collection": "role_change_log",
+        "foreign_key": "assigned_by_profile_id",
+        "local_key": "$id",
+        "description": "Role changes made by this admin"
+      }
+    ],
+    "many_to_many": [
+      {
+        "collection": "facilities",
+        "through_field": "assigned_facilities",
+        "description": "Facilities under this admin's management scope"
+      }
+    ]
+  }
+}

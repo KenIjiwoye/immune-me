@@ -1,0 +1,333 @@
+{
+  "$id": "access_audit_log",
+  "name": "Access Audit Log",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "user_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "user_profile_type",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "action_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "resource_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "resource_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "facility_context",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "session_context",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "ip_address",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 45,
+      "default": null
+    },
+    {
+      "key": "user_agent",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "success",
+      "type": "boolean",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": true
+    },
+    {
+      "key": "error_message",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "additional_data",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "timestamp",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_id"]
+    },
+    {
+      "key": "user_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_profile_id"]
+    },
+    {
+      "key": "user_profile_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_profile_type"]
+    },
+    {
+      "key": "action_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["action_type"]
+    },
+    {
+      "key": "resource_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["resource_type"]
+    },
+    {
+      "key": "facility_context_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_context"]
+    },
+    {
+      "key": "timestamp_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["timestamp"]
+    },
+    {
+      "key": "success_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["success"]
+    },
+    {
+      "key": "user_timestamp_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_id", "timestamp"]
+    },
+    {
+      "key": "facility_timestamp_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_context", "timestamp"]
+    },
+    {
+      "key": "action_resource_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["action_type", "resource_type"]
+    },
+    {
+      "key": "profile_type_action_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["user_profile_type", "action_type"]
+    }
+  ],
+  "permissions": {
+    "read": [
+      "label:role:administrator",
+      "label:role:supervisor"
+    ],
+    "create": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "label:role:doctor",
+      "label:role:user",
+      "team:facility-*-team/member"
+    ],
+    "update": [
+      "label:role:administrator"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
+  },
+  "validation": {
+    "rules": {
+      "action_type": {
+        "enum": [
+          "login",
+          "logout",
+          "create",
+          "read",
+          "update",
+          "delete",
+          "export",
+          "import",
+          "search",
+          "report_generation",
+          "role_change",
+          "permission_change",
+          "password_change",
+          "profile_update",
+          "facility_access"
+        ],
+        "required": true
+      },
+      "resource_type": {
+        "enum": [
+          "patient",
+          "immunization_record",
+          "vaccine",
+          "facility",
+          "user",
+          "notification",
+          "report",
+          "patient_profile",
+          "employee_profile",
+          "admin_profile",
+          "system_config",
+          "audit_log"
+        ],
+        "required": true
+      },
+      "user_profile_type": {
+        "enum": ["patient", "employee", "admin"]
+      },
+      "ip_address": {
+        "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$"
+      },
+      "user_agent": {
+        "max_length": 500
+      },
+      "error_message": {
+        "max_length": 500
+      },
+      "session_context": {
+        "max_length": 1000,
+        "format": "json"
+      },
+      "additional_data": {
+        "max_length": 2000,
+        "format": "json"
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "user_id",
+        "local_key": "$id",
+        "description": "User who performed the action"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_context",
+        "local_key": "$id",
+        "description": "Facility context for the audit event"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "user_profile_id",
+        "local_key": "$id",
+        "description": "Patient profile reference for audit events",
+        "condition": "user_profile_type = 'patient'"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "user_profile_id",
+        "local_key": "$id",
+        "description": "Employee profile reference for audit events",
+        "condition": "user_profile_type = 'employee'"
+      },
+      {
+        "collection": "admin_profiles",
+        "foreign_key": "user_profile_id",
+        "local_key": "$id",
+        "description": "Admin profile reference for audit events",
+        "condition": "user_profile_type = 'admin'"
+      }
+    ]
+  }
+}

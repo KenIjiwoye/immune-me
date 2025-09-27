@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient, UseQueryOptions } from '@tanstack/react-query';
 import api from '../services/api';
-import { Patient, PatientWithRelations, PatientListResponse, PatientQueryParams } from '../types/patient';
+import profileService from '../services/profileService';
+import { Patient, PatientWithRelations, PatientListResponse, PatientQueryParams, PatientWithProfile } from '../types/patient';
+import { PatientProfile } from '../types/profile';
 
 // Query keys
 export const patientKeys = {
@@ -11,25 +13,81 @@ export const patientKeys = {
   detail: (id: number) => [...patientKeys.details(), id] as const,
 };
 
-// Fetch patients with pagination and filtering
+// Fetch patients with pagination and filtering (Profile-enhanced)
 const fetchPatients = async (params: PatientQueryParams): Promise<PatientListResponse> => {
   console.log('Fetching patients with params:', params);
   try {
     const response = await api.get('/patients', { params });
     console.log('Patients fetched successfully:', response.data);
-    return response.data;
+    
+    // Enhance with Profile data if available
+    const enhancedData = await enhancePatientsWithProfiles(response.data);
+    return enhancedData;
   } catch (error) {
     console.error('Error fetching patients:', error);
     throw error;
   }
 };
 
-// Fetch single patient
+// Enhance patients with Profile data
+const enhancePatientsWithProfiles = async (patientListResponse: PatientListResponse): Promise<PatientListResponse> => {
+  try {
+    const enhancedPatients = await Promise.all(
+      patientListResponse.data.map(async (patient) => {
+        try {
+          // Try to get patient profile if patient has user association
+          if (patient.id) {
+            const profile = await profileService.patient.getByPatientId(patient.id.toString());
+            if (profile) {
+              const user = await profileService.getUserWithProfile(profile.user_id);
+              return {
+                ...patient,
+                profile,
+                user
+              } as PatientWithProfile;
+            }
+          }
+        } catch (error) {
+          // Profile not found or error - continue with basic patient data
+          console.log(`No profile found for patient ${patient.id}:`, error);
+        }
+        return patient;
+      })
+    );
+
+    return {
+      ...patientListResponse,
+      data: enhancedPatients
+    };
+  } catch (error) {
+    console.error('Error enhancing patients with profiles:', error);
+    // Return original data if enhancement fails
+    return patientListResponse;
+  }
+};
+
+// Fetch single patient (Profile-enhanced)
 const fetchPatient = async (id: number): Promise<PatientWithRelations> => {
   console.log('Fetching patient with ID:', id);
   try {
     const response = await api.get(`/patients/${id}`);
     console.log('Patient fetched successfully:', response.data);
+    
+    // Try to enhance with Profile data
+    try {
+      const profile = await profileService.patient.getByPatientId(id.toString());
+      if (profile) {
+        const user = await profileService.getUserWithProfile(profile.user_id);
+        return {
+          ...response.data,
+          profile,
+          user
+        } as PatientWithProfile;
+      }
+    } catch (profileError) {
+      console.log(`No profile found for patient ${id}:`, profileError);
+    }
+    
     return response.data;
   } catch (error) {
     console.error('Error fetching patient:', error);
@@ -37,15 +95,72 @@ const fetchPatient = async (id: number): Promise<PatientWithRelations> => {
   }
 };
 
-// Create new patient
+// Create new patient (Profile-aware)
 const createPatient = async (patient: Omit<Patient, 'id'>): Promise<Patient> => {
   console.log('Creating patient with data:', patient);
   try {
     const response = await api.post('/patients', patient);
     console.log('Patient created successfully:', response.data);
+    
+    // Note: Profile creation should be handled separately through Profile services
+    // This maintains backward compatibility while allowing Profile integration
+    
     return response.data;
   } catch (error) {
     console.error('Error creating patient:', error);
+    throw error;
+  }
+};
+
+// Create patient with Profile (new enhanced method)
+const createPatientWithProfile = async (
+  patientData: Omit<Patient, 'id'>,
+  profileData?: Partial<PatientProfile>,
+  userData?: { email: string; password: string; phone?: string }
+): Promise<PatientWithProfile> => {
+  console.log('Creating patient with profile:', { patientData, profileData, userData });
+  try {
+    // First create the basic patient record
+    const patientResponse = await api.post('/patients', patientData);
+    const patient = patientResponse.data;
+    
+    // If profile data is provided, create user account and profile
+    if (profileData && userData) {
+      try {
+        // Create user account
+        const userResponse = await api.post('/auth/register', {
+          ...userData,
+          name: patientData.fullName,
+          labels: ['role:patient', `facility_${patientData.facilityId}`]
+        });
+        const user = userResponse.data.user;
+        
+        // Create patient profile
+        const profile = await profileService.patient.create({
+          user_id: user.$id,
+          patient_id: patient.id.toString(),
+          facility_id: patientData.facilityId?.toString() || '',
+          profile_status: 'active',
+          verification_status: 'pending',
+          access_permissions: ['view_own_records', 'receive_notifications'],
+          ...profileData
+        });
+        
+        return {
+          ...patient,
+          profile: profile.data,
+          user
+        } as PatientWithProfile;
+      } catch (profileError) {
+        console.error('Error creating patient profile:', profileError);
+        // Return basic patient if profile creation fails
+        return patient;
+      }
+    }
+    
+    return patient;
+  } catch (error) {
+    console.error('Error creating patient with profile:', error);
     throw error;
   }
 };
@@ -141,7 +256,7 @@ export const useDeletePatient = () => {
   });
 };
 
-// Hook for patient immunization records
+// Hook for patient immunization records (Profile-enhanced)
 export const usePatientImmunizations = (patientId: number) => {
   return useQuery({
     queryKey: [...patientKeys.detail(patientId), 'immunizations'],
@@ -150,7 +265,46 @@ export const usePatientImmunizations = (patientId: number) => {
       try {
         const response = await api.get(`/patients/${patientId}/immunization-records`);
         console.log('Immunizations fetched successfully:', response.data);
-        return response.data;
+        
+        // Enhance immunization records with Profile data for administrators
+        const enhancedRecords = await Promise.all(
+          response.data.map(async (record: any) => {
+            try {
+              if (record.administered_by_user_id) {
+                const adminUser = await profileService.getUserWithProfile(record.administered_by_user_id);
+                if (adminUser.profileType === 'employee' && adminUser.profile) {
+                  const employeeProfile = adminUser.profile as any;
+                  return {
+                    ...record,
+                    administeredBy: {
+                      ...record.administeredBy,
+                      professionalTitle: employeeProfile.professional_title,
+                      licenseNumber: employeeProfile.license_number,
+                      employeeId: employeeProfile.employee_id,
+                      employeeType: employeeProfile.employee_type,
+                      department: employeeProfile.department
+                    },
+                    administeredByProfile: employeeProfile,
+                    administeredByUser: adminUser,
+                    administeredByDetails: {
+                      employee_id: employeeProfile.employee_id,
+                      professional_title: employeeProfile.professional_title,
+                      license_number: employeeProfile.license_number,
+                      facility_id: employeeProfile.primary_facility_id,
+                      employee_type: employeeProfile.employee_type,
+                      department: employeeProfile.department
+                    }
+                  };
+                }
+              }
+            } catch (error) {
+              console.log('Could not enhance immunization record with profile data:', error);
+            }
+            return record;
+          })
+        );
+        
+        return enhancedRecords;
       } catch (error) {
         console.error('Error fetching immunizations:', error);
         throw error;
@@ -158,4 +312,58 @@ export const usePatientImmunizations = (patientId: number) => {
     },
     enabled: !!patientId,
   });
+};
+
+// New hook for creating patient with Profile
+export const useCreatePatientWithProfile = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({
+      patientData,
+      profileData,
+      userData
+    }: {
+      patientData: Omit<Patient, 'id'>;
+      profileData?: Partial<PatientProfile>;
+      userData?: { email: string; password: string; phone?: string }
+    }) => createPatientWithProfile(patientData, profileData, userData),
+    onSuccess: (data) => {
+      console.log('Create patient with profile mutation succeeded:', data);
+      queryClient.invalidateQueries({ queryKey: patientKeys.lists() });
+      if (data.profile) {
+        queryClient.invalidateQueries({ queryKey: ['profiles', 'patient'] });
+      }
+    },
+    onError: (error) => {
+      console.error('Create patient with profile mutation failed:', error);
+    },
+  });
+};
+
+// Hook to get patient profile by patient ID
+export const usePatientProfile = (patientId: number) => {
+  return useQuery({
+    queryKey: ['profiles', 'patient', 'byPatientId', patientId],
+    queryFn: async () => {
+      try {
+        return await profileService.patient.getByPatientId(patientId.toString());
+      } catch (error) {
+        // Return null if no profile found
+        return null;
+      }
+    },
+    enabled: !!patientId,
+  });
+};
+
+// Hook to check if patient has profile
+export const usePatientHasProfile = (patientId: number) => {
+  const { data: profile, isLoading } = usePatientProfile(patientId);
+  
+  return {
+    hasProfile: !!profile,
+    profile,
+    isLoading
+  };
 };

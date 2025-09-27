@@ -10,7 +10,8 @@
     "migrate-users": "node utils/user-migration.js",
     "test-password": "node tests/auth-tests.js password",
     "test-permissions": "node tests/auth-tests.js permissions",
-    "test-teams": "node tests/auth-tests.js teams"
+    "test-teams": "node tests/auth-tests.js teams",
+    "populate-schemas": "node populate-schemas.js"
   },
   "dependencies": {
     "node-appwrite": "^14.0.0",

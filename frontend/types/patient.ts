@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PatientProfile, UserWithProfile } from './profile';
 
 // Patient validation schema
 export const patientSchema = z.object({
@@ -34,6 +35,15 @@ export interface PatientWithRelations extends Patient {
     name: string;
   };
   immunizationRecords?: ImmunizationRecord[];
+  // Profile integration - optional for backward compatibility
+  profile?: PatientProfile;
+  user?: UserWithProfile;
+}
+
+// Enhanced patient type with Profile data
+export interface PatientWithProfile extends PatientWithRelations {
+  profile: PatientProfile;
+  user: UserWithProfile;
 }
 
 // Immunization record type
@@ -49,6 +59,17 @@ export interface ImmunizationRecord {
   administeredBy: {
     id: number;
     fullName: string;
+    // Enhanced with Profile data when available
+    professionalTitle?: string;
+    licenseNumber?: string;
+    employeeId?: string;
+  };
+  // Enhanced audit trail with Profile integration
+  administeredByDetails?: {
+    employee_id?: string;
+    professional_title?: string;
+    license_number?: string;
+    facility_id?: string;
   };
 }
 
@@ -70,6 +91,10 @@ export interface PatientQueryParams {
   search?: string;
   district?: string;
   sex?: 'M' | 'F';
+  // Profile-aware filtering
+  verification_status?: 'pending' | 'verified' | 'rejected';
+  profile_status?: 'active' | 'inactive' | 'suspended';
+  has_profile?: boolean;
 }
 
 // Form data type (for forms)

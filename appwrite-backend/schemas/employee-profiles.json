@@ -1,0 +1,372 @@
+{
+  "$id": "employee_profiles",
+  "name": "Employee Profiles",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "employee_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "employee_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 30,
+      "default": null
+    },
+    {
+      "key": "professional_title",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "license_number",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "license_expiry_date",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "specializations",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "primary_facility_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "assigned_facilities",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "department",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "supervisor_user_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "employment_status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "active"
+    },
+    {
+      "key": "hire_date",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "work_schedule",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "contact_information",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "emergency_contact",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 1000,
+      "default": null
+    },
+    {
+      "key": "training_records",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "performance_metrics",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "user_id_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["user_id"]
+    },
+    {
+      "key": "employee_id_unique",
+      "type": "unique",
+      "status": "available",
+      "attributes": ["employee_id"]
+    },
+    {
+      "key": "primary_facility_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["primary_facility_id"]
+    },
+    {
+      "key": "employee_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["employee_type"]
+    },
+    {
+      "key": "employment_status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["employment_status"]
+    },
+    {
+      "key": "supervisor_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["supervisor_user_id"]
+    },
+    {
+      "key": "license_expiry_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["license_expiry_date"]
+    },
+    {
+      "key": "department_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["department"]
+    },
+    {
+      "key": "facility_type_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["primary_facility_id", "employee_type"]
+    },
+    {
+      "key": "status_type_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["employment_status", "employee_type"]
+    }
+  ],
+  "permissions": {
+    "read": [
+      "user:self",
+      "label:role:administrator",
+      "label:role:supervisor",
+      "team:facility-*-team/admin"
+    ],
+    "create": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "team:facility-*-team/owner"
+    ],
+    "update": [
+      "user:self",
+      "label:role:administrator",
+      "label:role:supervisor",
+      "team:facility-*-team/owner"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
+  },
+  "validation": {
+    "rules": {
+      "employee_type": {
+        "enum": ["doctor", "supervisor", "nurse", "data_entry_clerk", "technician", "administrator"],
+        "required": true
+      },
+      "employment_status": {
+        "enum": ["active", "inactive", "suspended", "terminated", "on_leave"],
+        "required": true
+      },
+      "professional_title": {
+        "max_length": 100
+      },
+      "license_number": {
+        "max_length": 100,
+        "pattern": "^[A-Z0-9\\-\\/]+$"
+      },
+      "specializations": {
+        "allowed_values": [
+          "pediatrics",
+          "internal_medicine",
+          "family_medicine",
+          "nursing",
+          "public_health",
+          "immunization_specialist",
+          "general_practice",
+          "infectious_diseases",
+          "preventive_medicine",
+          "community_health"
+        ]
+      },
+      "department": {
+        "max_length": 100
+      },
+      "employee_id": {
+        "min_length": 3,
+        "max_length": 50,
+        "pattern": "^[A-Z0-9\\-]+$"
+      },
+      "work_schedule": {
+        "max_length": 1000,
+        "format": "json"
+      },
+      "contact_information": {
+        "max_length": 1000,
+        "format": "json"
+      },
+      "emergency_contact": {
+        "max_length": 1000,
+        "format": "json"
+      },
+      "training_records": {
+        "max_length": 2000,
+        "format": "json"
+      },
+      "performance_metrics": {
+        "max_length": 2000,
+        "format": "json"
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "user_id",
+        "local_key": "$id",
+        "description": "Reference to Appwrite Users collection for authentication"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "primary_facility_id",
+        "local_key": "$id",
+        "description": "Primary facility assignment"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "supervisor_user_id",
+        "local_key": "$id",
+        "description": "Supervising user account"
+      }
+    ],
+    "has_many": [
+      {
+        "collection": "immunization_records",
+        "foreign_key": "administered_by_profile_id",
+        "local_key": "$id",
+        "description": "Immunization records administered by this employee"
+      },
+      {
+        "collection": "notifications",
+        "foreign_key": "recipient_profile_id",
+        "local_key": "$id",
+        "description": "Employee-specific notifications"
+      }
+    ],
+    "many_to_many": [
+      {
+        "collection": "facilities",
+        "through_field": "assigned_facilities",
+        "description": "Multiple facility assignments for cross-facility employees"
+      }
+    ]
+  }
+}

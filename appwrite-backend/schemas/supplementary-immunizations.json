@@ -134,6 +134,67 @@
       "required": true,
       "array": false,
       "default": null
+    },
+    {
+      "key": "created_by_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "created_by_employee_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "created_by_professional_title",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "campaign_coordinators",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "approval_required",
+      "type": "boolean",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "approved_by_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "approval_timestamp",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
     }
   ],
   "indexes": [
@@ -202,6 +263,36 @@
       "type": "fulltext",
       "status": "available",
       "attributes": ["name", "description", "target_population"]
+    },
+    {
+      "key": "created_by_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["created_by_profile_id"]
+    },
+    {
+      "key": "created_by_employee_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["created_by_employee_id"]
+    },
+    {
+      "key": "approved_by_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["approved_by_profile_id"]
+    },
+    {
+      "key": "approval_required_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["approval_required"]
+    },
+    {
+      "key": "approval_timestamp_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["approval_timestamp"]
     }
   ],
   "permissions": {
@@ -254,6 +345,13 @@
       "target_age_max": {
         "pattern": "^[0-9]+\\s?(days?|weeks?|months?|years?)$",
         "max_length": 20
+      },
+      "created_by_employee_id": {
+        "max_length": 50,
+        "pattern": "^[A-Z0-9\\-]+$"
+      },
+      "created_by_professional_title": {
+        "max_length": 100
       }
     }
   },
@@ -273,6 +371,27 @@
         "collection": "users",
         "foreign_key": "created_by",
         "local_key": "$id"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "created_by_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to EmployeeProfile of user who created this campaign"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "approved_by_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to EmployeeProfile of supervisor who approved this campaign"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "campaign_coordinators",
+        "local_key": "$id",
+        "description": "Optional references to EmployeeProfiles of staff coordinating this campaign",
+        "relationship_type": "many_to_many"
       }
     ]
   }

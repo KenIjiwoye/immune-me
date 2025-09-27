@@ -144,6 +144,51 @@
       "required": true,
       "array": false,
       "default": null
+    },
+    {
+      "key": "patient_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "profile_verification_status",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "guardian_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "profile_access_permissions",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "profile_notification_preferences",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 2000,
+      "default": null
     }
   ],
   "indexes": [
@@ -188,6 +233,24 @@
       "type": "key",
       "status": "available",
       "attributes": ["facility_id", "district"]
+    },
+    {
+      "key": "patient_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["patient_profile_id"]
+    },
+    {
+      "key": "profile_verification_status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["profile_verification_status"]
+    },
+    {
+      "key": "guardian_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["guardian_profile_id"]
     }
   ],
   "permissions": {
@@ -245,6 +308,16 @@
         "pattern": "^\\+?[0-9\\s\\-\\(\\)]+$",
         "min_length": 8,
         "max_length": 20
+      },
+      "profile_verification_status": {
+        "enum": ["pending", "verified", "rejected", "not_applicable"]
+      },
+      "profile_access_permissions": {
+        "allowed_values": ["view_own_records", "receive_notifications", "update_contact_info", "view_immunization_history", "schedule_appointments"]
+      },
+      "profile_notification_preferences": {
+        "max_length": 2000,
+        "format": "json"
       }
     }
   },
@@ -266,6 +339,20 @@
         "collection": "notifications",
         "foreign_key": "patient_id",
         "local_key": "$id"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "patient_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to PatientProfile for enhanced patient authentication and self-service access"
+      },
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "guardian_profile_id",
+        "local_key": "$id",
+        "description": "Optional reference to guardian's PatientProfile for minor patients"
       }
     ]
   }

@@ -1,0 +1,43 @@
+{
+  "name": "appwrite-immuneme-seeders",
+  "version": "1.0.0",
+  "description": "Database seeders for ImmuneMe Appwrite cloud database",
+  "main": "database-seeder.js",
+  "scripts": {
+    "seed": "node database-seeder.js",
+    "seed:facilities": "node facility-seeder.js",
+    "seed:vaccines": "node vaccine-seeder.js",
+    "seed:users": "node user-profile-seeder.js",
+    "seed:patients": "node patient-seeder.js",
+    "seed:immunizations": "node immunization-seeder.js",
+    "seed:notifications": "node notification-seeder.js",
+    "seed:all": "npm run seed",
+    "clean": "node database-seeder.js --clean",
+    "seed:step-by-step": "echo 'Run these commands in order:' && echo '1. npm run seed:collections' && echo '2. npm run seed:facilities' && echo '3. npm run seed:vaccines' && echo '4. npm run seed:users-only' && echo '5. npm run seed:employee-profiles' && echo '6. npm run seed:patients-only'",
+    "seed:collections": "node 00-create-collections.js",
+    "seed:users-only": "node 01-users-only-seeder.js",
+    "seed:employee-profiles": "node 02-profiles-seeder.js",
+    "seed:patients-only": "node 03-patients-seeder.js",
+    "seed:complete": "node run-all-seeders.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "appwrite",
+    "seeder",
+    "immunization",
+    "healthcare",
+    "liberia"
+  ],
+  "author": "ImmuneMe Team",
+  "license": "MIT",
+  "dependencies": {
+    "node-appwrite": "^13.0.0",
+    "dotenv": "^16.3.1",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1",
+    "inquirer": "^8.2.6"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

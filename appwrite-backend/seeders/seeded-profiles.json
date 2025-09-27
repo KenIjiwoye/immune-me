@@ -1,0 +1,2450 @@
+{
+  "users": [
+    {
+      "$id": "68d7c1a1002a13d6c28b",
+      "$createdAt": "2025-09-27T10:51:14.585+00:00",
+      "$updatedAt": "2025-09-27T10:51:15.125+00:00",
+      "name": "Ruth Moore",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$NzNETHQ3Y2hmNlRobkx1bw$ST+29oPKEQDwKQR1gzWGGmT38kiOXL2S38uG3LN2Nig",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:14.583+00:00",
+      "status": true,
+      "labels": [
+        "roleadministrator"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:14.583+00:00",
+      "email": "admin@immuneme.lr",
+      "phone": "+231762250892",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1a2981dfe5a292f",
+          "$createdAt": "2025-09-27T10:51:14.623+00:00",
+          "$updatedAt": "2025-09-27T10:51:14.623+00:00",
+          "name": "",
+          "userId": "68d7c1a1002a13d6c28b",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "admin@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1a29baaa59d3629",
+          "$createdAt": "2025-09-27T10:51:14.637+00:00",
+          "$updatedAt": "2025-09-27T10:51:14.637+00:00",
+          "name": "",
+          "userId": "68d7c1a1002a13d6c28b",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231762250892",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "administrator",
+      "employeeId": "ADMIN-001",
+      "title": "System Administrator"
+    },
+    {
+      "$id": "68d7c1a20036f182502d",
+      "$createdAt": "2025-09-27T10:51:15.717+00:00",
+      "$updatedAt": "2025-09-27T10:51:16.214+00:00",
+      "name": "Robert Stewart",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$Vi9MQWlNMHQ5SjE0YWx6dg$HKbztnKTzXBPxrLJ4qvUW8YNNyrqtrbLY34ShTXiiN0",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:15.716+00:00",
+      "status": true,
+      "labels": [
+        "roledoctor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:15.716+00:00",
+      "email": "robert.stewart501@immuneme.lr",
+      "phone": "+231772869862",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1a3b86cd5c6e741",
+          "$createdAt": "2025-09-27T10:51:15.755+00:00",
+          "$updatedAt": "2025-09-27T10:51:15.755+00:00",
+          "name": "",
+          "userId": "68d7c1a20036f182502d",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "robert.stewart501@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1a3bc169a2bc230",
+          "$createdAt": "2025-09-27T10:51:15.770+00:00",
+          "$updatedAt": "2025-09-27T10:51:15.770+00:00",
+          "name": "",
+          "userId": "68d7c1a20036f182502d",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231772869862",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "doctor",
+      "employeeId": null,
+      "title": "Medical Doctor"
+    },
+    {
+      "$id": "68d7c1a40007668109d5",
+      "$createdAt": "2025-09-27T10:51:16.920+00:00",
+      "$updatedAt": "2025-09-27T10:51:17.498+00:00",
+      "name": "Robert Hernandez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$MUUzTk9vbG1TWkxoVHhHdQ$k50pWX09QYQRum+Q50xXQ1VQOGPYUcvDa1wCtDvu20Y",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:16.919+00:00",
+      "status": true,
+      "labels": [
+        "rolesupervisor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:16.919+00:00",
+      "email": "robert.hernandez753@immuneme.lr",
+      "phone": "+231777819185",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1a4e8c498333ad0",
+          "$createdAt": "2025-09-27T10:51:16.953+00:00",
+          "$updatedAt": "2025-09-27T10:51:16.953+00:00",
+          "name": "",
+          "userId": "68d7c1a40007668109d5",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "robert.hernandez753@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1a4ebe581879d8f",
+          "$createdAt": "2025-09-27T10:51:16.966+00:00",
+          "$updatedAt": "2025-09-27T10:51:16.966+00:00",
+          "name": "",
+          "userId": "68d7c1a40007668109d5",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231777819185",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "supervisor",
+      "employeeId": null,
+      "title": "Nursing Supervisor"
+    },
+    {
+      "$id": "68d7c1a50019ba04bb76",
+      "$createdAt": "2025-09-27T10:51:18.273+00:00",
+      "$updatedAt": "2025-09-27T10:51:18.860+00:00",
+      "name": "Thomas Sesay",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$N0d3OGRyTkFlY3dqbGZOcQ$JecI/kmnZ6wihJOMDV+Dss9kDqI4D7WxJCxgbikR/cs",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:18.272+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:18.272+00:00",
+      "email": "thomas.sesay840@immuneme.lr",
+      "phone": "+231772030563",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1a64b78865c9221",
+          "$createdAt": "2025-09-27T10:51:18.309+00:00",
+          "$updatedAt": "2025-09-27T10:51:18.309+00:00",
+          "name": "",
+          "userId": "68d7c1a50019ba04bb76",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "thomas.sesay840@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1a64ea04bffc928",
+          "$createdAt": "2025-09-27T10:51:18.322+00:00",
+          "$updatedAt": "2025-09-27T10:51:18.322+00:00",
+          "name": "",
+          "userId": "68d7c1a50019ba04bb76",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231772030563",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1a6002fb74000df",
+      "$createdAt": "2025-09-27T10:51:19.637+00:00",
+      "$updatedAt": "2025-09-27T10:51:20.157+00:00",
+      "name": "Prince Campbell",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$cWZEQzBISDB6Y2kuakd1YQ$ChQJibykl59p2YRsuVjllKenJ/gyP/gcg+0tBBt0Nxg",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:19.636+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:19.636+00:00",
+      "email": "prince.campbell588@immuneme.lr",
+      "phone": "+231779275439",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1a7a46a711b764f",
+          "$createdAt": "2025-09-27T10:51:19.673+00:00",
+          "$updatedAt": "2025-09-27T10:51:19.673+00:00",
+          "name": "",
+          "userId": "68d7c1a6002fb74000df",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "prince.campbell588@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1a7a73e5ef28c50",
+          "$createdAt": "2025-09-27T10:51:19.685+00:00",
+          "$updatedAt": "2025-09-27T10:51:19.685+00:00",
+          "name": "",
+          "userId": "68d7c1a6002fb74000df",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231779275439",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1a80003be0682b2",
+      "$createdAt": "2025-09-27T10:51:20.909+00:00",
+      "$updatedAt": "2025-09-27T10:51:21.488+00:00",
+      "name": "Mark Green",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$ZURIb3drWXFGVEhtNS5PaQ$jTVTmbnbSe2zqiw7gXxXT6D8Z9puwc9ZbnOjCvQ6IZc",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:20.908+00:00",
+      "status": true,
+      "labels": [
+        "roleclerk"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:20.908+00:00",
+      "email": "mark.green77@immuneme.lr",
+      "phone": "+231865646600",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1a8e767356e4d06",
+          "$createdAt": "2025-09-27T10:51:20.947+00:00",
+          "$updatedAt": "2025-09-27T10:51:20.947+00:00",
+          "name": "",
+          "userId": "68d7c1a80003be0682b2",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "mark.green77@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1a8eaabce338fde",
+          "$createdAt": "2025-09-27T10:51:20.961+00:00",
+          "$updatedAt": "2025-09-27T10:51:20.961+00:00",
+          "name": "",
+          "userId": "68d7c1a80003be0682b2",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231865646600",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "clerk",
+      "employeeId": null,
+      "title": "Data Entry Clerk"
+    },
+    {
+      "$id": "68d7c1a9001879b2b9f0",
+      "$createdAt": "2025-09-27T10:51:22.220+00:00",
+      "$updatedAt": "2025-09-27T10:51:22.783+00:00",
+      "name": "Gift Mitchell",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$R0JNdjBpcG1KalJnT1lxLg$T3rBaxT/J3HhJVKYiyIDJnVKv58a7sG/4k3l/izcJTs",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:22.219+00:00",
+      "status": true,
+      "labels": [
+        "roledoctor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:22.219+00:00",
+      "email": "gift.mitchell798@immuneme.lr",
+      "phone": "+231773992729",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1aa3d79ef74c626",
+          "$createdAt": "2025-09-27T10:51:22.251+00:00",
+          "$updatedAt": "2025-09-27T10:51:22.251+00:00",
+          "name": "",
+          "userId": "68d7c1a9001879b2b9f0",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "gift.mitchell798@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1aa40666ddc11cc",
+          "$createdAt": "2025-09-27T10:51:22.263+00:00",
+          "$updatedAt": "2025-09-27T10:51:22.263+00:00",
+          "name": "",
+          "userId": "68d7c1a9001879b2b9f0",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231773992729",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "doctor",
+      "employeeId": null,
+      "title": "Medical Doctor"
+    },
+    {
+      "$id": "68d7c1aa002b91288297",
+      "$createdAt": "2025-09-27T10:51:23.640+00:00",
+      "$updatedAt": "2025-09-27T10:51:24.380+00:00",
+      "name": "Miriam Williams",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$NXk1ZU02TXdDekF4YTZucA$qDbah1/H/67IQuMls8KlBNopIQruVl/Sxh5NqBGrfpk",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:23.639+00:00",
+      "status": true,
+      "labels": [
+        "rolesupervisor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:23.639+00:00",
+      "email": "miriam.williams855@immuneme.lr",
+      "phone": "+231864780568",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1aba36c93b79736",
+          "$createdAt": "2025-09-27T10:51:23.669+00:00",
+          "$updatedAt": "2025-09-27T10:51:23.669+00:00",
+          "name": "",
+          "userId": "68d7c1aa002b91288297",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "miriam.williams855@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1aba7e2b3406826",
+          "$createdAt": "2025-09-27T10:51:23.687+00:00",
+          "$updatedAt": "2025-09-27T10:51:23.687+00:00",
+          "name": "",
+          "userId": "68d7c1aa002b91288297",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231864780568",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "supervisor",
+      "employeeId": null,
+      "title": "Nursing Supervisor"
+    },
+    {
+      "$id": "68d7c1ac001204b2604d",
+      "$createdAt": "2025-09-27T10:51:25.179+00:00",
+      "$updatedAt": "2025-09-27T10:51:25.766+00:00",
+      "name": "Linda Baker",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$ZjZaL3RSMjEwaGNYblNvbA$53ILHCtx+5wYXl/Tep4X9bgB1SkWGS9zL7X3/7jHm08",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:25.178+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:25.178+00:00",
+      "email": "linda.baker492@immuneme.lr",
+      "phone": "+231866120042",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1ad34995b56ea48",
+          "$createdAt": "2025-09-27T10:51:25.215+00:00",
+          "$updatedAt": "2025-09-27T10:51:25.215+00:00",
+          "name": "",
+          "userId": "68d7c1ac001204b2604d",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "linda.baker492@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1ad38138a027fe5",
+          "$createdAt": "2025-09-27T10:51:25.229+00:00",
+          "$updatedAt": "2025-09-27T10:51:25.229+00:00",
+          "name": "",
+          "userId": "68d7c1ac001204b2604d",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231866120042",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1ad0029e5e8b5c2",
+      "$createdAt": "2025-09-27T10:51:26.614+00:00",
+      "$updatedAt": "2025-09-27T10:51:27.526+00:00",
+      "name": "Faith Perez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$Tm9wRWhHbHhTU1FUd0JGSw$mxoG1TcHclPnU7VTD+3Btrg/Q+DaFWFB0SeEjC7p5BA",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:26.613+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:26.613+00:00",
+      "email": "faith.perez912@immuneme.lr",
+      "phone": "+231884971577",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1ae9fbccf2cba7e",
+          "$createdAt": "2025-09-27T10:51:26.654+00:00",
+          "$updatedAt": "2025-09-27T10:51:26.654+00:00",
+          "name": "",
+          "userId": "68d7c1ad0029e5e8b5c2",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "faith.perez912@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1aea37e91032a01",
+          "$createdAt": "2025-09-27T10:51:26.669+00:00",
+          "$updatedAt": "2025-09-27T10:51:26.669+00:00",
+          "name": "",
+          "userId": "68d7c1ad0029e5e8b5c2",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231884971577",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1af001ac0024431",
+      "$createdAt": "2025-09-27T10:51:28.306+00:00",
+      "$updatedAt": "2025-09-27T10:51:28.861+00:00",
+      "name": "Hannah Johnson",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$ZUZIZnZpQjRKZWdqYm5QOQ$WbfOHItaIOVjKRjabTju5rf/XT3CF+Uxq2/4PsPvIxE",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:28.304+00:00",
+      "status": true,
+      "labels": [
+        "roleclerk"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:28.304+00:00",
+      "email": "hannah.johnson544@immuneme.lr",
+      "phone": "+231777840773",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b05317cb5077ff",
+          "$createdAt": "2025-09-27T10:51:28.340+00:00",
+          "$updatedAt": "2025-09-27T10:51:28.340+00:00",
+          "name": "",
+          "userId": "68d7c1af001ac0024431",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "hannah.johnson544@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b055ef6581dfcf",
+          "$createdAt": "2025-09-27T10:51:28.351+00:00",
+          "$updatedAt": "2025-09-27T10:51:28.351+00:00",
+          "name": "",
+          "userId": "68d7c1af001ac0024431",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231777840773",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "clerk",
+      "employeeId": null,
+      "title": "Data Entry Clerk"
+    },
+    {
+      "$id": "68d7c1b000301de4148a",
+      "$createdAt": "2025-09-27T10:51:29.647+00:00",
+      "$updatedAt": "2025-09-27T10:51:30.453+00:00",
+      "name": "Jessica Sanchez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$akVjYXdNWjYySEExUk8weQ$+lTIBQBP5ug1KB0SaZH0TvP2UiG5yRi5lG3+J5Ufwk0",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:29.646+00:00",
+      "status": true,
+      "labels": [
+        "roledoctor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:29.646+00:00",
+      "email": "jessica.sanchez946@immuneme.lr",
+      "phone": "+231761461697",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b1a868d3698e51",
+          "$createdAt": "2025-09-27T10:51:29.689+00:00",
+          "$updatedAt": "2025-09-27T10:51:29.689+00:00",
+          "name": "",
+          "userId": "68d7c1b000301de4148a",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "jessica.sanchez946@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b1ac25f25b75bd",
+          "$createdAt": "2025-09-27T10:51:29.705+00:00",
+          "$updatedAt": "2025-09-27T10:51:29.705+00:00",
+          "name": "",
+          "userId": "68d7c1b000301de4148a",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231761461697",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "doctor",
+      "employeeId": null,
+      "title": "Medical Doctor"
+    },
+    {
+      "$id": "68d7c1b200163fef1f02",
+      "$createdAt": "2025-09-27T10:51:31.211+00:00",
+      "$updatedAt": "2025-09-27T10:51:31.770+00:00",
+      "name": "Rachel Scott",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$MmdkWEovTy56bnB4blVVWg$SvdZ5HQCjWOnpvixOj3p7LpNqvY1Y+Le6nI6On6IhuU",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:31.210+00:00",
+      "status": true,
+      "labels": [
+        "rolesupervisor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:31.210+00:00",
+      "email": "rachel.scott799@immuneme.lr",
+      "phone": "+231778609295",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b33d5226b332c1",
+          "$createdAt": "2025-09-27T10:51:31.251+00:00",
+          "$updatedAt": "2025-09-27T10:51:31.251+00:00",
+          "name": "",
+          "userId": "68d7c1b200163fef1f02",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "rachel.scott799@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b34097e9e2b9ab",
+          "$createdAt": "2025-09-27T10:51:31.264+00:00",
+          "$updatedAt": "2025-09-27T10:51:31.264+00:00",
+          "name": "",
+          "userId": "68d7c1b200163fef1f02",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231778609295",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "supervisor",
+      "employeeId": null,
+      "title": "Nursing Supervisor"
+    },
+    {
+      "$id": "68d7c1b3002a69df4d25",
+      "$createdAt": "2025-09-27T10:51:32.565+00:00",
+      "$updatedAt": "2025-09-27T10:51:33.137+00:00",
+      "name": "Love Martinez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$OHlhL084aXRXTjJCZXdGcA$do3wGCatSI5OaJo3fo2TPZmOYG9vojwesJPsgAmgpAA",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:32.564+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:32.564+00:00",
+      "email": "love.martinez192@immuneme.lr",
+      "phone": "+231774988099",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b494034a21df36",
+          "$createdAt": "2025-09-27T10:51:32.606+00:00",
+          "$updatedAt": "2025-09-27T10:51:32.606+00:00",
+          "name": "",
+          "userId": "68d7c1b3002a69df4d25",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "love.martinez192@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b497edf50dbdec",
+          "$createdAt": "2025-09-27T10:51:32.622+00:00",
+          "$updatedAt": "2025-09-27T10:51:32.622+00:00",
+          "name": "",
+          "userId": "68d7c1b3002a69df4d25",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231774988099",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1b50004ad77f208",
+      "$createdAt": "2025-09-27T10:51:33.963+00:00",
+      "$updatedAt": "2025-09-27T10:51:34.513+00:00",
+      "name": "Yaw Sanchez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$eVRSNUsyazVDdlJ1Q2h1cQ$+812Nb6f0aCtmnDOJbwGyo/LV0IGegM8vn1DfKgNvWc",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:33.962+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:33.962+00:00",
+      "email": "yaw.sanchez102@immuneme.lr",
+      "phone": "+231869417511",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b6006c9b0f0921",
+          "$createdAt": "2025-09-27T10:51:34.001+00:00",
+          "$updatedAt": "2025-09-27T10:51:34.001+00:00",
+          "name": "",
+          "userId": "68d7c1b50004ad77f208",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "yaw.sanchez102@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b6039a170f720c",
+          "$createdAt": "2025-09-27T10:51:34.014+00:00",
+          "$updatedAt": "2025-09-27T10:51:34.014+00:00",
+          "name": "",
+          "userId": "68d7c1b50004ad77f208",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231869417511",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1b6001a53bf7cb3",
+      "$createdAt": "2025-09-27T10:51:35.276+00:00",
+      "$updatedAt": "2025-09-27T10:51:35.852+00:00",
+      "name": "Joshua Thomas",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$MGJTZWpqT20wdG9GUkVYcQ$ScB/rtFSwdBvBqk6QC8W6c1WhvcwUJrRvXEMzry/bcY",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:35.275+00:00",
+      "status": true,
+      "labels": [
+        "roleclerk"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:35.275+00:00",
+      "email": "joshua.thomas578@immuneme.lr",
+      "phone": "+231775480704",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b74c2000c2a2b3",
+          "$createdAt": "2025-09-27T10:51:35.311+00:00",
+          "$updatedAt": "2025-09-27T10:51:35.311+00:00",
+          "name": "",
+          "userId": "68d7c1b6001a53bf7cb3",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "joshua.thomas578@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b75053f2ff6969",
+          "$createdAt": "2025-09-27T10:51:35.329+00:00",
+          "$updatedAt": "2025-09-27T10:51:35.329+00:00",
+          "name": "",
+          "userId": "68d7c1b6001a53bf7cb3",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231775480704",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "clerk",
+      "employeeId": null,
+      "title": "Data Entry Clerk"
+    },
+    {
+      "$id": "68d7c1b7002f40bb4a5e",
+      "$createdAt": "2025-09-27T10:51:36.637+00:00",
+      "$updatedAt": "2025-09-27T10:51:37.282+00:00",
+      "name": "Lisa Edwards",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$WnlqUnlVNUtVb09BaFJoTw$dEKxe0/U0vf3Gkj0OU0Is7kZtLWWKhvd9hfNMxmaQQI",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:36.635+00:00",
+      "status": true,
+      "labels": [
+        "roledoctor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:36.635+00:00",
+      "email": "lisa.edwards815@immuneme.lr",
+      "phone": "+231777862764",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1b8a476f8882a07",
+          "$createdAt": "2025-09-27T10:51:36.673+00:00",
+          "$updatedAt": "2025-09-27T10:51:36.673+00:00",
+          "name": "",
+          "userId": "68d7c1b7002f40bb4a5e",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "lisa.edwards815@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1b8a7cc138b8fd3",
+          "$createdAt": "2025-09-27T10:51:36.687+00:00",
+          "$updatedAt": "2025-09-27T10:51:36.687+00:00",
+          "name": "",
+          "userId": "68d7c1b7002f40bb4a5e",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231777862764",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "doctor",
+      "employeeId": null,
+      "title": "Medical Doctor"
+    },
+    {
+      "$id": "68d7c1b9000bc5bc3c41",
+      "$createdAt": "2025-09-27T10:51:38.107+00:00",
+      "$updatedAt": "2025-09-27T10:51:38.713+00:00",
+      "name": "Joy Lopez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$VTJEYTBHTjUvZjF0ZHpZRQ$BDyC74KVG9M6FFP0NCMxgPCw1WbtGjZpgFWNN0uePd8",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:38.106+00:00",
+      "status": true,
+      "labels": [
+        "rolesupervisor"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:38.106+00:00",
+      "email": "joy.lopez921@immuneme.lr",
+      "phone": "+231765842761",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1ba264e2b837bea",
+          "$createdAt": "2025-09-27T10:51:38.156+00:00",
+          "$updatedAt": "2025-09-27T10:51:38.156+00:00",
+          "name": "",
+          "userId": "68d7c1b9000bc5bc3c41",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "joy.lopez921@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1ba29360a516c67",
+          "$createdAt": "2025-09-27T10:51:38.168+00:00",
+          "$updatedAt": "2025-09-27T10:51:38.168+00:00",
+          "name": "",
+          "userId": "68d7c1b9000bc5bc3c41",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231765842761",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "supervisor",
+      "employeeId": null,
+      "title": "Nursing Supervisor"
+    },
+    {
+      "$id": "68d7c1ba002854e525fb",
+      "$createdAt": "2025-09-27T10:51:39.533+00:00",
+      "$updatedAt": "2025-09-27T10:51:40.061+00:00",
+      "name": "David White",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$QVVacmVvaC5RTTlOdkVlSA$yuvWEfYSDtQ3Bfxnz/OAlDrETZe+Y3oy1mRVbTiEmI0",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:39.531+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:39.531+00:00",
+      "email": "david.white925@immuneme.lr",
+      "phone": "+231762954102",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1bb8b794e4011e5",
+          "$createdAt": "2025-09-27T10:51:39.571+00:00",
+          "$updatedAt": "2025-09-27T10:51:39.571+00:00",
+          "name": "",
+          "userId": "68d7c1ba002854e525fb",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "david.white925@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1bb8ed7e07db69e",
+          "$createdAt": "2025-09-27T10:51:39.585+00:00",
+          "$updatedAt": "2025-09-27T10:51:39.585+00:00",
+          "name": "",
+          "userId": "68d7c1ba002854e525fb",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231762954102",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1bb003ca67bf5fb",
+      "$createdAt": "2025-09-27T10:51:40.854+00:00",
+      "$updatedAt": "2025-09-27T10:51:41.412+00:00",
+      "name": "Mark Thompson",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$Y1Y2QVc5OC5teDY4Y1dyMw$Rvl3ApPhara8HoTfUb2K7agg4+kd0FjTX8W9ROWiDzA",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:40.853+00:00",
+      "status": true,
+      "labels": [
+        "rolenurse"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:40.853+00:00",
+      "email": "mark.thompson920@immuneme.lr",
+      "phone": "+231762463127",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1bcd9903ed8a3a1",
+          "$createdAt": "2025-09-27T10:51:40.891+00:00",
+          "$updatedAt": "2025-09-27T10:51:40.891+00:00",
+          "name": "",
+          "userId": "68d7c1bb003ca67bf5fb",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "mark.thompson920@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1bcdd1e98539f5b",
+          "$createdAt": "2025-09-27T10:51:40.905+00:00",
+          "$updatedAt": "2025-09-27T10:51:40.905+00:00",
+          "name": "",
+          "userId": "68d7c1bb003ca67bf5fb",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231762463127",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "nurse",
+      "employeeId": null,
+      "title": "Registered Nurse"
+    },
+    {
+      "$id": "68d7c1bd00136c6a1333",
+      "$createdAt": "2025-09-27T10:51:42.189+00:00",
+      "$updatedAt": "2025-09-27T10:51:42.823+00:00",
+      "name": "Betty Torres",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$MzloNTZ0WE83WVRldDlrRQ$UIrFhsVGraAlOh3/JCkJImFuzV0qy2fk6ZGPuNgKPLY",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:42.188+00:00",
+      "status": true,
+      "labels": [
+        "roleclerk"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:42.188+00:00",
+      "email": "betty.torres480@immuneme.lr",
+      "phone": "+231775187366",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1be3618bc1bd920",
+          "$createdAt": "2025-09-27T10:51:42.221+00:00",
+          "$updatedAt": "2025-09-27T10:51:42.221+00:00",
+          "name": "",
+          "userId": "68d7c1bd00136c6a1333",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "betty.torres480@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1be394b7e02e50b",
+          "$createdAt": "2025-09-27T10:51:42.234+00:00",
+          "$updatedAt": "2025-09-27T10:51:42.234+00:00",
+          "name": "",
+          "userId": "68d7c1bd00136c6a1333",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231775187366",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "clerk",
+      "employeeId": null,
+      "title": "Data Entry Clerk"
+    },
+    {
+      "$id": "68d7c1be002d674845e3",
+      "$createdAt": "2025-09-27T10:51:43.618+00:00",
+      "$updatedAt": "2025-09-27T10:51:44.291+00:00",
+      "name": "Grace Davis",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$aURMWUxiT2VaQ05DTDJONw$8rqk+EJ//QxhMQiiTaSgbyDmE6+SuabRG+GpOSX+dQ8",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:43.617+00:00",
+      "status": true,
+      "labels": [
+        "rolepatient"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:43.617+00:00",
+      "email": "grace.davis707@immuneme.lr",
+      "phone": "+231775535663",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1bf9fe9134afedf",
+          "$createdAt": "2025-09-27T10:51:43.654+00:00",
+          "$updatedAt": "2025-09-27T10:51:43.654+00:00",
+          "name": "",
+          "userId": "68d7c1be002d674845e3",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "grace.davis707@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1bfa2dd787a89a0",
+          "$createdAt": "2025-09-27T10:51:43.667+00:00",
+          "$updatedAt": "2025-09-27T10:51:43.667+00:00",
+          "name": "",
+          "userId": "68d7c1be002d674845e3",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231775535663",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "patient",
+      "employeeId": null,
+      "title": "User"
+    },
+    {
+      "$id": "68d7c1c0000be7f45a7b",
+      "$createdAt": "2025-09-27T10:51:45.037+00:00",
+      "$updatedAt": "2025-09-27T10:51:45.693+00:00",
+      "name": "Isaac Stewart",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$R2F1U3hJWjI1L0ppR0IuRw$mq0ASFlp87fOur6xXSZPhuwP7JMWSRMq34Xko9y03cE",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:45.036+00:00",
+      "status": true,
+      "labels": [
+        "rolepatient"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:45.036+00:00",
+      "email": "isaac.stewart30@immuneme.lr",
+      "phone": "+231763912100",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1c1117194809cfc",
+          "$createdAt": "2025-09-27T10:51:45.071+00:00",
+          "$updatedAt": "2025-09-27T10:51:45.071+00:00",
+          "name": "",
+          "userId": "68d7c1c0000be7f45a7b",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "isaac.stewart30@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1c11426653edb24",
+          "$createdAt": "2025-09-27T10:51:45.082+00:00",
+          "$updatedAt": "2025-09-27T10:51:45.082+00:00",
+          "name": "",
+          "userId": "68d7c1c0000be7f45a7b",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231763912100",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "patient",
+      "employeeId": null,
+      "title": "User"
+    },
+    {
+      "$id": "68d7c1c100252f94d995",
+      "$createdAt": "2025-09-27T10:51:46.748+00:00",
+      "$updatedAt": "2025-09-27T10:51:47.634+00:00",
+      "name": "Jennifer Wilson",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$ZEtHY09MeW1jWGVCdXc4SQ$vomhYjLhaZdx+jC0EjFh8OCz0m+PjRjd2rWcESh/rEo",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:46.747+00:00",
+      "status": true,
+      "labels": [
+        "rolepatient"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:46.747+00:00",
+      "email": "jennifer.wilson530@immuneme.lr",
+      "phone": "+231766504912",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1c2bfe82669325d",
+          "$createdAt": "2025-09-27T10:51:46.786+00:00",
+          "$updatedAt": "2025-09-27T10:51:46.786+00:00",
+          "name": "",
+          "userId": "68d7c1c100252f94d995",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "jennifer.wilson530@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1c2c544e1680fdc",
+          "$createdAt": "2025-09-27T10:51:46.808+00:00",
+          "$updatedAt": "2025-09-27T10:51:46.808+00:00",
+          "name": "",
+          "userId": "68d7c1c100252f94d995",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231766504912",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "patient",
+      "employeeId": null,
+      "title": "User"
+    },
+    {
+      "$id": "68d7c1c3002194e4a899",
+      "$createdAt": "2025-09-27T10:51:48.431+00:00",
+      "$updatedAt": "2025-09-27T10:51:48.989+00:00",
+      "name": "Susan Ramirez",
+      "password": "$argon2id$v=19$m=65536,t=4,p=3$M3k0dVQ5N0h6VUE1OVhibw$TPW1E0MqdDqRs3jXSK7qsuKzlbQ5TAi9Pr88bjo5NZ0",
+      "hash": "argon2",
+      "hashOptions": {
+        "type": "argon2",
+        "memoryCost": 2048,
+        "timeCost": 4,
+        "threads": 3
+      },
+      "registration": "2025-09-27T10:51:48.430+00:00",
+      "status": true,
+      "labels": [
+        "rolepatient"
+      ],
+      "passwordUpdate": "2025-09-27T10:51:48.430+00:00",
+      "email": "susan.ramirez343@immuneme.lr",
+      "phone": "+231774478035",
+      "emailVerification": false,
+      "phoneVerification": false,
+      "mfa": false,
+      "prefs": {},
+      "targets": [
+        {
+          "$id": "68d7c1c472f6bbd629c8",
+          "$createdAt": "2025-09-27T10:51:48.470+00:00",
+          "$updatedAt": "2025-09-27T10:51:48.470+00:00",
+          "name": "",
+          "userId": "68d7c1c3002194e4a899",
+          "providerId": null,
+          "providerType": "email",
+          "identifier": "susan.ramirez343@immuneme.lr",
+          "expired": false
+        },
+        {
+          "$id": "68d7c1c475e08a54b2fe",
+          "$createdAt": "2025-09-27T10:51:48.482+00:00",
+          "$updatedAt": "2025-09-27T10:51:48.482+00:00",
+          "name": "",
+          "userId": "68d7c1c3002194e4a899",
+          "providerId": null,
+          "providerType": "sms",
+          "identifier": "+231774478035",
+          "expired": false
+        }
+      ],
+      "accessedAt": "",
+      "role": "patient",
+      "employeeId": null,
+      "title": "User"
+    }
+  ],
+  "employeeProfiles": [
+    {
+      "user_id": "68d7c1a1002a13d6c28b",
+      "employee_id": "ADMIN-001",
+      "employee_type": "administrator",
+      "professional_title": "System Administrator",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [],
+      "primary_facility_id": "68d7c34f001f2e473a31",
+      "assigned_facilities": [
+        "68d7c34f001f2e473a31"
+      ],
+      "department": "Administration",
+      "employment_status": "active",
+      "hire_date": "2024-06-16T09:21:30.394+00:00",
+      "contact_information": "{\"email\":\"admin@immuneme.lr\",\"phone\":\"+231762250892\",\"emergency_contact\":\"+231772619423\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:14.740+00:00",
+      "updated_at": "2025-09-27T10:59:14.740+00:00",
+      "$id": "68d7c382002e34f3b2f4",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:15.508+00:00",
+      "$updatedAt": "2025-09-27T10:59:15.508+00:00",
+      "$sequence": 1,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1a20036f182502d",
+      "employee_id": "EMP-001",
+      "employee_type": "doctor",
+      "professional_title": "Medical Doctor",
+      "license_number": "MD-9924",
+      "license_expiry_date": "2027-09-27T10:59:15.374+00:00",
+      "specializations": [
+        "general_practice",
+        "pediatrics"
+      ],
+      "primary_facility_id": "68d7c350001ef797897f",
+      "assigned_facilities": [
+        "68d7c350001ef797897f"
+      ],
+      "department": "Medical",
+      "employment_status": "active",
+      "hire_date": "2023-10-27T05:50:38.920+00:00",
+      "contact_information": "{\"email\":\"robert.stewart501@immuneme.lr\",\"phone\":\"+231772869862\",\"emergency_contact\":\"+231888438902\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:15.374+00:00",
+      "updated_at": "2025-09-27T10:59:15.374+00:00",
+      "$id": "68d7c38300176f10d02a",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:16.134+00:00",
+      "$updatedAt": "2025-09-27T10:59:16.134+00:00",
+      "$sequence": 2,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1a40007668109d5",
+      "employee_id": "EMP-002",
+      "employee_type": "supervisor",
+      "professional_title": "Nursing Supervisor",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [
+        "nursing",
+        "public_health"
+      ],
+      "primary_facility_id": "68d7c351000c9bd122aa",
+      "assigned_facilities": [
+        "68d7c351000c9bd122aa"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2025-05-01T13:24:23.938+00:00",
+      "contact_information": "{\"email\":\"robert.hernandez753@immuneme.lr\",\"phone\":\"+231777819185\",\"emergency_contact\":\"+231762245510\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:15.997+00:00",
+      "updated_at": "2025-09-27T10:59:15.997+00:00",
+      "$id": "68d7c383003e5bbf8ddc",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:16.820+00:00",
+      "$updatedAt": "2025-09-27T10:59:16.820+00:00",
+      "$sequence": 3,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1a50019ba04bb76",
+      "employee_id": "EMP-003",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-6576",
+      "license_expiry_date": "2027-09-27T10:59:16.703+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c3510030bc1942cc",
+      "assigned_facilities": [
+        "68d7c3510030bc1942cc"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-01-30T09:27:46.147+00:00",
+      "contact_information": "{\"email\":\"thomas.sesay840@immuneme.lr\",\"phone\":\"+231772030563\",\"emergency_contact\":\"+231763830046\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:16.703+00:00",
+      "updated_at": "2025-09-27T10:59:16.703+00:00",
+      "$id": "68d7c384002bfc7238c7",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:17.723+00:00",
+      "$updatedAt": "2025-09-27T10:59:17.723+00:00",
+      "$sequence": 4,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1a6002fb74000df",
+      "employee_id": "EMP-004",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-7553",
+      "license_expiry_date": "2027-09-27T10:59:17.591+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c35200182b646bd1",
+      "assigned_facilities": [
+        "68d7c35200182b646bd1"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-09-29T09:02:20.288+00:00",
+      "contact_information": "{\"email\":\"prince.campbell588@immuneme.lr\",\"phone\":\"+231779275439\",\"emergency_contact\":\"+231772746868\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:17.591+00:00",
+      "updated_at": "2025-09-27T10:59:17.591+00:00",
+      "$id": "68d7c3850024fe500ae6",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:18.359+00:00",
+      "$updatedAt": "2025-09-27T10:59:18.359+00:00",
+      "$sequence": 5,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1a80003be0682b2",
+      "employee_id": "EMP-005",
+      "employee_type": "clerk",
+      "professional_title": "Data Entry Clerk",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [],
+      "primary_facility_id": "68d7c352003b02a27859",
+      "assigned_facilities": [
+        "68d7c352003b02a27859"
+      ],
+      "department": "Administration",
+      "employment_status": "active",
+      "hire_date": "2025-03-01T03:57:03.062+00:00",
+      "contact_information": "{\"email\":\"mark.green77@immuneme.lr\",\"phone\":\"+231865646600\",\"emergency_contact\":\"+231764460471\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:18.230+00:00",
+      "updated_at": "2025-09-27T10:59:18.230+00:00",
+      "$id": "68d7c386000e68ca5ec4",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:18.993+00:00",
+      "$updatedAt": "2025-09-27T10:59:18.993+00:00",
+      "$sequence": 6,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1a9001879b2b9f0",
+      "employee_id": "EMP-006",
+      "employee_type": "doctor",
+      "professional_title": "Medical Doctor",
+      "license_number": "MD-369",
+      "license_expiry_date": "2027-09-27T10:59:18.865+00:00",
+      "specializations": [
+        "general_practice",
+        "pediatrics"
+      ],
+      "primary_facility_id": "68d7c35300209ffc3e46",
+      "assigned_facilities": [
+        "68d7c35300209ffc3e46"
+      ],
+      "department": "Medical",
+      "employment_status": "active",
+      "hire_date": "2024-12-28T14:56:57.910+00:00",
+      "contact_information": "{\"email\":\"gift.mitchell798@immuneme.lr\",\"phone\":\"+231773992729\",\"emergency_contact\":\"+231765129839\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:18.865+00:00",
+      "updated_at": "2025-09-27T10:59:18.865+00:00",
+      "$id": "68d7c38600361dca2214",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:19.878+00:00",
+      "$updatedAt": "2025-09-27T10:59:19.878+00:00",
+      "$sequence": 7,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1aa002b91288297",
+      "employee_id": "EMP-007",
+      "employee_type": "supervisor",
+      "professional_title": "Nursing Supervisor",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [
+        "nursing",
+        "public_health"
+      ],
+      "primary_facility_id": "68d7c354000740d595ac",
+      "assigned_facilities": [
+        "68d7c354000740d595ac"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2025-09-26T20:12:18.649+00:00",
+      "contact_information": "{\"email\":\"miriam.williams855@immuneme.lr\",\"phone\":\"+231864780568\",\"emergency_contact\":\"+231771007186\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:19.741+00:00",
+      "updated_at": "2025-09-27T10:59:19.741+00:00",
+      "$id": "68d7c387002e5ace7f71",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:20.535+00:00",
+      "$updatedAt": "2025-09-27T10:59:20.535+00:00",
+      "$sequence": 8,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1ac001204b2604d",
+      "employee_id": "EMP-008",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-1947",
+      "license_expiry_date": "2027-09-27T10:59:20.396+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c354002a3f98f741",
+      "assigned_facilities": [
+        "68d7c354002a3f98f741"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2025-02-27T12:56:14.660+00:00",
+      "contact_information": "{\"email\":\"linda.baker492@immuneme.lr\",\"phone\":\"+231866120042\",\"emergency_contact\":\"+231867853009\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:20.396+00:00",
+      "updated_at": "2025-09-27T10:59:20.396+00:00",
+      "$id": "68d7c3880018cf60d49b",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:21.163+00:00",
+      "$updatedAt": "2025-09-27T10:59:21.163+00:00",
+      "$sequence": 9,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1ad0029e5e8b5c2",
+      "employee_id": "EMP-009",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-9553",
+      "license_expiry_date": "2027-09-27T10:59:21.022+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c3550011b2b546e2",
+      "assigned_facilities": [
+        "68d7c3550011b2b546e2"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-02-19T20:08:38.622+00:00",
+      "contact_information": "{\"email\":\"faith.perez912@immuneme.lr\",\"phone\":\"+231884971577\",\"emergency_contact\":\"+231882488149\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:21.022+00:00",
+      "updated_at": "2025-09-27T10:59:21.022+00:00",
+      "$id": "68d7c389000161d644bb",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:21.766+00:00",
+      "$updatedAt": "2025-09-27T10:59:21.766+00:00",
+      "$sequence": 10,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1af001ac0024431",
+      "employee_id": "EMP-010",
+      "employee_type": "clerk",
+      "professional_title": "Data Entry Clerk",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [],
+      "primary_facility_id": "68d7c355003cdc20b59b",
+      "assigned_facilities": [
+        "68d7c355003cdc20b59b"
+      ],
+      "department": "Administration",
+      "employment_status": "active",
+      "hire_date": "2023-10-07T03:48:37.828+00:00",
+      "contact_information": "{\"email\":\"hannah.johnson544@immuneme.lr\",\"phone\":\"+231777840773\",\"emergency_contact\":\"+231766166413\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:21.638+00:00",
+      "updated_at": "2025-09-27T10:59:21.638+00:00",
+      "$id": "68d7c3890027ec5850f0",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:22.404+00:00",
+      "$updatedAt": "2025-09-27T10:59:22.404+00:00",
+      "$sequence": 11,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b000301de4148a",
+      "employee_id": "EMP-011",
+      "employee_type": "doctor",
+      "professional_title": "Medical Doctor",
+      "license_number": "MD-8746",
+      "license_expiry_date": "2027-09-27T10:59:22.270+00:00",
+      "specializations": [
+        "general_practice",
+        "pediatrics"
+      ],
+      "primary_facility_id": "68d7c3560022922a5895",
+      "assigned_facilities": [
+        "68d7c3560022922a5895"
+      ],
+      "department": "Medical",
+      "employment_status": "active",
+      "hire_date": "2024-08-19T10:45:59.856+00:00",
+      "contact_information": "{\"email\":\"jessica.sanchez946@immuneme.lr\",\"phone\":\"+231761461697\",\"emergency_contact\":\"+231762187655\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:22.270+00:00",
+      "updated_at": "2025-09-27T10:59:22.270+00:00",
+      "$id": "68d7c38a0010e0929376",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:23.096+00:00",
+      "$updatedAt": "2025-09-27T10:59:23.096+00:00",
+      "$sequence": 12,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b200163fef1f02",
+      "employee_id": "EMP-012",
+      "employee_type": "supervisor",
+      "professional_title": "Nursing Supervisor",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [
+        "nursing",
+        "public_health"
+      ],
+      "primary_facility_id": "68d7c357000a72aa36ea",
+      "assigned_facilities": [
+        "68d7c357000a72aa36ea"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-02-11T15:14:54.129+00:00",
+      "contact_information": "{\"email\":\"rachel.scott799@immuneme.lr\",\"phone\":\"+231778609295\",\"emergency_contact\":\"+231888558991\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:22.957+00:00",
+      "updated_at": "2025-09-27T10:59:22.957+00:00",
+      "$id": "68d7c38a003bddcf5b32",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:23.693+00:00",
+      "$updatedAt": "2025-09-27T10:59:23.693+00:00",
+      "$sequence": 13,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b3002a69df4d25",
+      "employee_id": "EMP-013",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-9173",
+      "license_expiry_date": "2027-09-27T10:59:23.563+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c357002e9841e412",
+      "assigned_facilities": [
+        "68d7c357002e9841e412"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2025-08-15T03:33:12.990+00:00",
+      "contact_information": "{\"email\":\"love.martinez192@immuneme.lr\",\"phone\":\"+231774988099\",\"emergency_contact\":\"+231883212999\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:23.563+00:00",
+      "updated_at": "2025-09-27T10:59:23.563+00:00",
+      "$id": "68d7c38b002338aa3d51",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:24.324+00:00",
+      "$updatedAt": "2025-09-27T10:59:24.324+00:00",
+      "$sequence": 14,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b50004ad77f208",
+      "employee_id": "EMP-014",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-7393",
+      "license_expiry_date": "2027-09-27T10:59:24.190+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c3580014ac344069",
+      "assigned_facilities": [
+        "68d7c3580014ac344069"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-10-30T14:26:28.884+00:00",
+      "contact_information": "{\"email\":\"yaw.sanchez102@immuneme.lr\",\"phone\":\"+231869417511\",\"emergency_contact\":\"+231768884715\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:24.190+00:00",
+      "updated_at": "2025-09-27T10:59:24.190+00:00",
+      "$id": "68d7c38c000befdb1e3b",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:24.997+00:00",
+      "$updatedAt": "2025-09-27T10:59:24.997+00:00",
+      "$sequence": 15,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b6001a53bf7cb3",
+      "employee_id": "EMP-015",
+      "employee_type": "clerk",
+      "professional_title": "Data Entry Clerk",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [],
+      "primary_facility_id": "68d7c358003d588a9da8",
+      "assigned_facilities": [
+        "68d7c358003d588a9da8"
+      ],
+      "department": "Administration",
+      "employment_status": "active",
+      "hire_date": "2024-11-02T00:37:02.309+00:00",
+      "contact_information": "{\"email\":\"joshua.thomas578@immuneme.lr\",\"phone\":\"+231775480704\",\"emergency_contact\":\"+231882969409\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:24.857+00:00",
+      "updated_at": "2025-09-27T10:59:24.857+00:00",
+      "$id": "68d7c38c003595ac8ab0",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:25.613+00:00",
+      "$updatedAt": "2025-09-27T10:59:25.613+00:00",
+      "$sequence": 16,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b7002f40bb4a5e",
+      "employee_id": "EMP-016",
+      "employee_type": "doctor",
+      "professional_title": "Medical Doctor",
+      "license_number": "MD-1742",
+      "license_expiry_date": "2027-09-27T10:59:25.483+00:00",
+      "specializations": [
+        "general_practice",
+        "pediatrics"
+      ],
+      "primary_facility_id": "68d7c3590021c04da8ba",
+      "assigned_facilities": [
+        "68d7c3590021c04da8ba"
+      ],
+      "department": "Medical",
+      "employment_status": "active",
+      "hire_date": "2025-09-07T13:54:00.018+00:00",
+      "contact_information": "{\"email\":\"lisa.edwards815@immuneme.lr\",\"phone\":\"+231777862764\",\"emergency_contact\":\"+231777275691\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:25.483+00:00",
+      "updated_at": "2025-09-27T10:59:25.483+00:00",
+      "$id": "68d7c38d001e3cf0acfe",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:26.274+00:00",
+      "$updatedAt": "2025-09-27T10:59:26.274+00:00",
+      "$sequence": 17,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1b9000bc5bc3c41",
+      "employee_id": "EMP-017",
+      "employee_type": "supervisor",
+      "professional_title": "Nursing Supervisor",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [
+        "nursing",
+        "public_health"
+      ],
+      "primary_facility_id": "68d7c35a0006507ef17c",
+      "assigned_facilities": [
+        "68d7c35a0006507ef17c"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-10-18T21:22:17.464+00:00",
+      "contact_information": "{\"email\":\"joy.lopez921@immuneme.lr\",\"phone\":\"+231765842761\",\"emergency_contact\":\"+231868939699\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:26.178+00:00",
+      "updated_at": "2025-09-27T10:59:26.178+00:00",
+      "$id": "68d7c38e000b257d36aa",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:27.009+00:00",
+      "$updatedAt": "2025-09-27T10:59:27.009+00:00",
+      "$sequence": 18,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1ba002854e525fb",
+      "employee_id": "EMP-018",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-2261",
+      "license_expiry_date": "2027-09-27T10:59:26.882+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c35a002906f878eb",
+      "assigned_facilities": [
+        "68d7c35a002906f878eb"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2025-06-02T23:25:20.826+00:00",
+      "contact_information": "{\"email\":\"david.white925@immuneme.lr\",\"phone\":\"+231762954102\",\"emergency_contact\":\"+231881575362\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:26.882+00:00",
+      "updated_at": "2025-09-27T10:59:26.882+00:00",
+      "$id": "68d7c38e00372c6a2f62",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:27.628+00:00",
+      "$updatedAt": "2025-09-27T10:59:27.628+00:00",
+      "$sequence": 19,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1bb003ca67bf5fb",
+      "employee_id": "EMP-019",
+      "employee_type": "nurse",
+      "professional_title": "Registered Nurse",
+      "license_number": "RN-3075",
+      "license_expiry_date": "2027-09-27T10:59:27.489+00:00",
+      "specializations": [
+        "nursing",
+        "immunization_specialist"
+      ],
+      "primary_facility_id": "68d7c35b00169f345075",
+      "assigned_facilities": [
+        "68d7c35b00169f345075"
+      ],
+      "department": "Nursing",
+      "employment_status": "active",
+      "hire_date": "2024-11-03T12:04:27.878+00:00",
+      "contact_information": "{\"email\":\"mark.thompson920@immuneme.lr\",\"phone\":\"+231762463127\",\"emergency_contact\":\"+231881996240\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:27.489+00:00",
+      "updated_at": "2025-09-27T10:59:27.489+00:00",
+      "$id": "68d7c38f001e925ebe80",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:28.278+00:00",
+      "$updatedAt": "2025-09-27T10:59:28.278+00:00",
+      "$sequence": 20,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    },
+    {
+      "user_id": "68d7c1bd00136c6a1333",
+      "employee_id": "EMP-020",
+      "employee_type": "clerk",
+      "professional_title": "Data Entry Clerk",
+      "license_number": null,
+      "license_expiry_date": null,
+      "specializations": [],
+      "primary_facility_id": "68d7c35c000155d638fa",
+      "assigned_facilities": [
+        "68d7c35c000155d638fa"
+      ],
+      "department": "Administration",
+      "employment_status": "active",
+      "hire_date": "2025-08-06T15:06:26.107+00:00",
+      "contact_information": "{\"email\":\"betty.torres480@immuneme.lr\",\"phone\":\"+231775187366\",\"emergency_contact\":\"+231865616848\"}",
+      "work_schedule": "{\"monday\":\"08:00-17:00\",\"tuesday\":\"08:00-17:00\",\"wednesday\":\"08:00-17:00\",\"thursday\":\"08:00-17:00\",\"friday\":\"08:00-17:00\",\"saturday\":\"08:00-12:00\",\"sunday\":\"off\"}",
+      "created_at": "2025-09-27T10:59:28.141+00:00",
+      "updated_at": "2025-09-27T10:59:28.141+00:00",
+      "$id": "68d7c3900008df6c5e3c",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:28.926+00:00",
+      "$updatedAt": "2025-09-27T10:59:28.926+00:00",
+      "$sequence": 21,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "employee_profiles"
+    }
+  ],
+  "patientProfiles": [
+    {
+      "user_id": "68d7c1be002d674845e3",
+      "patient_id": "",
+      "profile_status": "active",
+      "verification_status": "verified",
+      "verification_method": "phone",
+      "access_permissions": [
+        "view_own_records",
+        "receive_notifications",
+        "update_contact_info",
+        "view_immunization_history"
+      ],
+      "notification_preferences": "{\"email_notifications\":true,\"sms_notifications\":true,\"push_notifications\":true,\"reminder_frequency\":\"weekly\",\"language\":\"en\"}",
+      "emergency_contact": "{\"name\":\"Linda Garcia\",\"relationship\":\"spouse\",\"phone\":\"+231885621648\"}",
+      "facility_id": "68d7c34f001f2e473a31",
+      "created_at": "2025-09-27T10:59:28.794+00:00",
+      "updated_at": "2025-09-27T10:59:28.794+00:00",
+      "$id": "68d7c3900031a31dda5d",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:29.636+00:00",
+      "$updatedAt": "2025-09-27T10:59:29.636+00:00",
+      "$sequence": 1,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "patient_profiles"
+    },
+    {
+      "user_id": "68d7c1c0000be7f45a7b",
+      "patient_id": "",
+      "profile_status": "active",
+      "verification_status": "pending",
+      "verification_method": "email",
+      "access_permissions": [
+        "view_own_records",
+        "receive_notifications",
+        "update_contact_info",
+        "view_immunization_history"
+      ],
+      "notification_preferences": "{\"email_notifications\":true,\"sms_notifications\":true,\"push_notifications\":true,\"reminder_frequency\":\"weekly\",\"language\":\"en\"}",
+      "emergency_contact": "{\"name\":\"Linda Jones\",\"relationship\":\"spouse\",\"phone\":\"+231886220774\"}",
+      "facility_id": "68d7c350001ef797897f",
+      "created_at": "2025-09-27T10:59:29.494+00:00",
+      "updated_at": "2025-09-27T10:59:29.494+00:00",
+      "$id": "68d7c391001ee8112c59",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:30.530+00:00",
+      "$updatedAt": "2025-09-27T10:59:30.530+00:00",
+      "$sequence": 2,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "patient_profiles"
+    },
+    {
+      "user_id": "68d7c1c100252f94d995",
+      "patient_id": "",
+      "profile_status": "active",
+      "verification_status": "verified",
+      "verification_method": "phone",
+      "access_permissions": [
+        "view_own_records",
+        "receive_notifications",
+        "update_contact_info",
+        "view_immunization_history"
+      ],
+      "notification_preferences": "{\"email_notifications\":true,\"sms_notifications\":true,\"push_notifications\":true,\"reminder_frequency\":\"weekly\",\"language\":\"en\"}",
+      "emergency_contact": "{\"name\":\"John Garcia\",\"relationship\":\"parent\",\"phone\":\"+231765200774\"}",
+      "facility_id": "68d7c351000c9bd122aa",
+      "created_at": "2025-09-27T10:59:30.390+00:00",
+      "updated_at": "2025-09-27T10:59:30.390+00:00",
+      "$id": "68d7c39200186e154890",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:31.230+00:00",
+      "$updatedAt": "2025-09-27T10:59:31.230+00:00",
+      "$sequence": 3,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "patient_profiles"
+    },
+    {
+      "user_id": "68d7c1c3002194e4a899",
+      "patient_id": "",
+      "profile_status": "active",
+      "verification_status": "pending",
+      "verification_method": "phone",
+      "access_permissions": [
+        "view_own_records",
+        "receive_notifications",
+        "update_contact_info",
+        "view_immunization_history"
+      ],
+      "notification_preferences": "{\"email_notifications\":true,\"sms_notifications\":true,\"push_notifications\":true,\"reminder_frequency\":\"weekly\",\"language\":\"en\"}",
+      "emergency_contact": "{\"name\":\"Jennifer Rodriguez\",\"relationship\":\"spouse\",\"phone\":\"+231885159824\"}",
+      "facility_id": "68d7c3510030bc1942cc",
+      "created_at": "2025-09-27T10:59:31.088+00:00",
+      "updated_at": "2025-09-27T10:59:31.088+00:00",
+      "$id": "68d7c393000584066f46",
+      "$permissions": [],
+      "$createdAt": "2025-09-27T10:59:31.869+00:00",
+      "$updatedAt": "2025-09-27T10:59:31.869+00:00",
+      "$sequence": 4,
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "patient_profiles"
+    }
+  ],
+  "facilities": [
+    {
+      "name": "John F. Kennedy Medical Center",
+      "district": "Monrovia",
+      "address": "Sinkor, Tubman Boulevard, Monrovia",
+      "contact_phone": "+231-77-555-0001",
+      "created_at": "2025-09-27T10:58:23.499+00:00",
+      "updated_at": "2025-09-27T10:58:23.499+00:00",
+      "$id": "68d7c34f001f2e473a31",
+      "$sequence": 172,
+      "$createdAt": "2025-09-27T10:58:24.506+00:00",
+      "$updatedAt": "2025-09-27T10:58:24.506+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Redemption Hospital",
+      "district": "Monrovia",
+      "address": "New Kru Town, Bushrod Island, Monrovia",
+      "contact_phone": "+231-77-555-0002",
+      "created_at": "2025-09-27T10:58:24.495+00:00",
+      "updated_at": "2025-09-27T10:58:24.495+00:00",
+      "$id": "68d7c350001ef797897f",
+      "$sequence": 173,
+      "$createdAt": "2025-09-27T10:58:25.256+00:00",
+      "$updatedAt": "2025-09-27T10:58:25.256+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "ELWA Hospital",
+      "district": "Paynesville",
+      "address": "ELWA Junction, Paynesville City",
+      "contact_phone": "+231-77-555-0003",
+      "created_at": "2025-09-27T10:58:25.201+00:00",
+      "updated_at": "2025-09-27T10:58:25.201+00:00",
+      "$id": "68d7c351000c9bd122aa",
+      "$sequence": 174,
+      "$createdAt": "2025-09-27T10:58:25.949+00:00",
+      "$updatedAt": "2025-09-27T10:58:25.949+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Liberia Government Hospital",
+      "district": "Monrovia",
+      "address": "Capitol Hill, Monrovia",
+      "contact_phone": "+231-77-555-0004",
+      "created_at": "2025-09-27T10:58:25.779+00:00",
+      "updated_at": "2025-09-27T10:58:25.779+00:00",
+      "$id": "68d7c3510030bc1942cc",
+      "$sequence": 175,
+      "$createdAt": "2025-09-27T10:58:26.566+00:00",
+      "$updatedAt": "2025-09-27T10:58:26.566+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "St. Joseph Catholic Hospital",
+      "district": "Monrovia",
+      "address": "Broad Street, Monrovia",
+      "contact_phone": "+231-77-555-0005",
+      "created_at": "2025-09-27T10:58:26.386+00:00",
+      "updated_at": "2025-09-27T10:58:26.386+00:00",
+      "$id": "68d7c35200182b646bd1",
+      "$sequence": 176,
+      "$createdAt": "2025-09-27T10:58:27.111+00:00",
+      "$updatedAt": "2025-09-27T10:58:27.111+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Firestone Medical Center",
+      "district": "Harbel",
+      "address": "Firestone Plantation, Harbel",
+      "contact_phone": "+231-77-555-0006",
+      "created_at": "2025-09-27T10:58:26.944+00:00",
+      "updated_at": "2025-09-27T10:58:26.944+00:00",
+      "$id": "68d7c352003b02a27859",
+      "$sequence": 177,
+      "$createdAt": "2025-09-27T10:58:27.708+00:00",
+      "$updatedAt": "2025-09-27T10:58:27.708+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Kakata Government Hospital",
+      "district": "Kakata",
+      "address": "Kakata City Center, Margibi County",
+      "contact_phone": "+231-77-555-0007",
+      "created_at": "2025-09-27T10:58:27.521+00:00",
+      "updated_at": "2025-09-27T10:58:27.521+00:00",
+      "$id": "68d7c35300209ffc3e46",
+      "$sequence": 178,
+      "$createdAt": "2025-09-27T10:58:28.304+00:00",
+      "$updatedAt": "2025-09-27T10:58:28.304+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Phebe Hospital",
+      "district": "Suakoko",
+      "address": "Phebe Training Hospital, Suakoko District",
+      "contact_phone": "+231-77-555-0008",
+      "created_at": "2025-09-27T10:58:28.116+00:00",
+      "updated_at": "2025-09-27T10:58:28.116+00:00",
+      "$id": "68d7c354000740d595ac",
+      "$sequence": 179,
+      "$createdAt": "2025-09-27T10:58:28.848+00:00",
+      "$updatedAt": "2025-09-27T10:58:28.848+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Gbarnga Government Hospital",
+      "district": "Gbarnga",
+      "address": "Gbarnga City, Bong County",
+      "contact_phone": "+231-77-555-0009",
+      "created_at": "2025-09-27T10:58:28.675+00:00",
+      "updated_at": "2025-09-27T10:58:28.675+00:00",
+      "$id": "68d7c354002a3f98f741",
+      "$sequence": 180,
+      "$createdAt": "2025-09-27T10:58:29.462+00:00",
+      "$updatedAt": "2025-09-27T10:58:29.462+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Ganta United Methodist Hospital",
+      "district": "Ganta",
+      "address": "Ganta City, Nimba County",
+      "contact_phone": "+231-77-555-0010",
+      "created_at": "2025-09-27T10:58:29.283+00:00",
+      "updated_at": "2025-09-27T10:58:29.283+00:00",
+      "$id": "68d7c3550011b2b546e2",
+      "$sequence": 181,
+      "$createdAt": "2025-09-27T10:58:30.127+00:00",
+      "$updatedAt": "2025-09-27T10:58:30.127+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Sanniquellie Government Hospital",
+      "district": "Sanniquellie",
+      "address": "Sanniquellie City, Nimba County",
+      "contact_phone": "+231-77-555-0011",
+      "created_at": "2025-09-27T10:58:29.973+00:00",
+      "updated_at": "2025-09-27T10:58:29.973+00:00",
+      "$id": "68d7c355003cdc20b59b",
+      "$sequence": 182,
+      "$createdAt": "2025-09-27T10:58:30.727+00:00",
+      "$updatedAt": "2025-09-27T10:58:30.727+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Tellewoyan Memorial Hospital",
+      "district": "Voinjama",
+      "address": "Voinjama City, Lofa County",
+      "contact_phone": "+231-77-555-0012",
+      "created_at": "2025-09-27T10:58:30.553+00:00",
+      "updated_at": "2025-09-27T10:58:30.553+00:00",
+      "$id": "68d7c3560022922a5895",
+      "$sequence": 183,
+      "$createdAt": "2025-09-27T10:58:31.350+00:00",
+      "$updatedAt": "2025-09-27T10:58:31.350+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Buchanan Government Hospital",
+      "district": "Buchanan",
+      "address": "Buchanan City, Grand Bassa County",
+      "contact_phone": "+231-77-555-0013",
+      "created_at": "2025-09-27T10:58:31.167+00:00",
+      "updated_at": "2025-09-27T10:58:31.167+00:00",
+      "$id": "68d7c357000a72aa36ea",
+      "$sequence": 184,
+      "$createdAt": "2025-09-27T10:58:31.931+00:00",
+      "$updatedAt": "2025-09-27T10:58:31.931+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "West Point Community Health Center",
+      "district": "Monrovia",
+      "address": "West Point Township, Monrovia",
+      "contact_phone": "+231-77-555-0014",
+      "created_at": "2025-09-27T10:58:31.745+00:00",
+      "updated_at": "2025-09-27T10:58:31.745+00:00",
+      "$id": "68d7c357002e9841e412",
+      "$sequence": 185,
+      "$createdAt": "2025-09-27T10:58:32.517+00:00",
+      "$updatedAt": "2025-09-27T10:58:32.517+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Clara Town Community Clinic",
+      "district": "Monrovia",
+      "address": "Clara Town, Bushrod Island, Monrovia",
+      "contact_phone": "+231-77-555-0015",
+      "created_at": "2025-09-27T10:58:32.330+00:00",
+      "updated_at": "2025-09-27T10:58:32.330+00:00",
+      "$id": "68d7c3580014ac344069",
+      "$sequence": 186,
+      "$createdAt": "2025-09-27T10:58:33.170+00:00",
+      "$updatedAt": "2025-09-27T10:58:33.170+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Logan Town Health Center",
+      "district": "Monrovia",
+      "address": "Logan Town, Monrovia",
+      "contact_phone": "+231-77-555-0016",
+      "created_at": "2025-09-27T10:58:32.981+00:00",
+      "updated_at": "2025-09-27T10:58:32.981+00:00",
+      "$id": "68d7c358003d588a9da8",
+      "$sequence": 187,
+      "$createdAt": "2025-09-27T10:58:33.731+00:00",
+      "$updatedAt": "2025-09-27T10:58:33.731+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Caldwell Health Center",
+      "district": "Montserrado",
+      "address": "Caldwell Township, Montserrado County",
+      "contact_phone": "+231-77-555-0017",
+      "created_at": "2025-09-27T10:58:33.540+00:00",
+      "updated_at": "2025-09-27T10:58:33.540+00:00",
+      "$id": "68d7c3590021c04da8ba",
+      "$sequence": 188,
+      "$createdAt": "2025-09-27T10:58:34.279+00:00",
+      "$updatedAt": "2025-09-27T10:58:34.279+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Bentol City Health Center",
+      "district": "Montserrado",
+      "address": "Bentol City, Montserrado County",
+      "contact_phone": "+231-77-555-0018",
+      "created_at": "2025-09-27T10:58:34.101+00:00",
+      "updated_at": "2025-09-27T10:58:34.101+00:00",
+      "$id": "68d7c35a0006507ef17c",
+      "$sequence": 189,
+      "$createdAt": "2025-09-27T10:58:34.840+00:00",
+      "$updatedAt": "2025-09-27T10:58:34.840+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Bomi Hills Health Center",
+      "district": "Tubmanburg",
+      "address": "Bomi Hills, Bomi County",
+      "contact_phone": "+231-77-555-0019",
+      "created_at": "2025-09-27T10:58:34.656+00:00",
+      "updated_at": "2025-09-27T10:58:34.656+00:00",
+      "$id": "68d7c35a002906f878eb",
+      "$sequence": 190,
+      "$createdAt": "2025-09-27T10:58:35.549+00:00",
+      "$updatedAt": "2025-09-27T10:58:35.549+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Robertsport Health Center",
+      "district": "Robertsport",
+      "address": "Robertsport City, Grand Cape Mount County",
+      "contact_phone": "+231-77-555-0020",
+      "created_at": "2025-09-27T10:58:35.361+00:00",
+      "updated_at": "2025-09-27T10:58:35.361+00:00",
+      "$id": "68d7c35b00169f345075",
+      "$sequence": 191,
+      "$createdAt": "2025-09-27T10:58:36.208+00:00",
+      "$updatedAt": "2025-09-27T10:58:36.208+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Zwedru Government Hospital",
+      "district": "Zwedru",
+      "address": "Zwedru City, Grand Gedeh County",
+      "contact_phone": "+231-77-555-0021",
+      "created_at": "2025-09-27T10:58:36.021+00:00",
+      "updated_at": "2025-09-27T10:58:36.021+00:00",
+      "$id": "68d7c35c000155d638fa",
+      "$sequence": 192,
+      "$createdAt": "2025-09-27T10:58:36.748+00:00",
+      "$updatedAt": "2025-09-27T10:58:36.748+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Monrovia Central Immunization Clinic",
+      "district": "Monrovia",
+      "address": "Broad Street, Central Monrovia",
+      "contact_phone": "+231-77-555-0022",
+      "created_at": "2025-09-27T10:58:36.566+00:00",
+      "updated_at": "2025-09-27T10:58:36.566+00:00",
+      "$id": "68d7c35c00236fb91bc2",
+      "$sequence": 193,
+      "$createdAt": "2025-09-27T10:58:37.378+00:00",
+      "$updatedAt": "2025-09-27T10:58:37.378+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Paynesville Maternal Health Center",
+      "district": "Paynesville",
+      "address": "Red Light Market Area, Paynesville",
+      "contact_phone": "+231-77-555-0023",
+      "created_at": "2025-09-27T10:58:37.196+00:00",
+      "updated_at": "2025-09-27T10:58:37.196+00:00",
+      "$id": "68d7c35d000c451f6f71",
+      "$sequence": 194,
+      "$createdAt": "2025-09-27T10:58:37.937+00:00",
+      "$updatedAt": "2025-09-27T10:58:37.937+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Sinkor Primary Healthcare Center",
+      "district": "Monrovia",
+      "address": "Sinkor Community, Monrovia",
+      "contact_phone": "+231-77-555-0024",
+      "created_at": "2025-09-27T10:58:37.759+00:00",
+      "updated_at": "2025-09-27T10:58:37.759+00:00",
+      "$id": "68d7c35d002f78870084",
+      "$sequence": 195,
+      "$createdAt": "2025-09-27T10:58:38.575+00:00",
+      "$updatedAt": "2025-09-27T10:58:38.575+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    },
+    {
+      "name": "Congo Town Health Post",
+      "district": "Monrovia",
+      "address": "Congo Town Community, Monrovia",
+      "contact_phone": "+231-77-555-0025",
+      "created_at": "2025-09-27T10:58:38.400+00:00",
+      "updated_at": "2025-09-27T10:58:38.400+00:00",
+      "$id": "68d7c35e001900e309a7",
+      "$sequence": 196,
+      "$createdAt": "2025-09-27T10:58:39.238+00:00",
+      "$updatedAt": "2025-09-27T10:58:39.238+00:00",
+      "$permissions": [],
+      "$databaseId": "68beb588001a9f2d71dc",
+      "$collectionId": "facilities"
+    }
+  ]
+}

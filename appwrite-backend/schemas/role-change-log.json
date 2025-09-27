@@ -1,0 +1,408 @@
+{
+  "$id": "role_change_log",
+  "name": "Role Change Log",
+  "enabled": true,
+  "documentSecurity": true,
+  "attributes": [
+    {
+      "key": "target_user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "target_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "target_profile_type",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "assigned_by_user_id",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "assigned_by_profile_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "assigned_by_profile_type",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 20,
+      "default": null
+    },
+    {
+      "key": "role_change_type",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 30,
+      "default": null
+    },
+    {
+      "key": "previous_roles",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "new_roles",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": true,
+      "size": 50,
+      "default": null
+    },
+    {
+      "key": "previous_teams",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "new_teams",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": true,
+      "size": 100,
+      "default": null
+    },
+    {
+      "key": "facility_context",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "reason",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 500,
+      "default": null
+    },
+    {
+      "key": "approval_required",
+      "type": "boolean",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": false
+    },
+    {
+      "key": "approved_by_user_id",
+      "type": "string",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "size": 36,
+      "default": null
+    },
+    {
+      "key": "approval_timestamp",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "effective_date",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "expiry_date",
+      "type": "datetime",
+      "status": "available",
+      "required": false,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "status",
+      "type": "string",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "size": 20,
+      "default": "active"
+    },
+    {
+      "key": "created_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    },
+    {
+      "key": "updated_at",
+      "type": "datetime",
+      "status": "available",
+      "required": true,
+      "array": false,
+      "default": null
+    }
+  ],
+  "indexes": [
+    {
+      "key": "target_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["target_user_id"]
+    },
+    {
+      "key": "target_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["target_profile_id"]
+    },
+    {
+      "key": "target_profile_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["target_profile_type"]
+    },
+    {
+      "key": "assigned_by_user_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["assigned_by_user_id"]
+    },
+    {
+      "key": "assigned_by_profile_id_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["assigned_by_profile_id"]
+    },
+    {
+      "key": "role_change_type_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["role_change_type"]
+    },
+    {
+      "key": "facility_context_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_context"]
+    },
+    {
+      "key": "effective_date_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["effective_date"]
+    },
+    {
+      "key": "status_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["status"]
+    },
+    {
+      "key": "approval_required_index",
+      "type": "key",
+      "status": "available",
+      "attributes": ["approval_required"]
+    },
+    {
+      "key": "target_effective_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["target_user_id", "effective_date"]
+    },
+    {
+      "key": "facility_effective_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["facility_context", "effective_date"]
+    },
+    {
+      "key": "type_status_compound",
+      "type": "key",
+      "status": "available",
+      "attributes": ["role_change_type", "status"]
+    }
+  ],
+  "permissions": {
+    "read": [
+      "label:role:administrator",
+      "label:role:supervisor"
+    ],
+    "create": [
+      "label:role:administrator",
+      "label:role:supervisor",
+      "team:facility-*-team/owner"
+    ],
+    "update": [
+      "label:role:administrator",
+      "label:role:supervisor"
+    ],
+    "delete": [
+      "label:role:administrator"
+    ]
+  },
+  "validation": {
+    "rules": {
+      "role_change_type": {
+        "enum": [
+          "manual_assignment",
+          "automatic_promotion",
+          "role_revocation",
+          "temporary_assignment",
+          "facility_transfer",
+          "department_change",
+          "permission_update",
+          "team_membership_change"
+        ],
+        "required": true
+      },
+      "target_profile_type": {
+        "enum": ["patient", "employee", "admin"]
+      },
+      "assigned_by_profile_type": {
+        "enum": ["employee", "admin"]
+      },
+      "status": {
+        "enum": ["active", "pending", "approved", "rejected", "expired", "revoked"],
+        "required": true
+      },
+      "previous_roles": {
+        "allowed_values": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:nurse",
+          "role:user",
+          "role:patient",
+          "role:data_entry_clerk",
+          "role:technician"
+        ]
+      },
+      "new_roles": {
+        "allowed_values": [
+          "role:administrator",
+          "role:supervisor",
+          "role:doctor",
+          "role:nurse",
+          "role:user",
+          "role:patient",
+          "role:data_entry_clerk",
+          "role:technician"
+        ]
+      },
+      "reason": {
+        "max_length": 500
+      }
+    }
+  },
+  "relationships": {
+    "belongs_to": [
+      {
+        "collection": "users",
+        "foreign_key": "target_user_id",
+        "local_key": "$id",
+        "description": "Target user whose roles are being changed"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "assigned_by_user_id",
+        "local_key": "$id",
+        "description": "User who made the role change"
+      },
+      {
+        "collection": "users",
+        "foreign_key": "approved_by_user_id",
+        "local_key": "$id",
+        "description": "User who approved the role change"
+      },
+      {
+        "collection": "facilities",
+        "foreign_key": "facility_context",
+        "local_key": "$id",
+        "description": "Facility context for the role change"
+      }
+    ],
+    "profile_relationships": [
+      {
+        "collection": "patient_profiles",
+        "foreign_key": "target_profile_id",
+        "local_key": "$id",
+        "description": "Target patient profile for role changes",
+        "condition": "target_profile_type = 'patient'"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "target_profile_id",
+        "local_key": "$id",
+        "description": "Target employee profile for role changes",
+        "condition": "target_profile_type = 'employee'"
+      },
+      {
+        "collection": "admin_profiles",
+        "foreign_key": "target_profile_id",
+        "local_key": "$id",
+        "description": "Target admin profile for role changes",
+        "condition": "target_profile_type = 'admin'"
+      },
+      {
+        "collection": "employee_profiles",
+        "foreign_key": "assigned_by_profile_id",
+        "local_key": "$id",
+        "description": "Employee profile who made the role change",
+        "condition": "assigned_by_profile_type = 'employee'"
+      },
+      {
+        "collection": "admin_profiles",
+        "foreign_key": "assigned_by_profile_id",
+        "local_key": "$id",
+        "description": "Admin profile who made the role change",
+        "condition": "assigned_by_profile_type = 'admin'"
+      }
+    ]
+  }
+}
