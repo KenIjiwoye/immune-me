@@ -1,4 +1,3984 @@
 {
     "projectId": "68a6e04b002d20c10020",
-    "endpoint": "https://fra.cloud.appwrite.io/v1"
+    "endpoint": "https://fra.cloud.appwrite.io/v1",
+    "databases": [
+        {
+            "$id": "68beb588001a9f2d71dc",
+            "name": "immune-me-dev",
+            "enabled": true
+        }
+    ],
+    "collections": [
+        {
+            "$id": "facility",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Facility",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 250,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "district",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 250,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "address",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contactPhone",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_phone",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "name_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "district_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "district"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "name_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "name"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "patients",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Patients",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "full_name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sex",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 1,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "date_of_birth",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "mother_name",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "father_name",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "district",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "town_village",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "address",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_phone",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "health_worker_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "health_worker_name",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "health_worker_phone",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "health_worker_address",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "patient_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "profile_verification_status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "guardian_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "profile_access_permissions",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "profile_notification_preferences",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "full_name_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "full_name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "district_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "district"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "date_of_birth_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "date_of_birth"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "health_worker_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "health_worker_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "full_name_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "full_name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_district_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id",
+                        "district"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "patient_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "patient_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "profile_verification_status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "profile_verification_status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "guardian_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "guardian_profile_id"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "vaccines",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Vaccines",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vaccine_code",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sequence_number",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "vaccine_series",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "standard_schedule_age",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "is_supplementary",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "is_active",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "name_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "vaccine_code_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_code"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "vaccine_series_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_series"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "sequence_number_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "sequence_number"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "name_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "name",
+                        "description"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "series_sequence_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_series",
+                        "sequence_number"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "is_active_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "is_active"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "is_supplementary_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "is_supplementary"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "immunization-records",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Immunization Records",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "patient_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vaccine_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administered_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "administered_by_user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "batch_number",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "health_officer",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "return_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "is_standard_schedule",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "schedule_status",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "administered_by_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administered_by_employee_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administered_by_professional_title",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administered_by_license_number",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administered_by_specializations",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "supervisor_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "quality_assurance_verified",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "verification_timestamp",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "patient_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "patient_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "vaccine_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "administered_by_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "administered_by_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "administered_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "administered_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "batch_number_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "batch_number"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "schedule_status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "schedule_status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "is_standard_schedule_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "is_standard_schedule"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "patient_vaccine_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "patient_id",
+                        "vaccine_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_date_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id",
+                        "administered_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "notes_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "notes"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "administered_by_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "administered_by_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "administered_by_employee_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "administered_by_employee_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "supervisor_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "supervisor_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "quality_assurance_verified_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "quality_assurance_verified"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "verification_timestamp_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "verification_timestamp"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "notifications",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Notifications",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "patient_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vaccine_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "due_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "message",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sent_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "viewed_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "recipient_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "recipient_profile_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "notification_channels",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "personalization_data",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "guardian_notification",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "guardian_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "delivery_preferences",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "language_preference",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 10,
+                    "default": "en",
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "priority",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "patient_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "patient_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "vaccine_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "due_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "due_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "message_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "message"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "recipient_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "recipient_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "recipient_profile_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "recipient_profile_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "guardian_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "guardian_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "guardian_notification_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "guardian_notification"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "language_preference_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "language_preference"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "priority_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "priority"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "patient_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "patient_id",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "due_date_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "due_date",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "profile_type_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "recipient_profile_type",
+                        "status"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "vaccine-schedules",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Vaccine Schedules",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "country",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "is_active",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "version",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": "1.0",
+                    "encrypt": false
+                },
+                {
+                    "key": "effective_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "created_by",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "name_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "country_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "country"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "is_active_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "is_active"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "effective_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "effective_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "name_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "name",
+                        "country"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "country_active_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "country",
+                        "is_active"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "name_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "name",
+                        "description"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "vaccine-schedule-items",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Vaccine Schedule Items",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "schedule_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vaccine_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "recommended_age",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "sequence_in_schedule",
+                    "type": "integer",
+                    "required": true,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "minimum_age",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "maximum_age",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "interval_from_previous",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "is_mandatory",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "schedule_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "schedule_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "vaccine_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "sequence_in_schedule_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "sequence_in_schedule"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "is_mandatory_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "is_mandatory"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "schedule_sequence_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "schedule_id",
+                        "sequence_in_schedule"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "schedule_vaccine_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "schedule_id",
+                        "vaccine_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "schedule_sequence_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "schedule_id",
+                        "sequence_in_schedule"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "notes_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "notes"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "supplementary-immunizations",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Supplementary Immunizations",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "description",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "start_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "end_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vaccine_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "target_population",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "campaign_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "target_age_min",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "target_age_max",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "target_districts",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_by",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "created_by_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_by_employee_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_by_professional_title",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "campaign_coordinators",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "approval_required",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "approved_by_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "approval_timestamp",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "name_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "name"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "vaccine_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "vaccine_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "start_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "start_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "end_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "end_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "campaign_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "campaign_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "created_by_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "created_by"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "date_range_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "start_date",
+                        "end_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "name_fulltext",
+                    "type": "fulltext",
+                    "status": "available",
+                    "attributes": [
+                        "name",
+                        "description",
+                        "target_population"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "created_by_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "created_by_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "created_by_employee_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "created_by_employee_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "approved_by_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "approved_by_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "approval_required_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "approval_required"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "approval_timestamp_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "approval_timestamp"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "patient-profiles",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Patient Profiles",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "patient_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "profile_status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_method",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "guardian_user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "access_permissions",
+                    "type": "string",
+                    "required": true,
+                    "array": true,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "notification_preferences",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "emergency_contact",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_id_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "patient_id_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "patient_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "verification_status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "verification_status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "guardian_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "guardian_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "profile_status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "profile_status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_verification_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id",
+                        "verification_status"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "employee-profiles",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Employee Profiles",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "employee_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "employee_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "professional_title",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "license_number",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "license_expiry_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "specializations",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "primary_facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_facilities",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "department",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "supervisor_user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "employment_status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "hire_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "work_schedule",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_information",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "emergency_contact",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "training_records",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "performance_metrics",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_id_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "employee_id_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "employee_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "primary_facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "primary_facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "employee_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "employee_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "employment_status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "employment_status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "supervisor_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "supervisor_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "license_expiry_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "license_expiry_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "department_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "department"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_type_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "primary_facility_id",
+                        "employee_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "status_type_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "employment_status",
+                        "employee_type"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "admin-profiles",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Admin Profiles",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "admin_level",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "system_permissions",
+                    "type": "string",
+                    "required": true,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_access_scope",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_facilities",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "security_clearance",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "mfa_enabled",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "last_security_review",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "audit_log_access",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "system_config_access",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "user_management_scope",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "backup_admin_user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "admin_notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_id_unique",
+                    "type": "unique",
+                    "status": "available",
+                    "attributes": [
+                        "user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "admin_level_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "admin_level"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "security_clearance_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "security_clearance"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_access_scope_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_access_scope"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "last_security_review_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "last_security_review"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_management_scope_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_management_scope"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "mfa_enabled_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "mfa_enabled"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "audit_log_access_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "audit_log_access"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "system_config_access_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "system_config_access"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "level_clearance_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "admin_level",
+                        "security_clearance"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "access-audit-log",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Access Audit Log",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "user_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "user_profile_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "action_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "resource_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "resource_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_context",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "session_context",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "ip_address",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 45,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "user_agent",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "success",
+                    "type": "boolean",
+                    "required": true,
+                    "array": false,
+                    "default": null
+                },
+                {
+                    "key": "error_message",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "additional_data",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "timestamp",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_profile_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_profile_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "action_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "action_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "resource_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "resource_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_context_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_context"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "timestamp_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "timestamp"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "success_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "success"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_timestamp_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_id",
+                        "timestamp"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_timestamp_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_context",
+                        "timestamp"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "action_resource_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "action_type",
+                        "resource_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "profile_type_action_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_profile_type",
+                        "action_type"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "audit-collections",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Audit Collections",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [],
+            "indexes": []
+        },
+        {
+            "$id": "role-change-log",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Role Change Log",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "target_user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "target_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "target_profile_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_by_user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_by_profile_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_by_profile_type",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "role_change_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "previous_roles",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "new_roles",
+                    "type": "string",
+                    "required": true,
+                    "array": true,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "previous_teams",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "new_teams",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_context",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "reason",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "approval_required",
+                    "type": "boolean",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                },
+                {
+                    "key": "approved_by_user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "approval_timestamp",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "effective_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "expiry_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "target_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "target_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "target_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "target_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "target_profile_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "target_profile_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "assigned_by_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "assigned_by_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "assigned_by_profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "assigned_by_profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "role_change_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "role_change_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_context_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_context"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "effective_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "effective_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "approval_required_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "approval_required"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "target_effective_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "target_user_id",
+                        "effective_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_effective_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_context",
+                        "effective_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "type_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "role_change_type",
+                        "status"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "profile-verification-workflow",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Profile Verification Workflow",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [
+                {
+                    "key": "profile_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "profile_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 30,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_method",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "initiated_by_user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_to_user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_data",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "documents_required",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "documents_submitted",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "rejection_reason",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "priority",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 10,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "due_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "completed_at",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "completed_by_user_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 36,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "workflow_steps",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": [
+                {
+                    "key": "profile_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "profile_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "profile_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "profile_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "verification_type_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "verification_type"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "status_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "assigned_to_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "assigned_to_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "priority_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "priority"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "due_date_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "due_date"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "completed_by_user_id_index",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "completed_by_user_id"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "facility_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "facility_id",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "type_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "verification_type",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "profile_type_status_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "profile_type",
+                        "status"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "assigned_priority_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "assigned_to_user_id",
+                        "priority"
+                    ],
+                    "orders": []
+                },
+                {
+                    "key": "due_date_priority_compound",
+                    "type": "key",
+                    "status": "available",
+                    "attributes": [
+                        "due_date",
+                        "priority"
+                    ],
+                    "orders": []
+                }
+            ]
+        },
+        {
+            "$id": "sync-collections",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Sync Collections",
+            "enabled": true,
+            "documentSecurity": false,
+            "attributes": [],
+            "indexes": []
+        },
+        {
+            "$id": "facilities",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "facilities",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "name",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "district",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "address",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 500,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "contact_phone",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 20,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "employee_profiles",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Employee Profiles",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "employee_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "employee_type",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "professional_title",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "license_number",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "license_expiry_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "specializations",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "primary_facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "assigned_facilities",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "department",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "employment_status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "hire_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "contact_information",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "work_schedule",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "patient_profiles",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Patient Profiles",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "user_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "patient_id",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "profile_status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_status",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "verification_method",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 50,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "access_permissions",
+                    "type": "string",
+                    "required": false,
+                    "array": true,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "notification_preferences",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 2000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "emergency_contact",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "immunization_records",
+            "$permissions": [],
+            "databaseId": "68beb588001a9f2d71dc",
+            "name": "Immunization Records",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "patient_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "vaccine_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "facility_id",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administered_by",
+                    "type": "string",
+                    "required": true,
+                    "array": false,
+                    "size": 255,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "administration_date",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "batch_number",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "expiry_date",
+                    "type": "datetime",
+                    "required": false,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "site_of_administration",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 100,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "dose_number",
+                    "type": "integer",
+                    "required": false,
+                    "array": false,
+                    "min": -9223372036854775808,
+                    "max": 9223372036854775807,
+                    "default": null
+                },
+                {
+                    "key": "notes",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "adverse_reactions",
+                    "type": "string",
+                    "required": false,
+                    "array": false,
+                    "size": 1000,
+                    "default": null,
+                    "encrypt": false
+                },
+                {
+                    "key": "created_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                },
+                {
+                    "key": "updated_at",
+                    "type": "datetime",
+                    "required": true,
+                    "array": false,
+                    "format": "",
+                    "default": null
+                }
+            ],
+            "indexes": []
+        }
+    ]
 }
