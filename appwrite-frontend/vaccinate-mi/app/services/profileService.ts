@@ -1,6 +1,7 @@
 import { adminProfilesService, employeeProfilesService, patientProfilesService } from './appwriteDatabase';
 import { AdminProfile, EmployeeProfile, PatientProfile } from '../types/appwrite';
 import { ProfileType } from '../types/profile';
+import { auditService } from './auditService';
 
 // Union type for all profiles
 export type Profile = AdminProfile | EmployeeProfile | PatientProfile;
@@ -366,7 +367,24 @@ export const profileSwitchingService = {
   // Switch to a different profile
   switchProfile: async (userId: string, targetProfileType: ProfileType): Promise<{ type: ProfileType; profile: Profile | null }> => {
     try {
-      return await detectProfileType(userId);
+      // Get current profile before switching
+      const currentProfileInfo = await detectProfileType(userId);
+      const currentProfileId = currentProfileInfo.profile?.$id;
+
+      // Perform the switch
+      const result = await detectProfileType(userId);
+
+      // Log profile switch if successful
+      if (result.profile && currentProfileId !== result.profile.$id) {
+        await auditService.logProfileSwitch(
+          userId,
+          currentProfileId || '',
+          result.profile.$id,
+          targetProfileType
+        );
+      }
+
+      return result;
     } catch (error) {
       console.error('Error switching profile:', error);
       return { type: 'patient', profile: null };

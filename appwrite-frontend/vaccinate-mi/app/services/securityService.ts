@@ -7,6 +7,7 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import { account, logAppwriteError } from './appwrite';
+import { auditService } from './auditService';
 
 // Security storage keys
 const SECURITY_KEYS = {
@@ -88,9 +89,15 @@ export class SecurityService {
         disableDeviceFallback: false,
       });
 
+      // Log biometric authentication event
+      const eventType = result.success ? 'biometric_success' : 'biometric_failure';
+      await auditService.logBiometricEvent('', result.success, eventType as any);
+
       return result.success;
     } catch (error) {
       console.error('Biometric authentication error:', error);
+      // Log biometric failure
+      await auditService.logBiometricEvent('', false, 'biometric_failure', { error: error instanceof Error ? error.message : 'Unknown error' });
       return false;
     }
   }
@@ -246,8 +253,21 @@ export class SecurityService {
       const expired = await this.isSessionExpired();
       if (expired) {
         console.log('Session expired, logging out...');
-        // Import authService here to avoid circular dependency
+
+        // Get current user context for audit logging
         const { authService } = await import('./appwriteAuth');
+        const currentUser = authService.isAuthenticated() ? await authService.getCurrentUser() : null;
+        const currentProfile = authService.getCurrentProfile();
+
+        // Log session timeout before logout
+        if (currentUser) {
+          await auditService.logSessionEvent(
+            currentUser.$id,
+            'session_timeout',
+            currentProfile?.profile.$id
+          );
+        }
+
         try {
           await authService.logout();
         } catch (error) {
@@ -317,6 +337,9 @@ export class SecurityService {
       // Create a device session or store device info
       // This could be extended to store device info in a collection
       await SecureStore.setItemAsync(SECURITY_KEYS.DEVICE_REGISTERED, 'true');
+
+      // Log device registration
+      await auditService.logDeviceEvent('', 'device_registration', deviceInfo);
 
       console.log('Device registered:', deviceInfo);
       return true;

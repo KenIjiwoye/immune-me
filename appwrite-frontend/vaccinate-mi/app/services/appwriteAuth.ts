@@ -9,6 +9,7 @@ import { ID } from 'react-native-appwrite';
 import * as SecureStore from 'expo-secure-store';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { securityService, isBiometricAuthEnabled } from './securityService';
+import { auditService } from './auditService';
 import type { AdminProfile, EmployeeProfile, PatientProfile } from '../types/appwrite';
 
 // UserSession type for authentication
@@ -212,6 +213,14 @@ export class AuthService {
       // Update security service with last activity
       await securityService.updateLastActivity();
 
+      // Log successful login
+      await auditService.logLoginSuccess(
+        user.$id,
+        profile?.profile.$id,
+        profile?.type,
+        session.$id
+      );
+
       // Check if biometric auth should be enabled for this user
       if (isBiometricAuthEnabled()) {
         const biometricCredentials = await securityService.getBiometricCredentials();
@@ -224,6 +233,13 @@ export class AuthService {
       this.notifyAuthListeners(user);
       return userSession;
     } catch (error) {
+      // Log failed login attempt
+      await auditService.logLoginFailure(
+        '', // We don't have userId for failed login, but we could try to get it from email
+        error instanceof Error ? error.message : 'Login failed',
+        { email: credentials.email }
+      );
+
       logAppwriteError(error, 'AuthService.login');
       throw error;
     }
@@ -259,7 +275,18 @@ export class AuthService {
    */
   async logout(): Promise<void> {
     try {
+      // Get current user info before logging out for audit
+      const userId = this.currentUser?.$id;
+      const profileId = this.currentProfile?.profile.$id;
+      const profileType = this.currentProfile?.type;
+      const sessionId = this.currentSession?.$id;
+
       await withRetry(() => account.deleteSession('current'));
+
+      // Log logout event
+      if (userId) {
+        await auditService.logLogout(userId, profileId, profileType, sessionId);
+      }
 
       this.currentUser = null;
       this.currentSession = null;
