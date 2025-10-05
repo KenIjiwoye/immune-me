@@ -23,7 +23,6 @@ import type {
   VaccineScheduleItem,
   AdminProfile,
   EmployeeProfile,
-  PatientProfile,
   ProfileVerificationWorkflow,
   AccessAuditLog,
   AuditCollection,
@@ -474,36 +473,71 @@ export class EmployeeProfilesService extends DatabaseService<EmployeeProfile> {
   }
 }
 
+
 /**
- * Patient Profiles Service
+ * Profile Verification Workflow Service
  */
-export class PatientProfilesService extends DatabaseService<PatientProfile> {
+export class ProfileVerificationWorkflowService extends DatabaseService<ProfileVerificationWorkflow> {
   constructor() {
-    super(COLLECTION_IDS.PATIENT_PROFILES);
+    super(COLLECTION_IDS.PROFILE_VERIFICATION_WORKFLOW);
   }
 
-  async getByUserId(userId: string): Promise<PatientProfile | null> {
-    try {
-      const result = await this.list({
-        queries: [Query.equal('user_id', userId)],
-        limit: 1,
-      });
-      return result.documents[0] || null;
-    } catch (error) {
-      return null;
-    }
+  async getByProfileId(profileId: string): Promise<ProfileVerificationWorkflow[]> {
+    const result = await this.list({
+      queries: [Query.equal('profile_id', profileId)],
+    });
+    return result.documents;
   }
 
-  async getByFacility(facilityId: string): Promise<PatientProfile[]> {
+  async getByUserId(userId: string): Promise<ProfileVerificationWorkflow[]> {
+    const result = await this.list({
+      queries: [Query.equal('user_id', userId)],
+    });
+    return result.documents;
+  }
+
+  async getByStatus(status: string): Promise<ProfileVerificationWorkflow[]> {
+    const result = await this.list({
+      queries: [Query.equal('status', status)],
+    });
+    return result.documents;
+  }
+
+  async getByAssignedUser(assignedUserId: string): Promise<ProfileVerificationWorkflow[]> {
+    const result = await this.list({
+      queries: [Query.equal('assigned_to_user_id', assignedUserId)],
+    });
+    return result.documents;
+  }
+
+  async getByFacility(facilityId: string): Promise<ProfileVerificationWorkflow[]> {
     const result = await this.list({
       queries: [Query.equal('facility_id', facilityId)],
     });
     return result.documents;
   }
 
-  async getByVerificationStatus(status: string): Promise<PatientProfile[]> {
+  async getByPriority(priority: string): Promise<ProfileVerificationWorkflow[]> {
     const result = await this.list({
-      queries: [Query.equal('verification_status', status)],
+      queries: [Query.equal('priority', priority)],
+    });
+    return result.documents;
+  }
+
+  async getPending(): Promise<ProfileVerificationWorkflow[]> {
+    const result = await this.list({
+      queries: [Query.equal('status', 'pending')],
+    });
+    return result.documents;
+  }
+
+  async getOverdue(): Promise<ProfileVerificationWorkflow[]> {
+    const now = new Date().toISOString();
+    const result = await this.list({
+      queries: [
+        Query.lessThan('due_date', now),
+        Query.notEqual('status', 'completed'),
+      ],
     });
     return result.documents;
   }
@@ -520,7 +554,7 @@ export const immunizationRecordsService = new ImmunizationRecordsService();
 export const notificationsService = new NotificationsService();
 export const adminProfilesService = new AdminProfilesService();
 export const employeeProfilesService = new EmployeeProfilesService();
-export const patientProfilesService = new PatientProfilesService();
+export const profileVerificationWorkflowService = new ProfileVerificationWorkflowService();
 
 // =============================================================================
 // UTILITY FUNCTIONS
@@ -545,8 +579,8 @@ export function getServiceByCollection(collectionName: string): DatabaseService<
       return adminProfilesService;
     case 'employee_profiles':
       return employeeProfilesService;
-    case 'patient_profiles':
-      return patientProfilesService;
+    case 'profile_verification_workflow':
+      return profileVerificationWorkflowService;
     default:
       throw new Error(`No service found for collection: ${collectionName}`);
   }
@@ -612,7 +646,7 @@ export default {
   notificationsService,
   adminProfilesService,
   employeeProfilesService,
-  patientProfilesService,
+  profileVerificationWorkflowService,
   getServiceByCollection,
   BatchOperations,
   subscribeToCollection,

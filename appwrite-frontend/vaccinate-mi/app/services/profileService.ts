@@ -1,24 +1,19 @@
-import { adminProfilesService, employeeProfilesService, patientProfilesService } from './appwriteDatabase';
-import { AdminProfile, EmployeeProfile, PatientProfile } from '../types/appwrite';
+import { adminProfilesService, employeeProfilesService } from './appwriteDatabase';
+import { AdminProfile, EmployeeProfile } from '../types/appwrite';
 import { ProfileType } from '../types/profile';
 import { auditService } from './auditService';
 
 // Union type for all profiles
-export type Profile = AdminProfile | EmployeeProfile | PatientProfile;
+export type Profile = AdminProfile | EmployeeProfile;
 
 // Profile type detection utility
 export const detectProfileType = async (userId: string): Promise<{ type: ProfileType; profile: Profile | null }> => {
   try {
     // Check all profile types in parallel
-    const [patientCheck, employeeCheck, adminCheck] = await Promise.allSettled([
-      patientProfilesService.getByUserId(userId),
+    const [employeeCheck, adminCheck] = await Promise.allSettled([
       employeeProfilesService.getByUserId(userId),
       adminProfilesService.getByUserId(userId)
     ]);
-
-    if (patientCheck.status === 'fulfilled' && patientCheck.value) {
-      return { type: 'patient', profile: patientCheck.value };
-    }
 
     if (employeeCheck.status === 'fulfilled' && employeeCheck.value) {
       return { type: 'employee', profile: employeeCheck.value };
@@ -28,10 +23,10 @@ export const detectProfileType = async (userId: string): Promise<{ type: Profile
       return { type: 'admin', profile: adminCheck.value };
     }
 
-    return { type: 'patient', profile: null }; // Default fallback
+    return { type: 'employee', profile: null }; // Default fallback
   } catch (error) {
     console.error('Error detecting profile type:', error);
-    return { type: 'patient', profile: null };
+    return { type: 'employee', profile: null };
   }
 };
 
@@ -92,10 +87,6 @@ const extractFacilityId = (profile: Profile | null): string | undefined => {
 const extractPermissions = (profile: Profile | null): string[] => {
   if (!profile) return [];
 
-  if ('access_permissions' in profile) {
-    return profile.access_permissions || [];
-  }
-
   if ('system_permissions' in profile) {
     return profile.system_permissions || [];
   }
@@ -103,43 +94,6 @@ const extractPermissions = (profile: Profile | null): string[] => {
   return [];
 };
 
-// Patient Profile Services
-export const patientProfileService = {
-  // Get patient profile by user ID
-  getByUserId: async (userId: string): Promise<PatientProfile | null> => {
-    return await patientProfilesService.getByUserId(userId);
-  },
-
-  // List patient profiles
-  list: async (params?: any) => {
-    return await patientProfilesService.list(params);
-  },
-
-  // Create patient profile
-  create: async (data: any) => {
-    return await patientProfilesService.create(data);
-  },
-
-  // Update patient profile
-  update: async (profileId: string, data: any) => {
-    return await patientProfilesService.update(profileId, data);
-  },
-
-  // Delete patient profile
-  delete: async (profileId: string) => {
-    return await patientProfilesService.delete(profileId);
-  },
-
-  // Get by facility
-  getByFacility: async (facilityId: string) => {
-    return await patientProfilesService.getByFacility(facilityId);
-  },
-
-  // Get by verification status
-  getByVerificationStatus: async (status: string) => {
-    return await patientProfilesService.getByVerificationStatus(status);
-  }
-};
 
 // Employee Profile Services
 export const employeeProfileService = {
@@ -218,10 +172,6 @@ export const profileUtils = {
   hasPermission: (profile: Profile | null, permission: string): boolean => {
     if (!profile) return false;
 
-    if ('access_permissions' in profile) {
-      return profile.access_permissions?.includes(permission as any) || false;
-    }
-
     if ('system_permissions' in profile) {
       return profile.system_permissions?.includes(permission as any) || false;
     }
@@ -232,10 +182,6 @@ export const profileUtils = {
   // Extract permissions from profile
   extractPermissions: (profile: Profile | null): string[] => {
     if (!profile) return [];
-
-    if ('access_permissions' in profile) {
-      return profile.access_permissions || [];
-    }
 
     if ('system_permissions' in profile) {
       return profile.system_permissions || [];
@@ -297,16 +243,6 @@ export const profileUtils = {
       updated_at: profile.updated_at
     };
 
-    if ('patient_id' in profile) {
-      return {
-        ...baseInfo,
-        type: 'patient',
-        patient_id: profile.patient_id,
-        verification_status: profile.verification_status,
-        profile_status: profile.profile_status
-      };
-    }
-
     if ('employee_id' in profile) {
       return {
         ...baseInfo,
@@ -339,15 +275,10 @@ export const profileSwitchingService = {
       const profiles: { type: ProfileType; profile: Profile }[] = [];
 
       // Check all profile types
-      const [patientProfile, employeeProfile, adminProfile] = await Promise.allSettled([
-        patientProfilesService.getByUserId(userId),
+      const [employeeProfile, adminProfile] = await Promise.allSettled([
         employeeProfilesService.getByUserId(userId),
         adminProfilesService.getByUserId(userId)
       ]);
-
-      if (patientProfile.status === 'fulfilled' && patientProfile.value) {
-        profiles.push({ type: 'patient', profile: patientProfile.value });
-      }
 
       if (employeeProfile.status === 'fulfilled' && employeeProfile.value) {
         profiles.push({ type: 'employee', profile: employeeProfile.value });
@@ -402,7 +333,6 @@ export const profileSwitchingService = {
 export default {
   detectProfileType,
   getUserWithProfile,
-  patient: patientProfileService,
   employee: employeeProfileService,
   admin: adminProfileService,
   utils: profileUtils,

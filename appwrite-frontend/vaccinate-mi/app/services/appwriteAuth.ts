@@ -4,13 +4,13 @@
  */
 
 import { account, logAppwriteError, withRetry } from './appwrite';
-import { adminProfilesService, employeeProfilesService, patientProfilesService } from './appwriteDatabase';
+import { adminProfilesService, employeeProfilesService } from './appwriteDatabase';
 import { ID } from 'react-native-appwrite';
 import * as SecureStore from 'expo-secure-store';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { securityService, isBiometricAuthEnabled } from './securityService';
 import { auditService } from './auditService';
-import type { AdminProfile, EmployeeProfile, PatientProfile } from '../types/appwrite';
+import type { AdminProfile, EmployeeProfile } from '../types/appwrite';
 
 // UserSession type for authentication
 export interface UserSession {
@@ -23,7 +23,7 @@ export interface UserSession {
     phoneVerification: boolean;
   };
   profile?: {
-    type: 'admin' | 'employee' | 'patient';
+    type: 'admin' | 'employee';
     profileId: string;
     facilityId?: string;
     permissions: string[];
@@ -56,7 +56,7 @@ export interface RegisterData {
   password: string;
   name: string;
   phone?: string;
-  profileType: 'admin' | 'employee' | 'patient';
+  profileType: 'admin' | 'employee';
 }
 
 export interface User {
@@ -104,8 +104,8 @@ export interface Session {
 }
 
 export interface UserProfile {
-  type: 'admin' | 'employee' | 'patient';
-  profile: AdminProfile | EmployeeProfile | PatientProfile;
+  type: 'admin' | 'employee';
+  profile: AdminProfile | EmployeeProfile;
   permissions: string[];
   facilityId?: string;
 }
@@ -344,54 +344,43 @@ export class AuthService {
   }
 
   /**
-    * Get user profile based on user ID
-    */
-   async getUserProfile(userId: string): Promise<UserProfile | null> {
-     try {
-       // Check admin profile first
-       const adminProfile = await adminProfilesService.getByUserId(userId);
-       if (adminProfile) {
-         return {
-           type: 'admin',
-           profile: adminProfile,
-           permissions: adminProfile.system_permissions || [],
-           facilityId: adminProfile.accessible_facilities?.[0],
-         };
-       }
+   * Get user profile based on user ID
+   */
+  async getUserProfile(userId: string): Promise<UserProfile | null> {
+    try {
+      // Check admin profile first
+      const adminProfile = await adminProfilesService.getByUserId(userId);
+      if (adminProfile) {
+        return {
+          type: 'admin',
+          profile: adminProfile,
+          permissions: adminProfile.system_permissions || [],
+          facilityId: adminProfile.accessible_facilities?.[0],
+        };
+      }
 
-       // Check employee profile
-       const employeeProfile = await employeeProfilesService.getByUserId(userId);
-       if (employeeProfile) {
-         return {
-           type: 'employee',
-           profile: employeeProfile,
-           permissions: [], // Employee permissions would be defined elsewhere
-           facilityId: employeeProfile.primary_facility_id,
-         };
-       }
+      // Check employee profile
+      const employeeProfile = await employeeProfilesService.getByUserId(userId);
+      if (employeeProfile) {
+        return {
+          type: 'employee',
+          profile: employeeProfile,
+          permissions: [], // Employee permissions would be defined elsewhere
+          facilityId: employeeProfile.primary_facility_id,
+        };
+      }
 
-       // Check patient profile
-       const patientProfile = await patientProfilesService.getByUserId(userId);
-       if (patientProfile) {
-         return {
-           type: 'patient',
-           profile: patientProfile,
-           permissions: patientProfile.access_permissions || [],
-           facilityId: patientProfile.facility_id,
-         };
-       }
-
-       return null;
-     } catch (error) {
-       logAppwriteError(error, 'AuthService.getUserProfile');
-       return null;
-     }
-   }
+      return null;
+    } catch (error) {
+      logAppwriteError(error, 'AuthService.getUserProfile');
+      return null;
+    }
+  }
 
    /**
     * Create user profile based on profile type
     */
-   private async createUserProfile(userId: string, profileType: 'admin' | 'employee' | 'patient'): Promise<void> {
+   private async createUserProfile(userId: string, profileType: 'admin' | 'employee'): Promise<void> {
      try {
        switch (profileType) {
          case 'admin':
@@ -423,18 +412,6 @@ export class AuthService {
              primary_facility_id: '',
              assigned_facilities: [],
              employment_status: 'active',
-             created_at: new Date().toISOString(),
-             updated_at: new Date().toISOString(),
-           });
-           break;
-
-         case 'patient':
-           await patientProfilesService.create({
-             user_id: userId,
-             profile_status: 'active',
-             verification_status: 'unverified',
-             access_permissions: ['read_own_records'],
-             facility_id: '',
              created_at: new Date().toISOString(),
              updated_at: new Date().toISOString(),
            });
@@ -1030,8 +1007,8 @@ export class RoleGuard {
   }
 
   /**
-   * Check if user can access facility data
-   */
+    * Check if user can access facility data
+    */
   static canAccessFacility(profile: UserProfile | null, facilityId: string): boolean {
     if (!profile) return false;
 
@@ -1045,10 +1022,6 @@ export class RoleGuard {
         const employeeProfile = profile.profile as EmployeeProfile;
         return employeeProfile.primary_facility_id === facilityId ||
                employeeProfile.assigned_facilities?.includes(facilityId) || false;
-
-      case 'patient':
-        const patientProfile = profile.profile as PatientProfile;
-        return patientProfile.facility_id === facilityId;
 
       default:
         return false;

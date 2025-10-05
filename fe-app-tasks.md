@@ -217,14 +217,14 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
   - Add query building and filtering
   - Set up batch operations
 
-- [ ] **FE-AW-05.2**: Implement collection-specific services
+- [x] **FE-AW-05.2**: Implement collection-specific services
   - Create `FacilitiesService`
   - Create `PatientsService`
   - Create `VaccinesService`
   - Create `ImmunizationRecordsService`
   - Create `NotificationsService`
 
-- [ ] **FE-AW-05.3**: Create Profile services
+- [x] **FE-AW-05.3**: Create Profile services
   - Implement `AdminProfilesService`
   - Implement `EmployeeProfilesService`
   - Implement `PatientProfilesService`
