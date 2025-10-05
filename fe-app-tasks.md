@@ -177,13 +177,13 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
 ### 4.2 Profile Integration
 **Priority: High | Dependencies: 4.1 | Working Dir: `appwrite-frontend/vaccinate-mi/`**
 
-- [ ] **FE-AW-04.4**: Integrate Profile system
+- [x] **FE-AW-04.4**: Integrate Profile system
   - Port Profile detection logic to `app/services/profileService.ts`
   - Set up automatic profile loading
   - Implement profile-based permissions
   - Add profile switching for multi-role users
 
-- [ ] **FE-AW-04.5**: Create role-based guards
+- [x] **FE-AW-04.5**: Create role-based guards
   - Implement route protection with Expo Router
   - Set up component-level access control
   - Add facility-based access restrictions

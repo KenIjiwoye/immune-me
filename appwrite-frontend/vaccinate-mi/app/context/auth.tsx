@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { router } from 'expo-router';
 import { authService, RoleGuard, UserSession } from '../services/appwriteAuth';
 import { ProfileType, Profile } from '../types/profile';
+import profileService from '../services/profileService';
 
 // Enhanced user type for the context
 export type UserWithProfile = {
@@ -34,6 +35,11 @@ type AuthContextType = {
   // Profile type and data
   profileType: ProfileType;
   profile: Profile | null;
+  // Profile switching for multi-role users
+  availableProfiles: { type: ProfileType; profile: Profile }[];
+  hasMultipleProfiles: boolean;
+  switchProfile: (profileType: ProfileType) => Promise<void>;
+  loadAvailableProfiles: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,6 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserWithProfile | null>(null);
   const [session, setSession] = useState<UserSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [availableProfiles, setAvailableProfiles] = useState<{ type: ProfileType; profile: Profile }[]>([]);
 
   // Load session from secure storage on app start
   useEffect(() => {
@@ -71,43 +78,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const currentUser = await authService.getCurrentUser();
       if (!currentUser) return;
 
-      // Get enhanced user with Profile data
-      const userProfile = authService.getCurrentProfile();
-      if (userProfile) {
-        const userWithProfile: UserWithProfile = {
-          $id: currentUser.$id,
-          email: currentUser.email,
-          name: currentUser.name,
-          phone: currentUser.phone,
-          emailVerification: currentUser.emailVerification,
-          phoneVerification: currentUser.phoneVerification,
-          profileType: userProfile.type,
-          profile: userProfile.profile,
-          role: userProfile.type,
-          facilityId: userProfile.facilityId,
-          permissions: userProfile.permissions,
-        };
-        setUser(userWithProfile);
-      } else {
-        // Fallback to basic user data if Profile loading fails
-        const fallbackUser: UserWithProfile = {
-          $id: currentUser.$id,
-          email: currentUser.email,
-          name: currentUser.name,
-          phone: currentUser.phone,
-          emailVerification: currentUser.emailVerification,
-          phoneVerification: currentUser.phoneVerification,
-          profileType: 'patient', // Default fallback
-          profile: null,
-          role: 'patient',
-          facilityId: undefined,
-          permissions: [],
-        };
-        setUser(fallbackUser);
-      }
+      // Get enhanced user with Profile data using the new profileService
+      const userWithProfileData = await profileService.getUserWithProfile(currentUser.$id);
+
+      const userWithProfile: UserWithProfile = {
+        $id: currentUser.$id,
+        email: currentUser.email,
+        name: currentUser.name,
+        phone: currentUser.phone,
+        emailVerification: currentUser.emailVerification,
+        phoneVerification: currentUser.phoneVerification,
+        profileType: userWithProfileData.profileType,
+        profile: userWithProfileData.profile,
+        role: userWithProfileData.role,
+        facilityId: userWithProfileData.facilityId,
+        permissions: userWithProfileData.permissions,
+      };
+      setUser(userWithProfile);
+
+      // Load available profiles for multi-role users
+      await loadAvailableProfiles();
     } catch (error) {
       console.error('Failed to load user with profile:', error);
-      throw error;
+      // Fallback to basic user data if Profile loading fails
+      try {
+        const currentUser = await authService.getCurrentUser();
+        if (currentUser) {
+          const fallbackUser: UserWithProfile = {
+            $id: currentUser.$id,
+            email: currentUser.email,
+            name: currentUser.name,
+            phone: currentUser.phone,
+            emailVerification: currentUser.emailVerification,
+            phoneVerification: currentUser.phoneVerification,
+            profileType: 'patient', // Default fallback
+            profile: null,
+            role: 'patient',
+            facilityId: undefined,
+            permissions: [],
+          };
+          setUser(fallbackUser);
+        }
+      } catch (fallbackError) {
+        console.error('Failed to load basic user data:', fallbackError);
+        throw fallbackError;
+      }
     }
   };
 
@@ -157,9 +172,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       try {
         await loadUserWithProfile();
+        await loadAvailableProfiles();
       } catch (error) {
         console.error('Failed to refresh profile:', error);
       }
+    }
+  };
+
+  // Load available profiles for multi-role users
+  const loadAvailableProfiles = async () => {
+    if (user) {
+      try {
+        const profiles = await profileService.switching.getAvailableProfiles(user.$id);
+        setAvailableProfiles(profiles);
+      } catch (error) {
+        console.error('Failed to load available profiles:', error);
+        setAvailableProfiles([]);
+      }
+    }
+  };
+
+  // Switch to a different profile
+  const switchProfile = async (profileType: ProfileType) => {
+    if (!user) return;
+
+    try {
+      setIsLoading(true);
+      const profileResult = await profileService.switching.switchProfile(user.$id, profileType);
+
+      if (profileResult.profile) {
+        const updatedUser: UserWithProfile = {
+          ...user,
+          profileType: profileResult.type,
+          profile: profileResult.profile,
+          role: profileResult.type,
+          facilityId: profileService.utils.getFacilityAccess(profileResult.profile)[0] || undefined,
+          permissions: profileService.utils.extractPermissions(profileResult.profile),
+        };
+        setUser(updatedUser);
+      }
+    } catch (error) {
+      console.error('Failed to switch profile:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -205,6 +261,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         getDisplayName,
         profileType: user?.profileType || 'patient',
         profile: user?.profile || null,
+        availableProfiles,
+        hasMultipleProfiles: availableProfiles.length > 1,
+        switchProfile,
+        loadAvailableProfiles,
       }}
     >
       {children}
