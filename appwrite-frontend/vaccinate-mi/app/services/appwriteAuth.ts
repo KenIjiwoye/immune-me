@@ -7,6 +7,8 @@ import { account, logAppwriteError, withRetry } from './appwrite';
 import { adminProfilesService, employeeProfilesService, patientProfilesService } from './appwriteDatabase';
 import { ID } from 'react-native-appwrite';
 import * as SecureStore from 'expo-secure-store';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { securityService, isBiometricAuthEnabled } from './securityService';
 import type { AdminProfile, EmployeeProfile, PatientProfile } from '../types/appwrite';
 
 // UserSession type for authentication
@@ -130,12 +132,23 @@ export class AuthService {
    */
   async initialize(): Promise<void> {
     try {
+      // Check if session has expired
+      const sessionExpired = await securityService.isSessionExpired();
+      if (sessionExpired) {
+        console.log('Session expired during initialization');
+        await this.clearStoredData();
+        await securityService.clearSecurityData();
+        return;
+      }
+
       // Try to restore session from secure storage
       const storedSession = await this.getStoredSession();
       if (storedSession) {
         this.currentSession = storedSession;
         await this.getCurrentUser();
         await this.loadStoredProfile();
+        // Update last activity since we're restoring a session
+        await securityService.updateLastActivity();
       } else {
         // Try to get current session from Appwrite
         await this.getCurrentUser();
@@ -196,6 +209,18 @@ export class AuthService {
       // Store session data securely
       await this.storeSessionData(userSession);
 
+      // Update security service with last activity
+      await securityService.updateLastActivity();
+
+      // Check if biometric auth should be enabled for this user
+      if (isBiometricAuthEnabled()) {
+        const biometricCredentials = await securityService.getBiometricCredentials();
+        if (biometricCredentials && biometricCredentials.userId === user.$id) {
+          // User has biometric enabled, we could prompt here but for now just log
+          console.log('Biometric authentication available for user');
+        }
+      }
+
       this.notifyAuthListeners(user);
       return userSession;
     } catch (error) {
@@ -242,6 +267,9 @@ export class AuthService {
 
       // Clear stored data
       await this.clearStoredData();
+
+      // Clear security data
+      await securityService.clearSecurityData();
 
       this.notifyAuthListeners(null);
     } catch (error) {
@@ -640,6 +668,9 @@ export class AuthService {
 
       this.currentProfile = profile;
 
+      // Update last activity
+      await securityService.updateLastActivity();
+
       return {
         user: {
           $id: user.$id,
@@ -671,6 +702,140 @@ export class AuthService {
     } catch (error) {
       return null;
     }
+  }
+
+  // =============================================================================
+  // BIOMETRIC AUTHENTICATION METHODS
+  // =============================================================================
+
+  /**
+   * Enable biometric authentication for current user
+   */
+  async enableBiometricAuth(): Promise<boolean> {
+    if (!this.currentUser) {
+      throw new Error('No user logged in');
+    }
+
+    return await securityService.enableBiometricAuth(this.currentUser.$id);
+  }
+
+  /**
+   * Disable biometric authentication
+   */
+  async disableBiometricAuth(): Promise<void> {
+    return await securityService.disableBiometricAuth();
+  }
+
+  /**
+   * Check if biometric authentication is available and enabled
+   */
+  async getBiometricStatus(): Promise<{
+    available: boolean;
+    enabled: boolean;
+    types: string[];
+  }> {
+    const [available, enabled, types] = await Promise.all([
+      securityService.isBiometricAvailable(),
+      securityService.isBiometricEnabled(),
+      securityService.getBiometricTypes().then(types =>
+        types.map(type => LocalAuthentication.AuthenticationType[type])
+      ),
+    ]);
+
+    return {
+      available: available && isBiometricAuthEnabled(),
+      enabled,
+      types,
+    };
+  }
+
+  /**
+   * Attempt biometric login (restore session with biometric auth)
+   */
+  async biometricLogin(): Promise<UserSession | null> {
+    try {
+      // Check if biometric is enabled
+      const biometricEnabled = await securityService.isBiometricEnabled();
+      if (!biometricEnabled || !isBiometricAuthEnabled()) {
+        return null;
+      }
+
+      // Authenticate with biometrics
+      const authenticated = await securityService.authenticateWithBiometrics('Login with biometrics');
+      if (!authenticated) {
+        return null;
+      }
+
+      // Try to restore session
+      return await this.refreshSession();
+    } catch (error) {
+      console.error('Biometric login failed:', error);
+      return null;
+    }
+  }
+
+  // =============================================================================
+  // DEVICE MANAGEMENT METHODS
+  // =============================================================================
+
+  /**
+   * Register current device
+   */
+  async registerDevice(): Promise<boolean> {
+    return await securityService.registerDevice();
+  }
+
+  /**
+   * Check if device is registered
+   */
+  async isDeviceRegistered(): Promise<boolean> {
+    return await securityService.isDeviceRegistered();
+  }
+
+  /**
+   * Get device information
+   */
+  async getDeviceInfo() {
+    return await securityService.getDeviceInfo();
+  }
+
+  // =============================================================================
+  // SESSION MANAGEMENT METHODS
+  // =============================================================================
+
+  /**
+   * Set session timeout in minutes
+   */
+  async setSessionTimeout(minutes: number): Promise<void> {
+    await securityService.setSessionTimeout(minutes);
+  }
+
+  /**
+   * Get current session timeout
+   */
+  getSessionTimeout(): number {
+    return securityService.getSessionTimeout();
+  }
+
+  /**
+   * Update last activity timestamp
+   */
+  async updateLastActivity(): Promise<void> {
+    await securityService.updateLastActivity();
+  }
+
+  /**
+   * Check if session is expired
+   */
+  async isSessionExpired(): Promise<boolean> {
+    return await securityService.isSessionExpired();
+  }
+
+  /**
+   * Get security status summary
+   */
+  async getSecurityStatus() {
+    return await securityService.getSecurityStatus();
   }
 
   // =============================================================================

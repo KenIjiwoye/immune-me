@@ -38,6 +38,13 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow VaccinateMe to use Face ID for secure authentication.",
+          "touchIDPermission": "Allow VaccinateMe to use Touch ID for secure authentication."
+        }
       ]
     ],
     "experiments": {

@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { authService, RoleGuard, UserSession } from '../services/appwriteAuth';
 import { ProfileType, Profile } from '../types/profile';
 import profileService from '../services/profileService';
+import { initializeSecurity } from '../services/securityService';
 
 // Enhanced user type for the context
 export type UserWithProfile = {
@@ -40,6 +41,17 @@ type AuthContextType = {
   hasMultipleProfiles: boolean;
   switchProfile: (profileType: ProfileType) => Promise<void>;
   loadAvailableProfiles: () => Promise<void>;
+  // Security methods
+  enableBiometricAuth: () => Promise<boolean>;
+  disableBiometricAuth: () => Promise<void>;
+  getBiometricStatus: () => Promise<{ available: boolean; enabled: boolean; types: string[] }>;
+  biometricLogin: () => Promise<UserSession | null>;
+  registerDevice: () => Promise<boolean>;
+  isDeviceRegistered: () => Promise<boolean>;
+  setSessionTimeout: (minutes: number) => Promise<void>;
+  getSessionTimeout: () => number;
+  updateLastActivity: () => Promise<void>;
+  getSecurityStatus: () => Promise<any>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -54,6 +66,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        // Initialize security service first
+        await initializeSecurity();
+
         await authService.initialize();
 
         // Try to refresh session and get current user
@@ -246,6 +261,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Security methods
+  const enableBiometricAuth = async (): Promise<boolean> => {
+    return await authService.enableBiometricAuth();
+  };
+
+  const disableBiometricAuth = async (): Promise<void> => {
+    return await authService.disableBiometricAuth();
+  };
+
+  const getBiometricStatus = async () => {
+    return await authService.getBiometricStatus();
+  };
+
+  const biometricLogin = async (): Promise<UserSession | null> => {
+    const session = await authService.biometricLogin();
+    if (session) {
+      setSession(session);
+      await loadUserWithProfile();
+    }
+    return session;
+  };
+
+  const registerDevice = async (): Promise<boolean> => {
+    return await authService.registerDevice();
+  };
+
+  const isDeviceRegistered = async (): Promise<boolean> => {
+    return await authService.isDeviceRegistered();
+  };
+
+  const setSessionTimeout = async (minutes: number): Promise<void> => {
+    return await authService.setSessionTimeout(minutes);
+  };
+
+  const getSessionTimeout = (): number => {
+    return authService.getSessionTimeout();
+  };
+
+  const updateLastActivity = async (): Promise<void> => {
+    return await authService.updateLastActivity();
+  };
+
+  const getSecurityStatus = async () => {
+    return await authService.getSecurityStatus();
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -265,6 +326,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         hasMultipleProfiles: availableProfiles.length > 1,
         switchProfile,
         loadAvailableProfiles,
+        enableBiometricAuth,
+        disableBiometricAuth,
+        getBiometricStatus,
+        biometricLogin,
+        registerDevice,
+        isDeviceRegistered,
+        setSessionTimeout,
+        getSessionTimeout,
+        updateLastActivity,
+        getSecurityStatus,
       }}
     >
       {children}

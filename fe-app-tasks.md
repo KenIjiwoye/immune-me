@@ -192,7 +192,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
 ### 4.3 Security Features
 **Priority: High | Dependencies: 4.1 | Working Dir: `appwrite-frontend/vaccinate-mi/`**
 
-- [ ] **FE-AW-04.6**: Implement security features
+- [x] **FE-AW-04.6**: Implement security features
   - Add biometric authentication (if enabled)
   - Set up session timeout handling
   - Implement secure token storage with expo-secure-store
