@@ -211,7 +211,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
 ### 5.1 Core Database Layer
 **Priority: Critical | Dependencies: 2.1, 3.1 | Working Dir: `appwrite-frontend/vaccinate-mi/`**
 
-- [ ] **FE-AW-05.1**: Create generic database service
+- [x] **FE-AW-05.1**: Create generic database service
   - Port `frontend/services/appwriteDatabase.ts` to `app/services/appwriteDatabase.ts`
   - Implement CRUD operations base class
   - Add query building and filtering
