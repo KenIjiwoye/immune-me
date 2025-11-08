@@ -288,7 +288,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
 ### 6.2 Advanced Query Features
 **Priority: Medium | Dependencies: 6.1 | Working Dir: `appwrite-frontend/vaccinate-mi/`**
 
-- [ ] **FE-AW-06.4**: Implement infinite queries
+- [x] **FE-AW-06.4**: Implement infinite queries
   - Set up infinite scrolling for patient lists
   - Add infinite loading for immunization records
   - Create paginated facility browsing
