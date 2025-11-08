@@ -168,6 +168,152 @@ export const validateDataIntegrity = {
   },
 };
 
+// =============================================================================
+// ENHANCED ERROR FORMATTING UTILITIES
+// =============================================================================
+
+/**
+ * Enhanced error formatting utilities for better user experience
+ */
+export const errorFormatting = {
+  /**
+   * Format field-specific validation errors for form display
+   */
+  formatFieldErrors: (errors: Record<string, string>): Record<string, string> => {
+    const formatted: Record<string, string> = {};
+
+    Object.entries(errors).forEach(([field, message]) => {
+      // Convert field names to user-friendly labels
+      const fieldLabel = field
+        .split('.')
+        .map(part => part.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()))
+        .join(' ');
+
+      formatted[field] = `${fieldLabel}: ${message}`;
+    });
+
+    return formatted;
+  },
+
+  /**
+   * Create user-friendly error messages from technical errors
+   */
+  createUserMessage: (error: any, context?: string): string => {
+    // Handle Zod validation errors
+    if (error.errors) {
+      const errorCount = error.errors.length;
+      if (errorCount === 1) {
+        return `Please correct the following error: ${error.errors[0].message}`;
+      }
+      return `Please correct the ${errorCount} validation errors below.`;
+    }
+
+    // Handle Appwrite errors
+    if (error.code) {
+      switch (error.code) {
+        case 400:
+          return 'Invalid data provided. Please check your input and try again.';
+        case 401:
+          return 'Your session has expired. Please log in again.';
+        case 403:
+          return 'You do not have permission to perform this action.';
+        case 404:
+          return 'The requested item was not found.';
+        case 409:
+          return 'This item has been modified by someone else. Please refresh and try again.';
+        case 429:
+          return 'Too many requests. Please wait a moment and try again.';
+        case 500:
+          return 'Server error occurred. Please try again later.';
+        default:
+          return error.message || 'An unexpected error occurred. Please try again.';
+      }
+    }
+
+    // Handle network errors
+    if (error.name === 'NetworkError' || error.message?.includes('network')) {
+      return 'Network connection error. Please check your internet connection and try again.';
+    }
+
+    // Handle timeout errors
+    if (error.name === 'TimeoutError' || error.message?.includes('timeout')) {
+      return 'Request timed out. Please try again.';
+    }
+
+    // Default fallback
+    return error.message || 'An unexpected error occurred. Please try again.';
+  },
+
+  /**
+   * Group errors by severity for better display
+   */
+  groupErrorsBySeverity: (errors: Record<string, string>): {
+    critical: Record<string, string>;
+    warning: Record<string, string>;
+    info: Record<string, string>;
+  } => {
+    const critical: Record<string, string> = {};
+    const warning: Record<string, string> = {};
+    const info: Record<string, string> = {};
+
+    Object.entries(errors).forEach(([field, message]) => {
+      // Simple heuristic: errors mentioning "required" are critical
+      if (message.toLowerCase().includes('required') ||
+          message.toLowerCase().includes('must') ||
+          message.toLowerCase().includes('cannot be empty')) {
+        critical[field] = message;
+      }
+      // Format errors are warnings
+      else if (message.toLowerCase().includes('format') ||
+               message.toLowerCase().includes('invalid')) {
+        warning[field] = message;
+      }
+      // Everything else is info
+      else {
+        info[field] = message;
+      }
+    });
+
+    return { critical, warning, info };
+  },
+
+  /**
+   * Create summary message for multiple errors
+   */
+  createErrorSummary: (errors: Record<string, string>): string => {
+    const errorCount = Object.keys(errors).length;
+
+    if (errorCount === 0) return '';
+
+    if (errorCount === 1) {
+      return 'Please correct the error below.';
+    }
+
+    const criticalCount = Object.values(errors).filter(msg =>
+      msg.toLowerCase().includes('required') ||
+      msg.toLowerCase().includes('must')
+    ).length;
+
+    if (criticalCount > 0) {
+      return `Please correct the ${errorCount} errors below, including ${criticalCount} required field${criticalCount > 1 ? 's' : ''}.`;
+    }
+
+    return `Please correct the ${errorCount} errors below.`;
+  },
+
+  /**
+   * Sanitize error messages for security (remove sensitive information)
+   */
+  sanitizeErrorMessage: (message: string): string => {
+    // Remove potential sensitive information
+    return message
+      .replace(/\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b/g, '[CARD NUMBER]') // Credit cards
+      .replace(/\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/g, '[SSN]') // SSN
+      .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL]') // Email
+      .replace(/\b\d{10,15}\b/g, '[PHONE]'); // Phone numbers
+  }
+};
+
 // Export validation result types
 export type ValidationResult<T> = { success: true; data: T } | { success: false; errors: Record<string, string> };
 export type IntegrityCheckResult = { valid: boolean; errors: string[] };
