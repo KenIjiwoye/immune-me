@@ -100,6 +100,17 @@ export const invalidateVaccineRelated = (vaccineId: string) => {
   queryClient.invalidateQueries({ queryKey: queryKeys.immunizationRecords.byVaccine(vaccineId) });
 };
 
+/**
+ * Invalidate immunization record-specific queries when a record is modified
+ */
+export const invalidateImmunizationRecordRelated = (recordId: string) => {
+  // Invalidate immunization record detail
+  queryClient.invalidateQueries({ queryKey: queryKeys.immunizationRecords.detail(recordId) });
+
+  // Invalidate related patient records (if patient queries need refresh)
+  // Note: Patient-specific invalidation would be handled by patient-related functions
+};
+
 // =============================================================================
 // OPTIMISTIC UPDATE UTILITIES
 // =============================================================================

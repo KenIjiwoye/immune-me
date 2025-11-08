@@ -273,7 +273,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
   - Implement cache invalidation strategies
   - Add offline query persistence
 
-- [ ] **FE-AW-06.2**: Create core entity hooks
+- [x] **FE-AW-06.2**: Create core entity hooks
   - Implement `useFacilities` hooks in `app/hooks/useFacilities.ts`
   - Create `usePatients` hooks in `app/hooks/usePatients.ts`
   - Build `useVaccines` hooks in `app/hooks/useVaccines.ts`
