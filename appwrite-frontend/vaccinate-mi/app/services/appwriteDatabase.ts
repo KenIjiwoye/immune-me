@@ -4,12 +4,54 @@
  */
 
 import { databases, APPWRITE_CONFIG, COLLECTION_IDS, logAppwriteError, withRetry } from './appwrite';
-import { createQuery } from '../utils/queries';
+import { createQuery, buildFilterQueries, buildDateRangeQuery, buildGeoLocationQuery, buildSearchQuery } from '../utils/queries';
 import { Query, ID } from 'react-native-appwrite';
 import type {
   AppwriteDocument,
   QueryResponse,
 } from '../types/appwrite';
+
+// Advanced search and filter types
+export interface SearchOptions {
+  query?: string;
+  fields?: string[];
+  limit?: number;
+  offset?: number;
+}
+
+export interface AdvancedFilter {
+  field: string;
+  operator: 'equal' | 'notEqual' | 'lessThan' | 'greaterThan' | 'lessThanEqual' | 'greaterThanEqual' | 'search' | 'between' | 'isNull' | 'isNotNull' | 'startsWith' | 'endsWith' | 'contains';
+  value?: any;
+  values?: any[];
+}
+
+export interface AdvancedSearchOptions {
+  filters?: AdvancedFilter[];
+  search?: SearchOptions;
+  dateRange?: {
+    field: string;
+    start?: Date | string;
+    end?: Date | string;
+  };
+  geoLocation?: {
+    field: string;
+    lat: number;
+    lng: number;
+    radius?: number;
+  };
+  sortBy?: {
+    field: string;
+    order: 'ASC' | 'DESC';
+  };
+  limit?: number;
+  offset?: number;
+}
+
+export interface LogicalOperator {
+  type: 'AND' | 'OR';
+  conditions: (AdvancedFilter | LogicalOperator)[];
+}
 
 // Collection Types (fresh from Appwrite Cloud)
 import type {
@@ -155,6 +197,133 @@ export class DatabaseService<T extends AppwriteDocument> {
   }
 
   /**
+   * Advanced search with multiple criteria
+   */
+  async advancedSearch(options: AdvancedSearchOptions): Promise<QueryResponse<T>> {
+    try {
+      const queries: string[] = [];
+
+      // Add filters
+      if (options.filters && options.filters.length > 0) {
+        const filterQueries = buildFilterQueries(options.filters.map(filter => ({
+          field: filter.field,
+          operator: filter.operator,
+          value: filter.value,
+          values: filter.values,
+        })));
+        queries.push(...filterQueries);
+      }
+
+      // Add search
+      if (options.search?.query && options.search.fields) {
+        const searchQueries = options.search.fields.map(field =>
+          buildSearchQuery(field, options.search!.query!)
+        );
+        queries.push(...searchQueries);
+      }
+
+      // Add date range
+      if (options.dateRange) {
+        const dateQueries = buildDateRangeQuery(
+          options.dateRange.field,
+          options.dateRange.start,
+          options.dateRange.end
+        );
+        queries.push(...dateQueries);
+      }
+
+      // Add geolocation
+      if (options.geoLocation) {
+        const geoQueries = buildGeoLocationQuery(
+          options.geoLocation.field,
+          options.geoLocation.lat,
+          options.geoLocation.lng,
+          options.geoLocation.radius
+        );
+        queries.push(...geoQueries);
+      }
+
+      // Add sorting
+      if (options.sortBy) {
+        queries.push(
+          options.sortBy.order === 'ASC'
+            ? Query.orderAsc(options.sortBy.field)
+            : Query.orderDesc(options.sortBy.field)
+        );
+      }
+
+      // Add pagination
+      if (options.limit) {
+        queries.push(Query.limit(options.limit));
+      }
+      if (options.offset) {
+        queries.push(Query.offset(options.offset));
+      }
+
+      const result = await withRetry(() =>
+        databases.listDocuments(this.databaseId, this.collectionId, queries)
+      );
+
+      return {
+        total: result.total,
+        documents: result.documents as unknown as T[],
+      };
+    } catch (error) {
+      logAppwriteError(error, `DatabaseService.advancedSearch - Collection: ${this.collectionId}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Search with logical operators (AND/OR)
+   */
+  async searchWithLogicalOperators(logicalOp: LogicalOperator, limit: number = 25): Promise<QueryResponse<T>> {
+    try {
+      const queries = this.buildLogicalQueries(logicalOp);
+      queries.push(Query.limit(limit));
+
+      const result = await withRetry(() =>
+        databases.listDocuments(this.databaseId, this.collectionId, queries)
+      );
+
+      return {
+        total: result.total,
+        documents: result.documents as unknown as T[],
+      };
+    } catch (error) {
+      logAppwriteError(error, `DatabaseService.searchWithLogicalOperators - Collection: ${this.collectionId}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Build queries from logical operators
+   */
+  private buildLogicalQueries(logicalOp: LogicalOperator): string[] {
+    const queries: string[] = [];
+
+    for (const condition of logicalOp.conditions) {
+      if ('type' in condition) {
+        // It's a nested logical operator
+        const nestedQueries = this.buildLogicalQueries(condition);
+        queries.push(...nestedQueries);
+      } else {
+        // It's a filter
+        const filter = condition as AdvancedFilter;
+        const filterQuery = buildFilterQueries([{
+          field: filter.field,
+          operator: filter.operator,
+          value: filter.value,
+          values: filter.values,
+        }]);
+        queries.push(...filterQuery);
+      }
+    }
+
+    return queries;
+  }
+
+  /**
    * Count documents with optional filters
    */
   async count(queries?: string[]): Promise<number> {
@@ -234,6 +403,57 @@ export class FacilitiesService extends DatabaseService<Facility> {
   async searchByName(name: string): Promise<Facility[]> {
     return this.search(name, ['name'], 10);
   }
+
+  /**
+   * Advanced search for facilities
+   */
+  async advancedSearch(options: AdvancedSearchOptions): Promise<QueryResponse<Facility>> {
+    return this.advancedSearch(options);
+  }
+
+  /**
+   * Search facilities by location (geospatial)
+   */
+  async searchByLocation(lat: number, lng: number, radiusKm: number = 10): Promise<Facility[]> {
+    const result = await this.advancedSearch({
+      geoLocation: {
+        field: 'location', // Assuming facilities have a location field
+        lat,
+        lng,
+        radius: radiusKm,
+      },
+      limit: 20,
+    });
+    return result.documents;
+  }
+
+  /**
+   * Search facilities with multiple criteria
+   */
+  async searchFacilities(criteria: {
+    name?: string;
+    district?: string;
+    contactPhone?: string;
+    limit?: number;
+  }): Promise<Facility[]> {
+    const filters: AdvancedFilter[] = [];
+
+    if (criteria.name) {
+      filters.push({ field: 'name', operator: 'search', value: criteria.name });
+    }
+    if (criteria.district) {
+      filters.push({ field: 'district', operator: 'equal', value: criteria.district });
+    }
+    if (criteria.contactPhone) {
+      filters.push({ field: 'contact_phone', operator: 'startsWith', value: criteria.contactPhone });
+    }
+
+    const result = await this.advancedSearch({
+      filters,
+      limit: criteria.limit || 25,
+    });
+    return result.documents;
+  }
 }
 
 /**
@@ -269,6 +489,76 @@ export class PatientsService extends DatabaseService<Patient> {
     });
     return result.documents;
   }
+
+  /**
+   * Advanced search for patients
+   */
+  async advancedSearch(options: AdvancedSearchOptions): Promise<QueryResponse<Patient>> {
+    return this.advancedSearch(options);
+  }
+
+  /**
+   * Search patients by multiple criteria
+   */
+  async searchPatients(criteria: {
+    name?: string;
+    district?: string;
+    facilityId?: string;
+    healthWorkerId?: string;
+    dateOfBirthRange?: { start?: Date | string; end?: Date | string };
+    limit?: number;
+  }): Promise<Patient[]> {
+    const filters: AdvancedFilter[] = [];
+
+    if (criteria.name) {
+      filters.push({ field: 'full_name', operator: 'search', value: criteria.name });
+    }
+    if (criteria.district) {
+      filters.push({ field: 'district', operator: 'equal', value: criteria.district });
+    }
+    if (criteria.facilityId) {
+      filters.push({ field: 'facility_id', operator: 'equal', value: criteria.facilityId });
+    }
+    if (criteria.healthWorkerId) {
+      filters.push({ field: 'health_worker_id', operator: 'equal', value: criteria.healthWorkerId });
+    }
+
+    const result = await this.advancedSearch({
+      filters,
+      dateRange: criteria.dateOfBirthRange ? {
+        field: 'date_of_birth',
+        start: criteria.dateOfBirthRange.start,
+        end: criteria.dateOfBirthRange.end,
+      } : undefined,
+      limit: criteria.limit || 50,
+    });
+    return result.documents;
+  }
+
+  /**
+   * Get patients by age range
+   */
+  async getByAgeRange(minAge?: number, maxAge?: number, limit: number = 50): Promise<Patient[]> {
+    const now = new Date();
+    const filters: AdvancedFilter[] = [];
+
+    if (maxAge !== undefined) {
+      const maxBirthDate = new Date(now.getFullYear() - maxAge, now.getMonth(), now.getDate());
+      filters.push({ field: 'date_of_birth', operator: 'greaterThanEqual', value: maxBirthDate.toISOString() });
+    }
+
+    if (minAge !== undefined) {
+      const minBirthDate = new Date(now.getFullYear() - minAge, now.getMonth(), now.getDate());
+      filters.push({ field: 'date_of_birth', operator: 'lessThanEqual', value: minBirthDate.toISOString() });
+    }
+
+    const result = await this.advancedSearch({
+      filters,
+      sortBy: { field: 'date_of_birth', order: 'DESC' },
+      limit,
+    });
+    return result.documents;
+  }
 }
 
 /**
@@ -293,6 +583,66 @@ export class VaccinesService extends DatabaseService<Vaccine> {
   async getByAgeGroup(ageGroup: string): Promise<Vaccine[]> {
     const result = await this.list({
       queries: [Query.equal('age_group', ageGroup)],
+    });
+    return result.documents;
+  }
+
+  /**
+   * Advanced search for vaccines
+   */
+  async advancedSearch(options: AdvancedSearchOptions): Promise<QueryResponse<Vaccine>> {
+    return this.advancedSearch(options);
+  }
+
+  /**
+   * Search vaccines with multiple criteria
+   */
+  async searchVaccines(criteria: {
+    name?: string;
+    disease?: string;
+    manufacturer?: string;
+    ageGroup?: string;
+    isActive?: boolean;
+    limit?: number;
+  }): Promise<Vaccine[]> {
+    const filters: AdvancedFilter[] = [];
+
+    if (criteria.name) {
+      filters.push({ field: 'name', operator: 'search', value: criteria.name });
+    }
+    if (criteria.disease) {
+      filters.push({ field: 'disease_targeted', operator: 'search', value: criteria.disease });
+    }
+    if (criteria.manufacturer) {
+      filters.push({ field: 'manufacturer', operator: 'search', value: criteria.manufacturer });
+    }
+    if (criteria.ageGroup) {
+      filters.push({ field: 'age_group', operator: 'equal', value: criteria.ageGroup });
+    }
+    if (criteria.isActive !== undefined) {
+      filters.push({ field: 'is_active', operator: 'equal', value: criteria.isActive });
+    }
+
+    const result = await this.advancedSearch({
+      filters,
+      limit: criteria.limit || 25,
+    });
+    return result.documents;
+  }
+
+  /**
+   * Get vaccines by multiple diseases
+   */
+  async getByDiseases(diseases: string[]): Promise<Vaccine[]> {
+    const filters: AdvancedFilter[] = diseases.map(disease => ({
+      field: 'disease_targeted',
+      operator: 'search',
+      value: disease,
+    }));
+
+    const result = await this.advancedSearch({
+      filters,
+      limit: 50,
     });
     return result.documents;
   }
@@ -349,6 +699,91 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
     }
 
     const result = await this.list({ queries });
+    return result.documents;
+  }
+
+  /**
+   * Advanced search for immunization records
+   */
+  async advancedSearch(options: AdvancedSearchOptions): Promise<QueryResponse<ImmunizationRecord>> {
+    return this.advancedSearch(options);
+  }
+
+  /**
+   * Search immunization records with multiple criteria
+   */
+  async searchImmunizationRecords(criteria: {
+    patientId?: string;
+    vaccineId?: string;
+    facilityId?: string;
+    administeredBy?: string;
+    batchNumber?: string;
+    dateRange?: { start?: Date | string; end?: Date | string };
+    limit?: number;
+  }): Promise<ImmunizationRecord[]> {
+    const filters: AdvancedFilter[] = [];
+
+    if (criteria.patientId) {
+      filters.push({ field: 'patient_id', operator: 'equal', value: criteria.patientId });
+    }
+    if (criteria.vaccineId) {
+      filters.push({ field: 'vaccine_id', operator: 'equal', value: criteria.vaccineId });
+    }
+    if (criteria.facilityId) {
+      filters.push({ field: 'facility_id', operator: 'equal', value: criteria.facilityId });
+    }
+    if (criteria.administeredBy) {
+      filters.push({ field: 'administered_by', operator: 'search', value: criteria.administeredBy });
+    }
+    if (criteria.batchNumber) {
+      filters.push({ field: 'batch_number', operator: 'equal', value: criteria.batchNumber });
+    }
+
+    const result = await this.advancedSearch({
+      filters,
+      dateRange: criteria.dateRange ? {
+        field: 'administration_date',
+        start: criteria.dateRange.start,
+        end: criteria.dateRange.end,
+      } : undefined,
+      sortBy: { field: 'administration_date', order: 'DESC' },
+      limit: criteria.limit || 100,
+    });
+    return result.documents;
+  }
+
+  /**
+   * Get immunization records by multiple vaccines
+   */
+  async getByVaccines(vaccineIds: string[]): Promise<ImmunizationRecord[]> {
+    const filters: AdvancedFilter[] = vaccineIds.map(vaccineId => ({
+      field: 'vaccine_id',
+      operator: 'equal',
+      value: vaccineId,
+    }));
+
+    const result = await this.advancedSearch({
+      filters,
+      sortBy: { field: 'administration_date', order: 'DESC' },
+      limit: 200,
+    });
+    return result.documents;
+  }
+
+  /**
+   * Get overdue immunizations
+   */
+  async getOverdueImmunizations(asOfDate?: Date | string): Promise<ImmunizationRecord[]> {
+    const cutoffDate = asOfDate ? new Date(asOfDate).toISOString() : new Date().toISOString();
+
+    const result = await this.advancedSearch({
+      filters: [
+        { field: 'administration_date', operator: 'lessThan', value: cutoffDate },
+        { field: 'administration_date', operator: 'isNotNull', value: null },
+      ],
+      sortBy: { field: 'administration_date', order: 'ASC' },
+      limit: 100,
+    });
     return result.documents;
   }
 }
@@ -555,6 +990,176 @@ export const notificationsService = new NotificationsService();
 export const adminProfilesService = new AdminProfilesService();
 export const employeeProfilesService = new EmployeeProfilesService();
 export const profileVerificationWorkflowService = new ProfileVerificationWorkflowService();
+
+// =============================================================================
+// ADVANCED QUERY UTILITIES
+// =============================================================================
+
+/**
+ * Build complex queries with multiple search criteria
+ */
+export function buildComplexQuery(options: {
+  searchTerms?: string[];
+  searchFields?: string[];
+  filters?: AdvancedFilter[];
+  dateRange?: { field: string; start?: Date | string; end?: Date | string };
+  geoLocation?: { field: string; lat: number; lng: number; radius?: number };
+  sortBy?: { field: string; order: 'ASC' | 'DESC' };
+  limit?: number;
+  offset?: number;
+}): string[] {
+  const queries: string[] = [];
+
+  // Multi-field search
+  if (options.searchTerms && options.searchFields) {
+    for (const term of options.searchTerms) {
+      for (const field of options.searchFields) {
+        queries.push(buildSearchQuery(field, term));
+      }
+    }
+  }
+
+  // Filters
+  if (options.filters) {
+    const filterQueries = buildFilterQueries(options.filters.map(filter => ({
+      field: filter.field,
+      operator: filter.operator,
+      value: filter.value,
+      values: filter.values,
+    })));
+    queries.push(...filterQueries);
+  }
+
+  // Date range
+  if (options.dateRange) {
+    const dateQueries = buildDateRangeQuery(
+      options.dateRange.field,
+      options.dateRange.start,
+      options.dateRange.end
+    );
+    queries.push(...dateQueries);
+  }
+
+  // Geolocation
+  if (options.geoLocation) {
+    const geoQueries = buildGeoLocationQuery(
+      options.geoLocation.field,
+      options.geoLocation.lat,
+      options.geoLocation.lng,
+      options.geoLocation.radius
+    );
+    queries.push(...geoQueries);
+  }
+
+  // Sorting
+  if (options.sortBy) {
+    queries.push(
+      options.sortBy.order === 'ASC'
+        ? Query.orderAsc(options.sortBy.field)
+        : Query.orderDesc(options.sortBy.field)
+    );
+  }
+
+  // Pagination
+  if (options.limit) {
+    queries.push(Query.limit(options.limit));
+  }
+  if (options.offset) {
+    queries.push(Query.offset(options.offset));
+  }
+
+  return queries;
+}
+
+/**
+ * Create a query builder for fluent API
+ */
+export class QueryBuilder {
+  private queries: string[] = [];
+
+  constructor(private collectionId: string) {}
+
+  /**
+   * Add search query
+   */
+  search(field: string, value: string): QueryBuilder {
+    this.queries.push(buildSearchQuery(field, value));
+    return this;
+  }
+
+  /**
+   * Add filter query
+   */
+  filter(filter: AdvancedFilter): QueryBuilder {
+    const filterQueries = buildFilterQueries([{
+      field: filter.field,
+      operator: filter.operator,
+      value: filter.value,
+      values: filter.values,
+    }]);
+    this.queries.push(...filterQueries);
+    return this;
+  }
+
+  /**
+   * Add date range query
+   */
+  dateRange(field: string, start?: Date | string, end?: Date | string): QueryBuilder {
+    const dateQueries = buildDateRangeQuery(field, start, end);
+    this.queries.push(...dateQueries);
+    return this;
+  }
+
+  /**
+   * Add geolocation query
+   */
+  geoLocation(field: string, lat: number, lng: number, radius?: number): QueryBuilder {
+    const geoQueries = buildGeoLocationQuery(field, lat, lng, radius);
+    this.queries.push(...geoQueries);
+    return this;
+  }
+
+  /**
+   * Add sorting
+   */
+  sortBy(field: string, order: 'ASC' | 'DESC' = 'ASC'): QueryBuilder {
+    this.queries.push(
+      order === 'ASC' ? Query.orderAsc(field) : Query.orderDesc(field)
+    );
+    return this;
+  }
+
+  /**
+   * Add pagination
+   */
+  paginate(limit?: number, offset?: number): QueryBuilder {
+    if (limit) this.queries.push(Query.limit(limit));
+    if (offset) this.queries.push(Query.offset(offset));
+    return this;
+  }
+
+  /**
+   * Get the built queries
+   */
+  build(): string[] {
+    return [...this.queries];
+  }
+
+  /**
+   * Execute the query
+   */
+  async execute<T extends AppwriteDocument>(): Promise<QueryResponse<T>> {
+    const service = new DatabaseService<T>(this.collectionId);
+    return service.list({ queries: this.queries });
+  }
+}
+
+/**
+ * Create a query builder instance
+ */
+export function createQueryBuilder(collectionId: string): QueryBuilder {
+  return new QueryBuilder(collectionId);
+}
 
 // =============================================================================
 // UTILITY FUNCTIONS
