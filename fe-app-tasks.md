@@ -267,7 +267,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
 ### 6.1 Core Query Setup
 **Priority: High | Dependencies: 5.1 | Working Dir: `appwrite-frontend/vaccinate-mi/`**
 
-- [ ] **FE-AW-06.1**: Set up React Query configuration
+- [x] **FE-AW-06.1**: Set up React Query configuration
   - Configure QueryClient in `app/context/queryClient.tsx`
   - Set up query key factories in `app/hooks/queryKeys.ts`
   - Implement cache invalidation strategies

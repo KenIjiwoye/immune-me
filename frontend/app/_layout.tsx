@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from '../context/auth';
 import { ActivityIndicator, View, Platform } from 'react-native';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider, queryClient } from '../context/queryClient';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
@@ -22,9 +22,6 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>;
 }
-
-// Create a client
-const queryClient = new QueryClient();
 
 // System UI configuration component
 function SystemUIConfig() {
