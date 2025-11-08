@@ -279,7 +279,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
   - Build `useVaccines` hooks in `app/hooks/useVaccines.ts`
   - Add `useImmunizationRecords` hooks in `app/hooks/useImmunizationRecords.ts`
 
-- [ ] **FE-AW-06.3**: Create Profile hooks
+- [x] **FE-AW-06.3**: Create Profile hooks
   - Port `frontend/hooks/useProfiles.ts` to `app/hooks/useProfiles.ts`
   - Implement Profile-specific queries
   - Add Profile mutation hooks
