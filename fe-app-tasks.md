@@ -239,7 +239,7 @@ All tasks will be performed within `appwrite-frontend/vaccinate-mi/` directory.
   - Implement date range queries
   - Add geolocation-based queries
 
-- [ ] **FE-AW-05.5**: Create relationship management
+- [x] **FE-AW-05.5**: Create relationship management
   - Implement patient-immunization linking
   - Set up facility-employee relationships
   - Create user-profile associations
