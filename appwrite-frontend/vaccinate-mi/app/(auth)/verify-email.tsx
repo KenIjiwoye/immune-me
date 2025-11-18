@@ -12,8 +12,8 @@ import {
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authService } from '../services/appwriteAuth';
-import { verifyEmailSchema, type VerifyEmailFormData } from '../schemas/auth';
+import { authService } from '@/services/appwriteAuth';
+import { verifyEmailSchema, type VerifyEmailFormData } from '@/schemas/auth';
 
 export default function VerifyEmailScreen() {
   const [isLoading, setIsLoading] = useState(false);

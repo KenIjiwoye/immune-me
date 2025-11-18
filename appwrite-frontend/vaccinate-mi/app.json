@@ -45,7 +45,8 @@
           "faceIDPermission": "Allow VaccinateMe to use Face ID for secure authentication.",
           "touchIDPermission": "Allow VaccinateMe to use Touch ID for secure authentication."
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,

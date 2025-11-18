@@ -13,9 +13,9 @@ import {
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authService } from '../services/appwriteAuth';
-import { registerSchema, type RegisterFormData } from '../schemas/auth';
-import { ProfileType } from '../types/profile';
+import { authService } from '@/services/appwriteAuth';
+import { registerSchema, type RegisterFormData } from '@/schemas/auth';
+import { ProfileType } from '@/types/profile';
 
 export default function RegisterScreen() {
   const [isLoading, setIsLoading] = useState(false);

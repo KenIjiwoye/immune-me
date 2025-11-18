@@ -13,8 +13,8 @@ import {
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { authService } from '../services/appwriteAuth';
-import { forgotPasswordSchema, type ForgotPasswordFormData } from '../schemas/auth';
+import { authService } from '@/services/appwriteAuth';
+import { forgotPasswordSchema, type ForgotPasswordFormData } from '@/schemas/auth';
 
 export default function ForgotPasswordScreen() {
   const [isLoading, setIsLoading] = useState(false);

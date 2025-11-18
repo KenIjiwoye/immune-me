@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { AuthGuard } from '../utils/guards';
+import { AuthGuard } from '@/utils/guards';
 
 export default function TabLayout() {
   return (

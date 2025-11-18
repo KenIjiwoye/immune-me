@@ -991,9 +991,9 @@ export const adminProfilesService = new AdminProfilesService();
 export const employeeProfilesService = new EmployeeProfilesService();
 export const profileVerificationWorkflowService = new ProfileVerificationWorkflowService();
 
-// Import and export relationship service
-import { relationshipService, RelationshipService, validateRelationshipData } from './relationshipService';
-export { relationshipService, RelationshipService, validateRelationshipData };
+// Import and export relationship service (using lazy initialization to avoid circular dependency)
+import { getRelationshipService, RelationshipService, validateRelationshipData } from './relationshipService';
+export { getRelationshipService, RelationshipService, validateRelationshipData };
 
 // =============================================================================
 // ADVANCED QUERY UTILITIES
@@ -1256,7 +1256,9 @@ export default {
   adminProfilesService,
   employeeProfilesService,
   profileVerificationWorkflowService,
-  relationshipService,
+  get relationshipService() {
+    return getRelationshipService();
+  },
   getServiceByCollection,
   BatchOperations,
   subscribeToCollection,

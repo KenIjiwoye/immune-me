@@ -13,8 +13,8 @@ import {
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '../context/auth';
-import { loginSchema, type LoginFormData } from '../schemas/auth';
+import { useAuth } from '@/context/auth';
+import { loginSchema, type LoginFormData } from '@/schemas/auth';
 
 export default function LoginScreen() {
   const { login, isLoading } = useAuth();

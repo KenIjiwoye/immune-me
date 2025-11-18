@@ -792,10 +792,28 @@ export class RelationshipService {
 }
 
 // =============================================================================
-// SERVICE INSTANCE
+// SERVICE INSTANCE (Lazy initialization to avoid circular dependency)
 // =============================================================================
 
-export const relationshipService = new RelationshipService();
+let relationshipServiceInstance: RelationshipService | null = null;
+
+/**
+ * Get the singleton instance of RelationshipService
+ * Uses lazy initialization to avoid circular dependency with DatabaseService
+ */
+export function getRelationshipService(): RelationshipService {
+  if (!relationshipServiceInstance) {
+    relationshipServiceInstance = new RelationshipService();
+  }
+  return relationshipServiceInstance;
+}
+
+// Maintain backward compatibility with object property access
+export const relationshipService = {
+  get instance(): RelationshipService {
+    return getRelationshipService();
+  }
+};
 
 // =============================================================================
 // UTILITY FUNCTIONS
@@ -841,5 +859,6 @@ export function validateRelationshipData(data: any, relationshipType: string): {
 export default {
   RelationshipService,
   relationshipService,
+  getRelationshipService,
   validateRelationshipData,
 };
