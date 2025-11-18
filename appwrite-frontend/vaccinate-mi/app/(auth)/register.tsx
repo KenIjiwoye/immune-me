@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import { Layout, Text, Input, Button, Spinner, Radio, RadioGroup, CheckBox } from '@ui-kitten/components';
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -73,6 +70,10 @@ export default function RegisterScreen() {
     },
   ];
 
+  const renderLoadingIndicator = () => (
+    <Spinner size="small" status="control" />
+  );
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -82,118 +83,87 @@ export default function RegisterScreen() {
         contentContainerStyle={{
           flexGrow: 1,
           padding: 20,
-          backgroundColor: '#fff',
+          backgroundColor: '#ffffff',
         }}
       >
-        <View style={{ alignItems: 'center', marginBottom: 32 }}>
-          <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#333', marginBottom: 8 }}>
+        <Layout style={{ alignItems: 'center', marginBottom: 32 }} level="1">
+          <Text category="h1" style={{ marginBottom: 8 }}>
             Create Account
           </Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center' }}>
+          <Text category="s1" appearance="hint" style={{ textAlign: 'center' }}>
             Join our healthcare platform
           </Text>
-        </View>
+        </Layout>
 
         {/* Profile Type Selection */}
-        <View style={{ marginBottom: 24 }}>
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 12 }}>
+        <Layout style={{ marginBottom: 24 }} level="1">
+          <Text category="label" style={{ marginBottom: 12 }}>
             I am a...
           </Text>
           <Controller
             control={control}
             name="profileType"
             render={({ field: { onChange, value } }) => (
-              <View style={{ gap: 8 }}>
+              <RadioGroup
+                selectedIndex={profileTypeOptions.findIndex(opt => opt.value === value)}
+                onChange={index => onChange(profileTypeOptions[index].value)}
+              >
                 {profileTypeOptions.map((option) => (
-                  <TouchableOpacity
+                  <Radio
                     key={option.value}
-                    style={{
-                      borderWidth: 2,
-                      borderColor: value === option.value ? '#3b82f6' : '#d1d5db',
-                      borderRadius: 8,
-                      padding: 16,
-                      backgroundColor: value === option.value ? '#eff6ff' : '#fff',
-                    }}
-                    onPress={() => onChange(option.value)}
+                    style={{ marginBottom: 8 }}
                   >
-                    <Text style={{
-                      fontSize: 16,
-                      fontWeight: '600',
-                      color: value === option.value ? '#3b82f6' : '#333',
-                      marginBottom: 4,
-                    }}>
-                      {option.label}
-                    </Text>
-                    <Text style={{
-                      fontSize: 14,
-                      color: value === option.value ? '#1d4ed8' : '#666',
-                    }}>
-                      {option.description}
-                    </Text>
-                  </TouchableOpacity>
+                    {() => (
+                      <Layout style={{ marginLeft: 8, flex: 1 }} level="1">
+                        <Text category="s1" style={{ marginBottom: 4 }}>
+                          {option.label}
+                        </Text>
+                        <Text category="c1" appearance="hint">
+                          {option.description}
+                        </Text>
+                      </Layout>
+                    )}
+                  </Radio>
                 ))}
-              </View>
+              </RadioGroup>
             )}
           />
           {errors.profileType && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 8 }}>
+            <Text status="danger" category="c1" style={{ marginTop: 8 }}>
               {errors.profileType.message}
             </Text>
           )}
-        </View>
+        </Layout>
 
         {/* Name Field */}
-        <View style={{ marginBottom: 16 }}>
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 8 }}>
-            Full Name
-          </Text>
+        <Layout style={{ marginBottom: 16 }} level="1">
           <Controller
             control={control}
             name="name"
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.name ? '#ef4444' : '#d1d5db',
-                  borderRadius: 8,
-                  padding: 12,
-                  fontSize: 16,
-                  backgroundColor: '#fff',
-                }}
+              <Input
+                label="Full Name"
                 placeholder="Enter your full name"
                 value={value}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 autoCapitalize="words"
                 autoCorrect={false}
+                status={errors.name ? 'danger' : 'basic'}
+                caption={errors.name?.message}
               />
             )}
           />
-          {errors.name && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 4 }}>
-              {errors.name.message}
-            </Text>
-          )}
-        </View>
+        </Layout>
 
         {/* Email Field */}
-        <View style={{ marginBottom: 16 }}>
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 8 }}>
-            Email
-          </Text>
+        <Layout style={{ marginBottom: 16 }} level="1">
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.email ? '#ef4444' : '#d1d5db',
-                  borderRadius: 8,
-                  padding: 12,
-                  fontSize: 16,
-                  backgroundColor: '#fff',
-                }}
+              <Input
+                label="Email"
                 placeholder="Enter your email"
                 value={value}
                 onBlur={onBlur}
@@ -201,34 +171,21 @@ export default function RegisterScreen() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
+                status={errors.email ? 'danger' : 'basic'}
+                caption={errors.email?.message}
               />
             )}
           />
-          {errors.email && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 4 }}>
-              {errors.email.message}
-            </Text>
-          )}
-        </View>
+        </Layout>
 
         {/* Password Field */}
-        <View style={{ marginBottom: 16 }}>
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 8 }}>
-            Password
-          </Text>
+        <Layout style={{ marginBottom: 16 }} level="1">
           <Controller
             control={control}
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.password ? '#ef4444' : '#d1d5db',
-                  borderRadius: 8,
-                  padding: 12,
-                  fontSize: 16,
-                  backgroundColor: '#fff',
-                }}
+              <Input
+                label="Password"
                 placeholder="Create a password"
                 value={value}
                 onBlur={onBlur}
@@ -236,34 +193,21 @@ export default function RegisterScreen() {
                 secureTextEntry
                 autoCapitalize="none"
                 autoCorrect={false}
+                status={errors.password ? 'danger' : 'basic'}
+                caption={errors.password?.message}
               />
             )}
           />
-          {errors.password && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 4 }}>
-              {errors.password.message}
-            </Text>
-          )}
-        </View>
+        </Layout>
 
         {/* Confirm Password Field */}
-        <View style={{ marginBottom: 24 }}>
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 8 }}>
-            Confirm Password
-          </Text>
+        <Layout style={{ marginBottom: 24 }} level="1">
           <Controller
             control={control}
             name="confirmPassword"
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.confirmPassword ? '#ef4444' : '#d1d5db',
-                  borderRadius: 8,
-                  padding: 12,
-                  fontSize: 16,
-                  backgroundColor: '#fff',
-                }}
+              <Input
+                label="Confirm Password"
                 placeholder="Confirm your password"
                 value={value}
                 onBlur={onBlur}
@@ -271,108 +215,86 @@ export default function RegisterScreen() {
                 secureTextEntry
                 autoCapitalize="none"
                 autoCorrect={false}
+                status={errors.confirmPassword ? 'danger' : 'basic'}
+                caption={errors.confirmPassword?.message}
               />
             )}
           />
-          {errors.confirmPassword && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 4 }}>
-              {errors.confirmPassword.message}
-            </Text>
-          )}
-        </View>
+        </Layout>
 
         {/* Terms and Conditions */}
-        <View style={{ marginBottom: 24 }}>
+        <Layout style={{ marginBottom: 24 }} level="1">
           <Controller
             control={control}
             name="acceptTerms"
             render={({ field: { onChange, value } }) => (
-              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                <TouchableOpacity
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderWidth: 2,
-                    borderColor: errors.acceptTerms ? '#ef4444' : '#d1d5db',
-                    borderRadius: 4,
-                    marginRight: 12,
-                    marginTop: 2,
-                    backgroundColor: value ? '#3b82f6' : '#fff',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                  onPress={() => onChange(!value)}
-                >
-                  {value && (
-                    <Text style={{ color: '#fff', fontSize: 12, fontWeight: 'bold' }}>✓</Text>
-                  )}
-                </TouchableOpacity>
-                <Text style={{ flex: 1, fontSize: 14, color: '#666', lineHeight: 20 }}>
-                  I agree to the{' '}
-                  <Text style={{ color: '#3b82f6' }}>Terms and Conditions</Text>
-                  {' '}and{' '}
-                  <Text style={{ color: '#3b82f6' }}>Privacy Policy</Text>
-                </Text>
-              </View>
+              <CheckBox
+                checked={value}
+                onChange={checked => onChange(checked)}
+                status={errors.acceptTerms ? 'danger' : 'basic'}
+              >
+                {() => (
+                  <Text category="c1" appearance="hint" style={{ flex: 1, marginLeft: 8 }}>
+                    I agree to the{' '}
+                    <Text status="primary">Terms and Conditions</Text>
+                    {' '}and{' '}
+                    <Text status="primary">Privacy Policy</Text>
+                  </Text>
+                )}
+              </CheckBox>
             )}
           />
           {errors.acceptTerms && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 8 }}>
+            <Text status="danger" category="c1" style={{ marginTop: 8 }}>
               {errors.acceptTerms.message}
             </Text>
           )}
-        </View>
+        </Layout>
 
         {/* Error Display */}
         {error && (
-          <View style={{
-            backgroundColor: '#fef2f2',
-            borderColor: '#fecaca',
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 16,
-          }}>
-            <Text style={{ color: '#dc2626', fontSize: 14 }}>
+          <Layout
+            style={{
+              backgroundColor: '#fef2f2',
+              borderColor: '#fecaca',
+              borderWidth: 1,
+              borderRadius: 8,
+              padding: 12,
+              marginBottom: 16,
+            }}
+            level="1"
+          >
+            <Text status="danger">
               {error}
             </Text>
-          </View>
+          </Layout>
         )}
 
         {/* Register Button */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: isLoading ? '#9ca3af' : '#3b82f6',
-            borderRadius: 8,
-            padding: 16,
-            alignItems: 'center',
-            marginBottom: 24,
-          }}
+        <Button
+          style={{ marginBottom: 24 }}
           onPress={handleSubmit(onSubmit)}
           disabled={isLoading}
+          accessoryLeft={isLoading ? renderLoadingIndicator : undefined}
         >
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
-              Create Account
-            </Text>
-          )}
-        </TouchableOpacity>
+          {isLoading ? 'Creating Account...' : 'Create Account'}
+        </Button>
 
         {/* Link to Login */}
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ color: '#666', fontSize: 14 }}>
-            Already have an account?{' '}
-          </Text>
-          <Link href="/(auth)/login" asChild>
-            <TouchableOpacity>
-              <Text style={{ color: '#3b82f6', fontSize: 14, fontWeight: '600' }}>
-                Sign In
-              </Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
+        <Layout style={{ alignItems: 'center' }} level="1">
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text appearance="hint" category="c1">
+              Already have an account?{' '}
+            </Text>
+            <Link href="/(auth)/login" asChild>
+              <TouchableOpacity>
+                <Text status="primary" category="c1" style={{ fontWeight: '600' }}>
+                  Sign In
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+        </Layout>
       </ScrollView>
     </KeyboardAvoidingView>
   );

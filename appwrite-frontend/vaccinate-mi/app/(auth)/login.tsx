@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native';
+import { Layout, Text, Input, Button, Spinner } from '@ui-kitten/components';
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -39,6 +35,10 @@ export default function LoginScreen() {
     }
   };
 
+  const renderLoadingIndicator = () => (
+    <Spinner size="small" status="control" />
+  );
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -49,36 +49,26 @@ export default function LoginScreen() {
           flexGrow: 1,
           justifyContent: 'center',
           padding: 20,
-          backgroundColor: '#fff',
+          backgroundColor: '#ffffff',
         }}
       >
-        <View style={{ alignItems: 'center', marginBottom: 40 }}>
-          <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#333', marginBottom: 8 }}>
+        <Layout style={{ alignItems: 'center', marginBottom: 40 }} level="1">
+          <Text category="h1" style={{ marginBottom: 8 }}>
             Welcome Back
           </Text>
-          <Text style={{ fontSize: 16, color: '#666', textAlign: 'center' }}>
+          <Text category="s1" appearance="hint" style={{ textAlign: 'center' }}>
             Sign in to your account
           </Text>
-        </View>
+        </Layout>
 
-        <View style={{ marginBottom: 20 }}>
+        <Layout style={{ marginBottom: 20 }} level="1">
           {/* Email Field */}
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 8 }}>
-            Email
-          </Text>
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.email ? '#ef4444' : '#d1d5db',
-                  borderRadius: 8,
-                  padding: 12,
-                  fontSize: 16,
-                  backgroundColor: '#fff',
-                }}
+              <Input
+                label="Email"
                 placeholder="Enter your email"
                 value={value}
                 onBlur={onBlur}
@@ -86,34 +76,21 @@ export default function LoginScreen() {
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
+                status={errors.email ? 'danger' : 'basic'}
+                caption={errors.email?.message}
               />
             )}
           />
-          {errors.email && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 4 }}>
-              {errors.email.message}
-            </Text>
-          )}
-        </View>
+        </Layout>
 
-        <View style={{ marginBottom: 24 }}>
+        <Layout style={{ marginBottom: 24 }} level="1">
           {/* Password Field */}
-          <Text style={{ fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 8 }}>
-            Password
-          </Text>
           <Controller
             control={control}
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderColor: errors.password ? '#ef4444' : '#d1d5db',
-                  borderRadius: 8,
-                  padding: 12,
-                  fontSize: 16,
-                  backgroundColor: '#fff',
-                }}
+              <Input
+                label="Password"
                 placeholder="Enter your password"
                 value={value}
                 onBlur={onBlur}
@@ -121,76 +98,65 @@ export default function LoginScreen() {
                 secureTextEntry
                 autoCapitalize="none"
                 autoCorrect={false}
+                status={errors.password ? 'danger' : 'basic'}
+                caption={errors.password?.message}
               />
             )}
           />
-          {errors.password && (
-            <Text style={{ color: '#ef4444', fontSize: 14, marginTop: 4 }}>
-              {errors.password.message}
-            </Text>
-          )}
-        </View>
+        </Layout>
 
         {/* Error Display */}
         {error && (
-          <View style={{
-            backgroundColor: '#fef2f2',
-            borderColor: '#fecaca',
-            borderWidth: 1,
-            borderRadius: 8,
-            padding: 12,
-            marginBottom: 16,
-          }}>
-            <Text style={{ color: '#dc2626', fontSize: 14 }}>
+          <Layout
+            style={{
+              backgroundColor: '#fef2f2',
+              borderColor: '#fecaca',
+              borderWidth: 1,
+              borderRadius: 8,
+              padding: 12,
+              marginBottom: 16,
+            }}
+            level="1"
+          >
+            <Text status="danger">
               {error}
             </Text>
-          </View>
+          </Layout>
         )}
 
         {/* Login Button */}
-        <TouchableOpacity
-          style={{
-            backgroundColor: isLoading ? '#9ca3af' : '#3b82f6',
-            borderRadius: 8,
-            padding: 16,
-            alignItems: 'center',
-            marginBottom: 16,
-          }}
+        <Button
+          style={{ marginBottom: 16 }}
           onPress={handleSubmit(onSubmit)}
           disabled={isLoading}
+          accessoryLeft={isLoading ? renderLoadingIndicator : undefined}
         >
-          {isLoading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
-              Sign In
-            </Text>
-          )}
-        </TouchableOpacity>
+          {isLoading ? 'Signing In...' : 'Sign In'}
+        </Button>
 
         {/* Links */}
-        <View style={{ alignItems: 'center', gap: 12 }}>
+        <Layout style={{ alignItems: 'center', gap: 12 }} level="1">
           <Link href="/(auth)/forgot-password" asChild>
             <TouchableOpacity>
-              <Text style={{ color: '#3b82f6', fontSize: 14 }}>
+              <Text status="primary" category="c1">
                 Forgot Password?
               </Text>
             </TouchableOpacity>
           </Link>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: '#666', fontSize: 14 }}>
+          <Layout style={{ flexDirection: 'row', alignItems: 'center' }} level="1">
+            <Text appearance="hint" category="c1">
               Don't have an account?{' '}
             </Text>
             <Link href="/(auth)/register" asChild>
               <TouchableOpacity>
-                <Text style={{ color: '#3b82f6', fontSize: 14, fontWeight: '600' }}>
+                <Text status="primary" category="c1" style={{ fontWeight: '600' }}>
                   Sign Up
                 </Text>
               </TouchableOpacity>
             </Link>
-          </View>
-        </View>
+          </Layout>
+        </Layout>
       </ScrollView>
     </KeyboardAvoidingView>
   );
