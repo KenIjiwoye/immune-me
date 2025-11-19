@@ -9,11 +9,11 @@ import { Layout, Text, Input, Button, Spinner } from '@ui-kitten/components';
 import { Link, router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/context/auth';
+import { authService } from '@/services/appwriteAuth';
 import { loginSchema, type LoginFormData } from '@/schemas/auth';
 
 export default function LoginScreen() {
-  const { login, isLoading } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -27,11 +27,19 @@ export default function LoginScreen() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setError(null);
-      await login(data.email, data.password);
-      // Navigation is handled by the auth context
+      setIsLoading(true);
+      
+      // Use the auth service directly for login
+      await authService.login({ email: data.email, password: data.password });
+      
+      // Navigate to main app after successful login
+      router.replace('/(tabs)');
+      
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed';
       setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 

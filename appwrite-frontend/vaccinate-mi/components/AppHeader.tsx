@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-import { Layout, Text, TopNavigation, Icon, TopNavigationAction } from '@ui-kitten/components';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Layout, Text, TopNavigation, Icon } from '@ui-kitten/components';
 
 interface AppHeaderProps {
   userName: string;
@@ -19,15 +19,16 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   hasNotifications = false,
   onNotificationPress,
 }) => {
-  const NotificationIcon = (props: any) => (
-    <View style={styles.notificationContainer}>
-      <Icon name="bell-outline" fill={props?.fill || '#8F9BB3'} style={{ width: 24, height: 24 }} />
-      {hasNotifications && <View style={styles.notificationBadge} />}
-    </View>
-  );
-
-  const renderNotificationAction = () => (
-    <TopNavigationAction icon={NotificationIcon} onPress={onNotificationPress} />
+  const renderNotificationButton = () => (
+    <TouchableOpacity
+      onPress={onNotificationPress}
+      style={styles.notificationButton}
+    >
+      <View style={styles.notificationContainer}>
+        <Icon name="bell-outline" fill="#8F9BB3" style={styles.notificationIcon} />
+        {hasNotifications && <View style={styles.notificationBadge} />}
+      </View>
+    </TouchableOpacity>
   );
 
   const renderTitle = () => (
@@ -52,7 +53,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     <Layout level="1" style={styles.container}>
       <TopNavigation
         title={renderTitle}
-        accessoryRight={renderNotificationAction}
+        accessoryRight={renderNotificationButton}
         style={styles.topNavigation}
       />
       <Text category="h4" style={styles.greeting}>
@@ -92,8 +93,15 @@ const styles = StyleSheet.create({
   userName: {
     fontWeight: 'bold',
   },
+  notificationButton: {
+    padding: 8,
+  },
   notificationContainer: {
     position: 'relative',
+  },
+  notificationIcon: {
+    width: 24,
+    height: 24,
   },
   notificationBadge: {
     position: 'absolute',
