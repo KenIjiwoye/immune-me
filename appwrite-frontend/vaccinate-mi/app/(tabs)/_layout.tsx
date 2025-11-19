@@ -6,7 +6,16 @@ import { AuthGuard } from '@/utils/guards';
 export default function TabLayout() {
   return (
     <AuthGuard>
-      <Tabs>
+      <Tabs screenOptions={{ headerShown: false, 
+        tabBarStyle: {
+          backgroundColor: '#ffffff',
+          height: 60,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingBottom: 5,
+          paddingTop: 5,
+        }
+       }} >
       <Tabs.Screen
         name="index"
         options={{

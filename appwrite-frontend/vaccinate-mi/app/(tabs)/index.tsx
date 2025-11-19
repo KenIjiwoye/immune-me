@@ -1,5 +1,6 @@
 import { ScrollView, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Layout, Text, Card, Icon } from '@ui-kitten/components';
+import { Layout, Text, Card } from '@ui-kitten/components';
+import { Ionicons } from '@expo/vector-icons';
 import { AppHeader } from '@/components/AppHeader';
 
 export default function Index() {
@@ -29,14 +30,14 @@ export default function Index() {
     </Card>
   );
 
-  const renderQuickAction = (iconName: string, label: string, action: string) => (
+  const renderQuickAction = (iconName: keyof typeof Ionicons.glyphMap, label: string, action: string) => (
     <TouchableOpacity
       style={styles.quickActionCard}
       onPress={() => handleQuickAction(action)}
       key={action}
     >
       <View style={styles.quickActionIconContainer}>
-        <Icon name={iconName} style={styles.quickActionIcon} fill="#3366FF" />
+        <Ionicons name={iconName} size={28} color="#3366FF" />
       </View>
       <Text category="s2" style={styles.quickActionLabel}>
         {label}
@@ -44,14 +45,14 @@ export default function Index() {
     </TouchableOpacity>
   );
 
-  const renderForYouItem = (iconName: string, title: string, description: string, action: string) => (
+  const renderForYouItem = (iconName: keyof typeof Ionicons.glyphMap, title: string, description: string, action: string) => (
     <TouchableOpacity
       style={styles.listItem}
       onPress={() => handleForYouPress(action)}
       key={action}
     >
       <View style={styles.listItemIcon}>
-        <Icon name={iconName} style={styles.icon} fill="#3366FF" />
+        <Ionicons name={iconName} size={24} color="#3366FF" />
       </View>
       <View style={styles.listItemContent}>
         <Text category="s1">{title}</Text>
@@ -59,14 +60,14 @@ export default function Index() {
           {description}
         </Text>
       </View>
-      <Icon name="chevron-right-outline" style={styles.chevronIcon} fill="#8F9BB3" />
+      <Ionicons name="chevron-forward-outline" size={20} color="#8F9BB3" />
     </TouchableOpacity>
   );
 
-  const renderActivityItem = (iconName: string, iconColor: string, iconBg: string, message: string, time: string) => (
+  const renderActivityItem = (iconName: keyof typeof Ionicons.glyphMap, iconColor: string, iconBg: string, message: string, time: string) => (
     <View style={styles.activityItem} key={time}>
       <View style={[styles.activityIcon, { backgroundColor: iconBg }]}>
-        <Icon name={iconName} style={styles.activityIconImage} fill={iconColor} />
+        <Ionicons name={iconName} size={24} color={iconColor} />
       </View>
       <View style={styles.activityContent}>
         <Text category="s2">{message}</Text>
@@ -104,7 +105,7 @@ export default function Index() {
           <View style={styles.quickActionsGrid}>
             {renderQuickAction('search-outline', 'Search Patient', 'search')}
             {renderQuickAction('camera-outline', 'Scan Vaccine', 'scan')}
-            {renderQuickAction('file-add-outline', 'Add Record', 'add')}
+            {renderQuickAction('document-text-outline', 'Add Record', 'add')}
           </View>
         </Layout>
 
@@ -216,10 +217,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  quickActionIcon: {
-    width: 28,
-    height: 28,
-  },
   quickActionLabel: {
     textAlign: 'center',
     fontWeight: 'bold',
@@ -245,14 +242,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 4,
   },
-  icon: {
-    width: 24,
-    height: 24,
-  },
-  chevronIcon: {
-    width: 20,
-    height: 20,
-  },
   activityContainer: {
     paddingHorizontal: 16,
     gap: 12,
@@ -269,10 +258,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  activityIconImage: {
-    width: 24,
-    height: 24,
   },
   activityContent: {
     flex: 1,

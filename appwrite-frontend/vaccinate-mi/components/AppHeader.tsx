@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Layout, Text, TopNavigation, Icon } from '@ui-kitten/components';
+import { Layout, Text, TopNavigation } from '@ui-kitten/components';
+import { Ionicons } from '@expo/vector-icons';
 
 interface AppHeaderProps {
   userName: string;
@@ -25,7 +26,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       style={styles.notificationButton}
     >
       <View style={styles.notificationContainer}>
-        <Icon name="bell-outline" fill="#8F9BB3" style={styles.notificationIcon} />
+        <Ionicons name="notifications-outline" size={24} color="#8F9BB3" />
         {hasNotifications && <View style={styles.notificationBadge} />}
       </View>
     </TouchableOpacity>
@@ -98,10 +99,6 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     position: 'relative',
-  },
-  notificationIcon: {
-    width: 24,
-    height: 24,
   },
   notificationBadge: {
     position: 'absolute',
