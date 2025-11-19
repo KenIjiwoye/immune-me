@@ -124,7 +124,7 @@ export default function PatientDetails() {
             title="Edit Patient"
             onPress={() => {
               setMenuVisible(false);
-              router.push(`/(tabs)/(patients)/edit/${patient.id}`);
+              router.push({ pathname: '/(tabs)/(patients)/edit', params: { id: patient.id } });
             }}
           />
         </OverflowMenu>

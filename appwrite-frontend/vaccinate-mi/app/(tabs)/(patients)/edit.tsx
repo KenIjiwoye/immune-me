@@ -6,11 +6,13 @@ import {
 } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { IndexPath } from '@ui-kitten/components';
 import ImmunizationForm from '../../../components/patients/ImmunizationForm';
 
 export default function PatientEdit() {
+  const { id } = useLocalSearchParams();
+
   const patient = {
     name: 'Eleanor Pena',
     dob: '05/12/1986',

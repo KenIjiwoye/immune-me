@@ -21,10 +21,16 @@ interface InitialData {
 }
 
 interface PatientData {
-  name: string;
-  dob: string;
+  name?: string;
+  dob?: string;
   patientId: string;
-  avatar: string;
+  avatar?: string;
+  vaccineType?: IndexPath;
+  dateAdministered?: Date;
+  facility?: string;
+  batchNumber?: string;
+  nextDoseDate?: Date;
+  notes?: string;
 }
 
 interface Props {
