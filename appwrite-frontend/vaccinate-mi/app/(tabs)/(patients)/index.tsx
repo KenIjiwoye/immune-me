@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Layout, Text, Input, Button } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 interface Patient {
   id: string;
@@ -15,6 +16,7 @@ interface Patient {
 
 export default function Patients() {
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   const patients: Patient[] = [
     {
@@ -52,10 +54,12 @@ export default function Patients() {
 
   const handlePatientPress = (patient: Patient) => {
     console.log('Patient pressed:', patient.name);
+    router.push(`/(tabs)/(patients)/123`);
   };
 
   const handleAddPatient = () => {
     console.log('Add patient pressed');
+    router.push('/(tabs)/(patients)/new');
   };
 
   const handleFilterPress = () => {
