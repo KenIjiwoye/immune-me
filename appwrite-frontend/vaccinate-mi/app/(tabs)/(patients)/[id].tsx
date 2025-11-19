@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Layout, Text } from '@ui-kitten/components';
+import { Layout, Text, OverflowMenu, MenuItem } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
@@ -14,6 +14,8 @@ interface Immunization {
 
 export default function PatientDetails() {
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const patient = {
     id: 'PA-738491',
@@ -61,9 +63,6 @@ export default function PatientDetails() {
     router.back();
   };
 
-  const handleMenu = () => {
-    console.log('Menu pressed');
-  };
 
   const handleAddRecord = () => {
     console.log('Add record pressed');
@@ -110,9 +109,25 @@ export default function PatientDetails() {
         <Text category="h6" style={styles.headerTitle}>
           {patient.name}
         </Text>
-        <TouchableOpacity style={styles.headerButton} onPress={handleMenu}>
-          <Ionicons name="ellipsis-vertical" size={24} color="#8F9BB3" />
-        </TouchableOpacity>
+        <OverflowMenu
+          anchor={(props) => (
+            <TouchableOpacity {...props} style={styles.headerButton} onPress={() => setMenuVisible(!menuVisible)}>
+              <Ionicons name="ellipsis-vertical" size={24} color="#8F9BB3" />
+            </TouchableOpacity>
+          )}
+          visible={menuVisible}
+          onBackdropPress={() => setMenuVisible(false)}
+          placement="bottom end"
+          fullWidth={false}
+        >
+          <MenuItem
+            title="Edit Patient"
+            onPress={() => {
+              setMenuVisible(false);
+              router.push(`/(tabs)/(patients)/edit/${patient.id}`);
+            }}
+          />
+        </OverflowMenu>
       </Layout>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
