@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ImmunizationForm from '../../../../components/patients/ImmunizationForm';
 import {
   View,
@@ -10,41 +10,21 @@ import {
 import { Layout, Text, IndexPath } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { immunizationRecordsService } from '../../../../services/immunizationRecordsService';
-import { patientsService } from '../../../../services/patientsService';
+import { useImmunization, useUpdateImmunization } from '../../../../hooks/useImmunizations';
+import { usePatient } from '../../../../hooks/usePatients';
 import { ImmunizationRecord, Patient } from '../../../../types/appwrite';
 
 const vaccines = ['COVID-19 (Pfizer)', 'Influenza', 'MMR'];
 
 export default function EditImmunization() {
   const params = useLocalSearchParams<{ id: string }>();
-  const [loading, setLoading] = useState(true);
-  const [immunization, setImmunization] = useState<ImmunizationRecord | null>(null);
-  const [patient, setPatient] = useState<Patient | null>(null);
 
-  useEffect(() => {
-    if (params.id) {
-      loadImmunization();
-    }
-  }, [params.id]);
+  // Use React Query hooks
+  const { data: immunization, isLoading: immunizationLoading, isError: immunizationError } = useImmunization(params.id);
+  const updateImmunizationMutation = useUpdateImmunization();
 
-  const loadImmunization = async () => {
-    try {
-      setLoading(true);
-      const record = await immunizationRecordsService.get(params.id);
-      setImmunization(record);
-
-      // Load patient details
-      const patientData = await patientsService.get(record.patient_id);
-      setPatient(patientData);
-    } catch (error) {
-      console.error('Failed to load immunization:', error);
-      Alert.alert('Error', 'Failed to load immunization record');
-      router.back();
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch patient details only when immunization data is available
+  const { data: patient, isLoading: patientLoading } = usePatient(immunization?.patient_id || '');
 
   const handleBack = () => {
     router.back();
@@ -62,7 +42,7 @@ export default function EditImmunization() {
         updated_at: new Date().toISOString(),
       };
 
-      await immunizationRecordsService.update(params.id, updatedData);
+      await updateImmunizationMutation.mutateAsync({ id: params.id, data: updatedData });
 
       Alert.alert('Success', 'Immunization record updated successfully', [
         {
@@ -70,13 +50,13 @@ export default function EditImmunization() {
           onPress: () => router.back(),
         },
       ]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to update immunization record:', error);
       Alert.alert('Error', 'Failed to update record. Please try again.');
     }
   };
 
-  if (loading) {
+  if (immunizationLoading || (immunization && patientLoading)) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -98,7 +78,7 @@ export default function EditImmunization() {
     );
   }
 
-  if (!immunization || !patient) {
+  if (immunizationError || !immunization || !patient) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -122,6 +102,7 @@ export default function EditImmunization() {
       </Layout>
     );
   }
+
 
   // Map vaccine ID to vaccine index (this is a placeholder)
   // TODO: Implement proper vaccine mapping

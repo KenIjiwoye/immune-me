@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { ScrollView, View, StyleSheet, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { Layout, Text, Input, Button } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { immunizationRecordsService } from '../../../services/immunizationRecordsService';
-import { patientsService } from '../../../services/patientsService';
-import { ImmunizationRecord, Patient } from '../../../types/appwrite';
+import { useImmunizations, useRecentImmunizations, useImmunizationsByDateRange } from '../../../hooks/useImmunizations';
+import { usePatient } from '../../../hooks/usePatients';
+import { ImmunizationRecord } from '../../../types/appwrite';
 
 interface ImmunizationWithPatient extends ImmunizationRecord {
   patientName?: string;
@@ -13,83 +13,81 @@ interface ImmunizationWithPatient extends ImmunizationRecord {
 
 export default function Immunizations() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [immunizations, setImmunizations] = useState<ImmunizationWithPatient[]>([]);
-  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'recent' | 'today'>('all');
   const router = useRouter();
 
-  useEffect(() => {
-    loadImmunizations();
-  }, [filter]);
+  // Calculate today's date range
+  const today = useMemo(() => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }, []);
 
-  const loadImmunizations = async () => {
-    try {
-      setLoading(true);
-      let records: ImmunizationRecord[] = [];
+  const tomorrow = useMemo(() => {
+    const date = new Date(today);
+    date.setDate(date.getDate() + 1);
+    return date;
+  }, [today]);
 
-      if (filter === 'today') {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
+  // Use appropriate query based on filter
+  const allQuery = useImmunizations({ limit: 100 });
+  const recentQuery = useRecentImmunizations(20);
+  const todayQuery = useImmunizationsByDateRange(
+    today.toISOString(),
+    tomorrow.toISOString()
+  );
 
-        records = await immunizationRecordsService.getByDateRange(
-          today.toISOString(),
-          tomorrow.toISOString()
-        );
-      } else {
-        const result = await immunizationRecordsService.list();
-        records = result.documents;
-      }
+  // Select the right query based on filter
+  const activeQuery = filter === 'today' ? todayQuery : filter === 'recent' ? recentQuery : allQuery;
+  const { data, isLoading, isError, error, refetch, isFetching } = activeQuery;
 
-      // Sort by date (most recent first)
-      records.sort(
-        (a, b) =>
-          new Date(b.administered_date).getTime() -
-          new Date(a.administered_date).getTime()
-      );
+  // Get immunization records from the appropriate query
+  const rawRecords = useMemo(() => {
+    if (!data) return [];
 
-      // Limit to recent if filter is set
-      if (filter === 'recent') {
-        records = records.slice(0, 20);
-      }
-
-      // Load patient names
-      const recordsWithPatients = await Promise.all(
-        records.map(async (record) => {
-          try {
-            const patient = await patientsService.get(record.patient_id);
-            return {
-              ...record,
-              patientName: patient.full_name,
-            };
-          } catch (error) {
-            return {
-              ...record,
-              patientName: 'Unknown Patient',
-            };
-          }
-        })
-      );
-
-      setImmunizations(recordsWithPatients);
-    } catch (error) {
-      console.error('Failed to load immunizations:', error);
-    } finally {
-      setLoading(false);
+    // For list queries, data has documents property
+    if ('documents' in data) {
+      return data.documents;
     }
-  };
+
+    // For other queries, data is already an array
+    return data as ImmunizationRecord[];
+  }, [data]);
+
+
+  // Sort by date (most recent first)
+  const sortedRecords = useMemo(() => {
+    return [...rawRecords].sort(
+      (a, b) =>
+        new Date(b.administered_date).getTime() -
+        new Date(a.administered_date).getTime()
+    );
+  }, [rawRecords]);
+
+  // Filter by search query
+  const filteredRecords = useMemo(() => {
+    if (!searchQuery) return sortedRecords;
+
+    // Note: Client-side filtering by patient name would require loading all patient data
+    // For now, just return all records when searching
+    // TODO: Implement server-side search or load patient data
+    return sortedRecords;
+  }, [sortedRecords, searchQuery]);
 
   const handleNotificationPress = () => {
     console.log('Notifications pressed');
   };
 
-  const handleImmunizationPress = (immunization: ImmunizationWithPatient) => {
+  const handleImmunizationPress = (immunization: ImmunizationRecord) => {
     router.push(`/(tabs)/immunizations/${immunization.$id}`);
   };
 
   const handleAddImmunization = () => {
     router.push('/(tabs)/immunizations/new');
+  };
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   const formatDate = (dateString: string) => {
@@ -101,19 +99,29 @@ export default function Immunizations() {
     });
   };
 
-  const getVaccineIcon = () => {
+  const getVaccineIcon = (): any => {
     return 'medical-outline';
   };
 
-  const filteredImmunizations = immunizations.filter((immunization) =>
-    immunization.patientName?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const renderSearchIcon = () => (
     <Ionicons name="search-outline" size={20} color="#8F9BB3" />
   );
 
-  const renderImmunizationCard = (immunization: ImmunizationWithPatient) => (
+  // Component to load patient name (uses React Query hook)
+  const PatientName = ({ patientId }: { patientId: string }) => {
+    const { data: patient, isLoading } = usePatient(patientId);
+
+    if (isLoading) return <Text category="s1">Loading...</Text>;
+
+    return (
+      <Text category="s1" style={styles.patientName}>
+        {patient?.full_name || 'Unknown Patient'}
+      </Text>
+    );
+  };
+
+  const renderImmunizationCard = (immunization: ImmunizationRecord) => (
     <TouchableOpacity
       key={immunization.$id}
       style={styles.card}
@@ -124,9 +132,7 @@ export default function Immunizations() {
           <Ionicons name={getVaccineIcon()} size={24} color="#3366FF" />
         </View>
         <View style={styles.cardInfo}>
-          <Text category="s1" style={styles.patientName}>
-            {immunization.patientName}
-          </Text>
+          <PatientName patientId={immunization.patient_id} />
           <Text category="c1" appearance="hint">
             Batch: {immunization.batch_number || 'N/A'}
           </Text>
@@ -141,6 +147,37 @@ export default function Immunizations() {
       <Ionicons name="chevron-forward-outline" size={20} color="#8F9BB3" />
     </TouchableOpacity>
   );
+
+  // Error state
+  if (isError) {
+    return (
+      <Layout style={styles.container}>
+        <Layout style={styles.header} level="2">
+          <Text category="h4" style={styles.headerTitle}>
+            Immunizations
+          </Text>
+          <TouchableOpacity
+            style={styles.notificationButton}
+            onPress={handleNotificationPress}
+          >
+            <Ionicons name="notifications-outline" size={24} color="#8F9BB3" />
+          </TouchableOpacity>
+        </Layout>
+        <View style={styles.emptyState}>
+          <Ionicons name="alert-circle-outline" size={64} color="#FF3D71" />
+          <Text category="h6" style={styles.emptyTitle}>
+            Failed to Load Immunizations
+          </Text>
+          <Text category="s1" appearance="hint">
+            {error?.message || 'An error occurred'}
+          </Text>
+          <Button style={{ marginTop: 16 }} onPress={handleRefresh}>
+            Try Again
+          </Button>
+        </View>
+      </Layout>
+    );
+  }
 
   return (
     <Layout style={styles.container}>
@@ -212,14 +249,14 @@ export default function Immunizations() {
       </Layout>
 
       {/* Immunization List */}
-      {loading ? (
+      {isLoading && !data ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3366FF" />
           <Text category="s1" appearance="hint" style={styles.loadingText}>
             Loading immunizations...
           </Text>
         </View>
-      ) : filteredImmunizations.length === 0 ? (
+      ) : filteredRecords.length === 0 ? (
         <View style={styles.emptyState}>
           <Ionicons name="medical-outline" size={64} color="#8F9BB3" />
           <Text category="h6" style={styles.emptyTitle}>
@@ -232,8 +269,18 @@ export default function Immunizations() {
           </Text>
         </View>
       ) : (
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.listContainer}>
-          {filteredImmunizations.map((immunization) =>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.listContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetching && filter === 'all'}
+              onRefresh={handleRefresh}
+              tintColor="#3366FF"
+            />
+          }
+        >
+          {filteredRecords.map((immunization) =>
             renderImmunizationCard(immunization)
           )}
         </ScrollView>

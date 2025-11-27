@@ -5,8 +5,7 @@ import { Layout, Text, OverflowMenu, MenuItem } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { usePatient, useDeletePatient } from '../../../hooks/usePatients';
-import { immunizationRecordsService } from '../../../services/immunizationRecordsService';
-import { useQuery } from '@tanstack/react-query';
+import { useImmunizationsByPatient } from '../../../hooks/useImmunizations';
 import type { Patient } from '../../../types/appwrite';
 
 interface ImmunizationDisplay {
@@ -26,12 +25,9 @@ export default function PatientDetails() {
   const { data: patient, isLoading: patientLoading, isError: patientError } = usePatient(params.id);
   const deletePatientMutation = useDeletePatient();
 
-  // Fetch immunization records
-  const { data: immunizationRecords = [], isLoading: immunizationsLoading } = useQuery({
-    queryKey: ['immunizations', 'patient', params.id],
-    queryFn: () => immunizationRecordsService.getByPatient(params.id),
-    enabled: !!params.id,
-  });
+  // Fetch immunization records using React Query
+  const { data: immunizationRecords = [], isLoading: immunizationsLoading } = useImmunizationsByPatient(params.id);
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

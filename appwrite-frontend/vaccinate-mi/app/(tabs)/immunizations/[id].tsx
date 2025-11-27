@@ -1,41 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import { Layout, Text, OverflowMenu, MenuItem } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { immunizationRecordsService } from '../../../services/immunizationRecordsService';
-import { patientsService } from '../../../services/patientsService';
+import { useImmunization, useDeleteImmunization } from '../../../hooks/useImmunizations';
+import { usePatient } from '../../../hooks/usePatients';
 import { ImmunizationRecord, Patient } from '../../../types/appwrite';
 
 export default function ImmunizationDetails() {
   const params = useLocalSearchParams<{ id: string }>();
   const [menuVisible, setMenuVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [immunization, setImmunization] = useState<ImmunizationRecord | null>(null);
-  const [patient, setPatient] = useState<Patient | null>(null);
 
-  useEffect(() => {
-    if (params.id) {
-      loadImmunization();
-    }
-  }, [params.id]);
+  // Use React Query hooks
+  const { data: immunization, isLoading: immunizationLoading, isError: immunizationError } = useImmunization(params.id);
+  const deleteImmunizationMutation = useDeleteImmunization();
 
-  const loadImmunization = async () => {
-    try {
-      setLoading(true);
-      const record = await immunizationRecordsService.get(params.id);
-      setImmunization(record);
-
-      // Load patient details
-      const patientData = await patientsService.get(record.patient_id);
-      setPatient(patientData);
-    } catch (error) {
-      console.error('Failed to load immunization:', error);
-      Alert.alert('Error', 'Failed to load immunization record');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Fetch patient details only when immunization data is available
+  const { data: patient, isLoading: patientLoading } = usePatient(immunization?.patient_id || '');
 
   const handleBack = () => {
     router.back();
@@ -58,7 +39,7 @@ export default function ImmunizationDetails() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await immunizationRecordsService.delete(params.id);
+              await deleteImmunizationMutation.mutateAsync(params.id);
               router.replace('/(tabs)/immunizations');
             } catch (error) {
               console.error('Failed to delete immunization:', error);
@@ -99,7 +80,7 @@ export default function ImmunizationDetails() {
     </View>
   );
 
-  if (loading) {
+  if (immunizationLoading || (immunization && patientLoading)) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -121,7 +102,7 @@ export default function ImmunizationDetails() {
     );
   }
 
-  if (!immunization || !patient) {
+  if (immunizationError || !immunization || !patient) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -145,6 +126,7 @@ export default function ImmunizationDetails() {
       </Layout>
     );
   }
+
 
   return (
     <Layout style={styles.container}>

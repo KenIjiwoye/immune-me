@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ImmunizationForm from '../../../components/patients/ImmunizationForm';
 import {
   ScrollView,
@@ -6,48 +6,38 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Layout, Text, Select, SelectItem, IndexPath } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { patientsService } from '../../../services/patientsService';
-import { immunizationRecordsService } from '../../../services/immunizationRecordsService';
+import { usePatients } from '../../../hooks/usePatients';
+import { useCreateImmunization } from '../../../hooks/useImmunizations';
 import { Patient, ImmunizationRecord } from '../../../types/appwrite';
 
 export default function NewImmunization() {
   const params = useLocalSearchParams<{ patientId?: string }>();
-  const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedPatientIndex, setSelectedPatientIndex] = useState<IndexPath | undefined>(
     undefined
   );
-  const [loading, setLoading] = useState(true);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
+  // Use React Query hooks
+  const { data: patientsData, isLoading: patientsLoading } = usePatients({ limit: 100 });
+  const createImmunizationMutation = useCreateImmunization();
+
+  const patients = useMemo(() => patientsData?.documents || [], [patientsData]);
+
+  // Pre-select patient if patientId is provided
   useEffect(() => {
-    loadPatients();
-  }, []);
-
-  const loadPatients = async () => {
-    try {
-      setLoading(true);
-      const result = await patientsService.list();
-      const patientsList = result.documents;
-      setPatients(patientsList);
-
-      // If patientId is provided in params, pre-select that patient
-      if (params.patientId) {
-        const patientIndex = patientsList.findIndex((p) => p.$id === params.patientId);
-        if (patientIndex !== -1) {
-          setSelectedPatientIndex(new IndexPath(patientIndex));
-          setSelectedPatient(patientsList[patientIndex]);
-        }
+    if (params.patientId && patients.length > 0) {
+      const patientIndex = patients.findIndex((p) => p.$id === params.patientId);
+      if (patientIndex !== -1) {
+        setSelectedPatientIndex(new IndexPath(patientIndex));
+        setSelectedPatient(patients[patientIndex]);
       }
-    } catch (error) {
-      console.error('Failed to load patients:', error);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [params.patientId, patients]);
 
   const handleBack = () => {
     router.back();
@@ -61,12 +51,12 @@ export default function NewImmunization() {
 
   const handleSave = async (data: any) => {
     if (!selectedPatient) {
-      alert('Please select a patient');
+      Alert.alert('Error', 'Please select a patient');
       return;
     }
 
     try {
-      const recordData: Partial<ImmunizationRecord> = {
+      const recordData = {
         patient_id: selectedPatient.$id,
         vaccine_id: 'temp-vaccine-id', // TODO: Map vaccine name to vaccine ID
         facility_id: selectedPatient.facility_id,
@@ -79,17 +69,29 @@ export default function NewImmunization() {
         updated_at: new Date().toISOString(),
       };
 
-      await immunizationRecordsService.create(recordData as Omit<ImmunizationRecord, keyof typeof AppwriteDocument>);
+      await createImmunizationMutation.mutateAsync(recordData);
 
-      // Navigate back to immunizations list
-      router.replace('/(tabs)/immunizations');
-    } catch (error) {
+      Alert.alert(
+        'Success',
+        'Immunization record created successfully!',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.replace('/(tabs)/immunizations'),
+          },
+        ]
+      );
+    } catch (error: any) {
       console.error('Failed to save immunization record:', error);
-      alert('Failed to save record. Please try again.');
+      Alert.alert(
+        'Error',
+        error.message || 'Failed to save record. Please try again.',
+        [{ text: 'OK' }]
+      );
     }
   };
 
-  if (loading) {
+  if (patientsLoading) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -140,7 +142,7 @@ export default function NewImmunization() {
             selectedIndex={selectedPatientIndex}
             onSelect={handlePatientSelect}
           >
-            {patients.map((patient, index) => (
+            {patients.map((patient) => (
               <SelectItem
                 key={patient.$id}
                 title={`${patient.full_name} (${patient.$id.slice(-8)})`}
@@ -151,7 +153,14 @@ export default function NewImmunization() {
       )}
 
       {/* Form */}
-      {selectedPatient ? (
+      {createImmunizationMutation.isPending ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3366FF" />
+          <Text category="s1" appearance="hint" style={styles.loadingText}>
+            Creating record...
+          </Text>
+        </View>
+      ) : selectedPatient ? (
         <ImmunizationForm
           initialData={{
             vaccineType: undefined,
@@ -183,6 +192,7 @@ export default function NewImmunization() {
     </Layout>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
