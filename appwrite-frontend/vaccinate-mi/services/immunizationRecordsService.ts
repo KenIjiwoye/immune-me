@@ -19,7 +19,7 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
     const result = await this.list({
       queries: [
         Query.equal('patient_id', patientId),
-        Query.orderDesc('administration_date'),
+        Query.orderDesc('administered_date'),
       ],
     });
     return result.documents;
@@ -32,7 +32,7 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
     const result = await this.list({
       queries: [
         Query.equal('facility_id', facilityId),
-        Query.orderDesc('administration_date'),
+        Query.orderDesc('administered_date'),
       ],
       limit,
     });
@@ -46,7 +46,7 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
     const result = await this.list({
       queries: [
         Query.equal('vaccine_id', vaccineId),
-        Query.orderDesc('administration_date'),
+        Query.orderDesc('administered_date'),
       ],
     });
     return result.documents;
@@ -57,9 +57,9 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
    */
   async getByDateRange(startDate: string, endDate: string, facilityId?: string): Promise<ImmunizationRecord[]> {
     const queries = [
-      Query.greaterThanEqual('administration_date', startDate),
-      Query.lessThanEqual('administration_date', endDate),
-      Query.orderDesc('administration_date'),
+      Query.greaterThanEqual('administered_date', startDate),
+      Query.lessThanEqual('administered_date', endDate),
+      Query.orderDesc('administered_date'),
     ];
 
     if (facilityId) {
@@ -76,8 +76,8 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
   async getByHealthWorker(healthWorkerId: string): Promise<ImmunizationRecord[]> {
     const result = await this.list({
       queries: [
-        Query.equal('administered_by', healthWorkerId),
-        Query.orderDesc('administration_date'),
+        Query.equal('administered_by_user_id', healthWorkerId),
+        Query.orderDesc('administered_date'),
       ],
     });
     return result.documents;
@@ -88,7 +88,7 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
    */
   async getRecent(limit: number = 50): Promise<ImmunizationRecord[]> {
     const result = await this.list({
-      queries: [Query.orderDesc('administration_date')],
+      queries: [Query.orderDesc('administered_date')],
       limit,
     });
     return result.documents;
@@ -101,7 +101,7 @@ export class ImmunizationRecordsService extends DatabaseService<ImmunizationReco
     const result = await this.list({
       queries: [
         Query.equal('batch_number', batchNumber),
-        Query.orderDesc('administration_date'),
+        Query.orderDesc('administered_date'),
       ],
     });
     return result.documents;

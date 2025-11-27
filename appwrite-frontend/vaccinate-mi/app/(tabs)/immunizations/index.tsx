@@ -45,8 +45,8 @@ export default function Immunizations() {
       // Sort by date (most recent first)
       records.sort(
         (a, b) =>
-          new Date(b.administration_date).getTime() -
-          new Date(a.administration_date).getTime()
+          new Date(b.administered_date).getTime() -
+          new Date(a.administered_date).getTime()
       );
 
       // Limit to recent if filter is set
@@ -133,7 +133,7 @@ export default function Immunizations() {
           <View style={styles.metaContainer}>
             <Ionicons name="calendar-outline" size={14} color="#8F9BB3" />
             <Text category="c2" appearance="hint">
-              {formatDate(immunization.administration_date)}
+              {formatDate(immunization.administered_date)}
             </Text>
           </View>
         </View>

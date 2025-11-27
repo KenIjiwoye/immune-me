@@ -56,7 +56,7 @@ export default function EditImmunization() {
     try {
       const updatedData: Partial<ImmunizationRecord> = {
         vaccine_id: 'temp-vaccine-id', // TODO: Map vaccine name to vaccine ID
-        administration_date: data.dateAdministered.toISOString(),
+        administered_date: data.dateAdministered.toISOString(),
         batch_number: data.batchNumber,
         notes: data.notes,
         updated_at: new Date().toISOString(),
@@ -146,10 +146,10 @@ export default function EditImmunization() {
       <ImmunizationForm
         initialData={{
           vaccineType: getVaccineIndex(immunization.vaccine_id),
-          dateAdministered: new Date(immunization.administration_date),
+          dateAdministered: new Date(immunization.administered_date),
           facility: '', // TODO: Load facility name from facility_id
           batchNumber: immunization.batch_number || '',
-          nextDoseDate: undefined,
+          nextDoseDate: immunization.return_date ? new Date(immunization.return_date) : undefined,
           notes: immunization.notes || '',
         }}
         patientData={{

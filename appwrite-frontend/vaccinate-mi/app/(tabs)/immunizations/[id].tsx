@@ -225,17 +225,16 @@ export default function ImmunizationDetails() {
             {renderInfoItem('Vaccine ID', immunization.vaccine_id, 'flask-outline')}
             {renderInfoItem(
               'Administration Date',
-              formatDate(immunization.administration_date),
+              formatDate(immunization.administered_date),
               'calendar-outline'
             )}
             {renderInfoItem('Batch Number', immunization.batch_number, 'barcode-outline')}
-            {immunization.expiry_date &&
+            {immunization.return_date &&
               renderInfoItem(
-                'Expiry Date',
-                formatDate(immunization.expiry_date),
+                'Return Date',
+                formatDate(immunization.return_date),
                 'time-outline'
               )}
-            {renderInfoItem('Dose Number', immunization.dose_number?.toString(), 'layers-outline')}
           </View>
         </View>
 
@@ -250,18 +249,14 @@ export default function ImmunizationDetails() {
             </Text>
           </View>
           <View style={styles.cardContent}>
-            {renderInfoItem('Administered By', immunization.administered_by, 'person-outline')}
-            {renderInfoItem(
-              'Site of Administration',
-              immunization.site_of_administration,
-              'location-outline'
-            )}
+            {renderInfoItem('Administered By', immunization.administered_by_user_id, 'person-outline')}
+            {renderInfoItem('Health Officer', immunization.health_officer, 'person-outline')}
             {renderInfoItem('Facility ID', immunization.facility_id, 'business-outline')}
           </View>
         </View>
 
         {/* Additional Information Card */}
-        {(immunization.notes || immunization.adverse_reactions) && (
+        {immunization.notes && (
           <View style={styles.card}>
             <View style={styles.cardHeader}>
               <View style={styles.iconContainer}>
@@ -279,16 +274,6 @@ export default function ImmunizationDetails() {
                   </Text>
                   <Text category="s1" style={styles.notesText}>
                     {immunization.notes}
-                  </Text>
-                </View>
-              )}
-              {immunization.adverse_reactions && (
-                <View style={styles.notesSection}>
-                  <Text category="c1" appearance="hint" style={styles.notesLabel}>
-                    Adverse Reactions
-                  </Text>
-                  <Text category="s1" style={[styles.notesText, styles.adverseText]}>
-                    {immunization.adverse_reactions}
                   </Text>
                 </View>
               )}

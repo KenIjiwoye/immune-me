@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Layout, Text, OverflowMenu, MenuItem } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { patientsService } from '../../../services/patientsService';
+import { immunizationRecordsService } from '../../../services/immunizationRecordsService';
+import type { Patient } from '../../../types/appwrite';
 
-interface Immunization {
+interface ImmunizationDisplay {
   id: string;
   name: string;
   administeredDate: string;
@@ -13,51 +16,54 @@ interface Immunization {
 }
 
 export default function PatientDetails() {
+  const params = useLocalSearchParams<{ id: string }>();
   const [selectedTab, setSelectedTab] = useState(0);
-
   const [menuVisible, setMenuVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [patient, setPatient] = useState<Patient | null>(null);
+  const [immunizations, setImmunizations] = useState<ImmunizationDisplay[]>([]);
 
-  const patient = {
-    id: 'PA-738491',
-    name: 'Olivia Chen',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDK5hmo-tOUKevtBLl7nQuwY3rPcJJXBWhJrxU1Vgi84U_sJU6Y1KwIWFdMGVTxGedSKSeW8xCzrc3nBFwUDvNOFnhcm-HjW-NBfiMqoFCbbAcaOHzjOthZbhgHxytJi1YZd0uBmATPzYLG32lKKPxdquNbQk8OgPMVTI2jLVagBcT4O_aptyCHMuEg3hXol3exIkQRdtPb_Od0yd0H74thIGJdASeQKTd0Qo_pgxGnY_VSjxZr87zWz7P1w8eQPESEfXhsKrEJxpY',
-    dateOfBirth: 'Oct 22, 2023',
-    sex: 'Female',
-    guardian: 'Mei Lin',
-    contact: '+1 (555) 123-4567',
-    assignedWorker: 'Dr. Emily Carter',
+  useEffect(() => {
+    if (params.id) {
+      loadPatientData();
+    }
+  }, [params.id]);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
   };
 
-  const immunizations: Immunization[] = [
-    {
-      id: '1',
-      name: 'BCG',
-      administeredDate: 'Nov 15, 2023',
-      nextDose: null,
-      status: 'completed',
-    },
-    {
-      id: '2',
-      name: 'Hepatitis B - Dose 1',
-      administeredDate: 'Dec 01, 2023',
-      nextDose: 'Jan 01, 2024',
-      status: 'completed',
-    },
-    {
-      id: '3',
-      name: 'Polio - Dose 1',
-      administeredDate: 'Dec 01, 2023',
-      nextDose: 'Jan 01, 2024',
-      status: 'completed',
-    },
-    {
-      id: '4',
-      name: 'DTaP - Dose 1',
-      administeredDate: 'Feb 20, 2024',
-      nextDose: 'Apr 20, 2024',
-      status: 'completed',
-    },
-  ];
+  const loadPatientData = async () => {
+    try {
+      setLoading(true);
+      // Load patient info
+      const patientData = await patientsService.get(params.id);
+      setPatient(patientData);
+
+      // Load immunization records for this patient
+      const records = await immunizationRecordsService.getByPatient(params.id);
+
+      // Transform immunization records to display format
+      const immunizationsDisplay: ImmunizationDisplay[] = records.map((record) => ({
+        id: record.$id,
+        name: record.vaccine_id, // TODO: Map vaccine_id to vaccine name
+        administeredDate: formatDate(record.administered_date),
+        nextDose: record.return_date ? formatDate(record.return_date) : null,
+        status: 'completed',
+      }));
+
+      setImmunizations(immunizationsDisplay);
+    } catch (error) {
+      console.error('Failed to load patient data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleBack = () => {
     router.back();
@@ -65,19 +71,22 @@ export default function PatientDetails() {
 
 
   const handleAddRecord = () => {
-    console.log('Add record pressed');
+    router.push({
+      pathname: '/(tabs)/immunizations/new',
+      params: { patientId: params.id },
+    });
   };
 
-  const renderInfoItem = (label: string, value: string) => (
+  const renderInfoItem = (label: string, value: string | undefined) => (
     <View style={styles.infoItem}>
       <Text category="c1" appearance="hint">
         {label}
       </Text>
-      <Text category="s1">{value}</Text>
+      <Text category="s1">{value || 'N/A'}</Text>
     </View>
   );
 
-  const renderImmunizationCard = (immunization: Immunization) => (
+  const renderImmunizationCard = (immunization: ImmunizationDisplay) => (
     <View key={immunization.id} style={styles.immunizationCard}>
       <View style={styles.statusDot} />
       <View style={styles.immunizationContent}>
@@ -99,6 +108,57 @@ export default function PatientDetails() {
     </View>
   );
 
+  if (loading) {
+    return (
+      <Layout style={styles.container}>
+        <Layout style={styles.header} level="2">
+          <TouchableOpacity style={styles.headerButton} onPress={handleBack}>
+            <Ionicons name="arrow-back" size={24} color="#8F9BB3" />
+          </TouchableOpacity>
+          <Text category="h6" style={styles.headerTitle}>
+            Patient Details
+          </Text>
+          <View style={styles.headerButton} />
+        </Layout>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3366FF" />
+          <Text category="s1" appearance="hint" style={styles.loadingText}>
+            Loading patient details...
+          </Text>
+        </View>
+      </Layout>
+    );
+  }
+
+  if (!patient) {
+    return (
+      <Layout style={styles.container}>
+        <Layout style={styles.header} level="2">
+          <TouchableOpacity style={styles.headerButton} onPress={handleBack}>
+            <Ionicons name="arrow-back" size={24} color="#8F9BB3" />
+          </TouchableOpacity>
+          <Text category="h6" style={styles.headerTitle}>
+            Patient Details
+          </Text>
+          <View style={styles.headerButton} />
+        </Layout>
+        <View style={styles.emptyState}>
+          <Ionicons name="alert-circle-outline" size={64} color="#8F9BB3" />
+          <Text category="h6" style={styles.emptyTitle}>
+            Patient Not Found
+          </Text>
+          <Text category="s1" appearance="hint">
+            This patient could not be loaded
+          </Text>
+        </View>
+      </Layout>
+    );
+  }
+
+  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    patient.full_name
+  )}&background=3366FF&color=fff&size=128`;
+
   return (
     <Layout style={styles.container}>
       {/* Header */}
@@ -107,11 +167,15 @@ export default function PatientDetails() {
           <Ionicons name="arrow-back" size={24} color="#8F9BB3" />
         </TouchableOpacity>
         <Text category="h6" style={styles.headerTitle}>
-          {patient.name}
+          {patient.full_name}
         </Text>
         <OverflowMenu
           anchor={(props) => (
-            <TouchableOpacity {...props} style={styles.headerButton} onPress={() => setMenuVisible(!menuVisible)}>
+            <TouchableOpacity
+              {...props}
+              style={styles.headerButton}
+              onPress={() => setMenuVisible(!menuVisible)}
+            >
               <Ionicons name="ellipsis-vertical" size={24} color="#8F9BB3" />
             </TouchableOpacity>
           )}
@@ -124,7 +188,7 @@ export default function PatientDetails() {
             title="Edit Patient"
             onPress={() => {
               setMenuVisible(false);
-              router.push({ pathname: '/(tabs)/(patients)/edit', params: { id: patient.id } });
+              router.push({ pathname: '/(tabs)/(patients)/edit', params: { id: patient.$id } });
             }}
           />
         </OverflowMenu>
@@ -134,37 +198,48 @@ export default function PatientDetails() {
         {/* Patient Info Card */}
         <View style={styles.card}>
           <View style={styles.patientHeader}>
-            <Image source={{ uri: patient.avatar }} style={styles.avatarLarge} />
+            <Image source={{ uri: avatarUrl }} style={styles.avatarLarge} />
             <View style={styles.patientHeaderInfo}>
-              <Text category="h6">{patient.name}</Text>
+              <Text category="h6">{patient.full_name}</Text>
               <Text category="c1" appearance="hint" style={styles.patientId}>
-                {patient.id}
+                {patient.$id.slice(-11)}
               </Text>
             </View>
           </View>
 
           <View style={styles.patientInfoGrid}>
-            {renderInfoItem('Date of Birth', patient.dateOfBirth)}
+            {renderInfoItem('Date of Birth', formatDate(patient.date_of_birth))}
             {renderInfoItem('Sex', patient.sex)}
-            {renderInfoItem('Guardian', patient.guardian)}
-            {renderInfoItem('Contact', patient.contact)}
+            {renderInfoItem('Mother', patient.mother_name)}
+            {renderInfoItem('Father', patient.father_name)}
+            {renderInfoItem('District', patient.district)}
+            {renderInfoItem('Town/Village', patient.town_village)}
+            {renderInfoItem('Contact', patient.contact_phone)}
+            {renderInfoItem('Address', patient.address)}
           </View>
         </View>
 
         {/* Assigned Worker Card */}
-        <View style={styles.workerCard}>
-          <View style={styles.workerIconContainer}>
-            <Ionicons name="shield-checkmark" size={24} color="#3366FF" />
+        {patient.health_worker_name && (
+          <View style={styles.workerCard}>
+            <View style={styles.workerIconContainer}>
+              <Ionicons name="shield-checkmark" size={24} color="#3366FF" />
+            </View>
+            <View style={styles.workerInfo}>
+              <Text category="c1" appearance="hint">
+                Assigned Health Worker
+              </Text>
+              <Text category="s1" style={styles.workerName}>
+                {patient.health_worker_name}
+              </Text>
+              {patient.health_worker_phone && (
+                <Text category="c1" appearance="hint">
+                  {patient.health_worker_phone}
+                </Text>
+              )}
+            </View>
           </View>
-          <View style={styles.workerInfo}>
-            <Text category="c1" appearance="hint">
-              Assigned Worker
-            </Text>
-            <Text category="s1" style={styles.workerName}>
-              {patient.assignedWorker}
-            </Text>
-          </View>
-        </View>
+        )}
 
         {/* Immunization History */}
         <View style={styles.historySection}>
@@ -415,5 +490,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    marginTop: 8,
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    padding: 32,
+  },
+  emptyTitle: {
+    marginTop: 16,
   },
 });

@@ -70,10 +70,11 @@ export default function NewImmunization() {
         patient_id: selectedPatient.$id,
         vaccine_id: 'temp-vaccine-id', // TODO: Map vaccine name to vaccine ID
         facility_id: selectedPatient.facility_id,
-        administered_by: 'Dr. Robert Johnson', // TODO: Get from auth context
-        administration_date: data.dateAdministered.toISOString(),
+        administered_by_user_id: 'temp-user-id', // TODO: Get from auth context
+        administered_date: data.dateAdministered.toISOString(),
         batch_number: data.batchNumber,
         notes: data.notes,
+        is_standard_schedule: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };

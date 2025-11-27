@@ -1,65 +1,113 @@
-import React, { useState } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Layout, Text, Input, Button } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { patientsService } from '../../../services/patientsService';
+import type { Patient as PatientType } from '../../../types/appwrite';
 
-interface Patient {
+interface PatientDisplay {
   id: string;
   name: string;
   patientId: string;
   age: number;
-  gender: 'M' | 'F';
+  gender: string;
   status: 'up-to-date' | 'pending' | 'overdue';
   avatar: string;
 }
 
 export default function Patients() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [patients, setPatients] = useState<PatientDisplay[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [total, setTotal] = useState(0);
   const router = useRouter();
+  const LIMIT = 25;
 
-  const patients: Patient[] = [
-    {
-      id: '1',
-      name: 'James Rodriguez',
-      patientId: '12345',
-      age: 34,
-      gender: 'M',
-      status: 'up-to-date',
-      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_BvPC_imz4gY8j2FNSSTbZ3mq6qiVNO2ZWBa_a6Y81eZ6Ac0Bh308-aUaRGUdDREyTfDTyDHffjsZAX6dBO5GXNJ8uiFMqzRuJJ_zkkDYavaiysSUnaFeNx_06ZredqdMC7NKP7qbCrIpQmAGU64Feof1y5njt9bgiP1ON45B9BBEBPHcbNYwklEpYmzM2rvOutHWqC5Vbc8c4BEwDcCaW4pVnyjFvr2zqVOoWMZucnDF3wQw9OysCFDYCu2MSRmhrufFM4xShqQ',
-    },
-    {
-      id: '2',
-      name: 'Maria Garcia',
-      patientId: '67890',
-      age: 28,
-      gender: 'F',
-      status: 'pending',
-      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCYeih17iiQhkX84RGryjoU1ZsRSjgKoRW5aLHQCJ1M4djXOHn_o5Q3Hog6EguzeW7KxNjMPGDIbiL07WFTq5qc7JjIMJPh6JCkufhQgMkVcY_ne1Td_7F6BQP1GPd0XggAvdAOwX0WlxWbVi8vctRvXdSJqNetPetLW-Qc0rFr2-r6OHuBSjDruoXYsm71IYej_-ebrKefV_t_-kvh4NR3IG4N0xhs-WmVYaN3K8u1ryn0dyPRGs9ExvT8NY1EY587KuRZQgTZibE',
-    },
-    {
-      id: '3',
-      name: 'Robert Smith',
-      patientId: '54321',
-      age: 45,
-      gender: 'M',
-      status: 'overdue',
-      avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB_4-t5tAouT2HfcMzZK-Apdalfe_ZkkpeVo8jXAsNwDamEIxBoK-Ke4yRKgDfcq8wpx3YuIH1eeN7joGv-Hvq0n6xnZ7qtCPed9MWMU0CDpS2hrq20O0H6B3eH_DMlKgKu3h_3AYDVr0KYXAedQO4b2KESsxxE4C2wzhwiaGFP4yOoVWbMu2G2Ajg6LDS-_siQx-X07ZJA2bdPoMcA_UOpkaooAcf1wQnPTcVMJAaYJCOavCZ3CsGG861IElisWUBxrgNRoy0l3Jg',
-    },
-  ];
+  useEffect(() => {
+    const initializePatients = async () => {
+      await loadPatients(true);
+    };
+    initializePatients();
+  }, []);
+
+  const calculateAge = (dateOfBirth: string): number => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const loadPatients = async (reset: boolean = false) => {
+    try {
+      if (reset) {
+        setLoading(true);
+        setOffset(0);
+      } else {
+        setLoadingMore(true);
+      }
+
+      const currentOffset = reset ? 0 : offset;
+      const result = await patientsService.list({
+        limit: LIMIT,
+        offset: currentOffset,
+      });
+
+      setTotal(result.total);
+
+      const patientsList: PatientDisplay[] = result.documents.map((patient: PatientType) => ({
+        id: patient.$id,
+        name: patient.full_name,
+        patientId: patient.$id.slice(-8),
+        age: calculateAge(patient.date_of_birth),
+        gender: patient.sex,
+        status: 'up-to-date', // TODO: Calculate actual status based on immunization records
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          patient.full_name
+        )}&background=3366FF&color=fff&size=128`,
+      }));
+
+      if (reset) {
+        setPatients(patientsList);
+        setOffset(LIMIT);
+      } else {
+        setPatients(prev => [...prev, ...patientsList]);
+        setOffset(prev => prev + LIMIT);
+      }
+
+      // Check if there are more records to load
+      setHasMore(currentOffset + result.documents.length < result.total);
+    } catch (error) {
+      console.error('Failed to load patients:', error);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore) {
+      loadPatients(false);
+    }
+  };
 
   const handleNotificationPress = () => {
     console.log('Notifications pressed');
   };
 
-  const handlePatientPress = (patient: Patient) => {
-    console.log('Patient pressed:', patient.name);
-    router.push(`/(tabs)/(patients)/123`);
+  const handlePatientPress = (patient: PatientDisplay) => {
+    router.push(`/(tabs)/(patients)/${patient.id}`);
   };
 
   const handleAddPatient = () => {
     console.log('Add patient pressed');
-    router.push('/(tabs)/(patients)/new');
   };
 
   const handleFilterPress = () => {
@@ -74,7 +122,7 @@ export default function Patients() {
     console.log('Status filter pressed');
   };
 
-  const getStatusColor = (status: Patient['status']) => {
+  const getStatusColor = (status: PatientDisplay['status']) => {
     switch (status) {
       case 'up-to-date':
         return '#00E096';
@@ -87,7 +135,7 @@ export default function Patients() {
     }
   };
 
-  const getStatusLabel = (status: Patient['status']) => {
+  const getStatusLabel = (status: PatientDisplay['status']) => {
     switch (status) {
       case 'up-to-date':
         return 'Up-to-date';
@@ -104,7 +152,7 @@ export default function Patients() {
     <Ionicons name="search-outline" size={20} color="#8F9BB3" />
   );
 
-  const renderPatientCard = (patient: Patient) => (
+  const renderPatientCard = (patient: PatientDisplay) => (
     <TouchableOpacity
       key={patient.id}
       style={styles.patientCard}
@@ -212,9 +260,49 @@ export default function Patients() {
       </Layout>
 
       {/* Patient List */}
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.listContainer}>
-        {patients.map((patient) => renderPatientCard(patient))}
-      </ScrollView>
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3366FF" />
+          <Text category="s1" appearance="hint" style={styles.loadingText}>
+            Loading patients...
+          </Text>
+        </View>
+      ) : patients.filter(patient =>
+        patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ).length === 0 ? (
+        <View style={styles.emptyState}>
+          <Ionicons name="people-outline" size={64} color="#8F9BB3" />
+          <Text category="h6" style={styles.emptyTitle}>
+            No patients found
+          </Text>
+          <Text category="s1" appearance="hint">
+            {searchQuery ? 'Try a different search term' : 'Start by adding a new patient'}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.listContainer}>
+          {patients
+            .filter(patient =>
+              patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((patient) => renderPatientCard(patient))}
+
+          {/* Load More Button */}
+          {!searchQuery && hasMore && (
+            <View style={styles.loadMoreContainer}>
+              <Button
+                size="medium"
+                appearance="outline"
+                onPress={handleLoadMore}
+                disabled={loadingMore}
+                style={styles.loadMoreButton}
+              >
+                {loadingMore ? 'Loading...' : `Load More (${patients.length} of ${total})`}
+              </Button>
+            </View>
+          )}
+        </ScrollView>
+      )}
 
       {/* Floating Action Button */}
       <TouchableOpacity style={styles.fab} onPress={handleAddPatient}>
@@ -339,5 +427,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    marginTop: 8,
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    padding: 32,
+  },
+  emptyTitle: {
+    marginTop: 16,
+  },
+  loadMoreContainer: {
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  loadMoreButton: {
+    minWidth: 200,
   },
 });

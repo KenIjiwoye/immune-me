@@ -111,7 +111,11 @@
         },
         {
             "$id": "patients",
-            "$permissions": [],
+            "$permissions": [
+                "create(\"any\")",
+                "read(\"any\")",
+                "update(\"any\")"
+            ],
             "databaseId": "68beb588001a9f2d71dc",
             "name": "Patients",
             "enabled": true,
@@ -2610,7 +2614,12 @@
         },
         {
             "$id": "access-audit-log",
-            "$permissions": [],
+            "$permissions": [
+                "create(\"users\")",
+                "read(\"users\")",
+                "update(\"users\")",
+                "delete(\"users\")"
+            ],
             "databaseId": "68beb588001a9f2d71dc",
             "name": "Access Audit Log",
             "enabled": true,
@@ -3858,7 +3867,12 @@
         },
         {
             "$id": "immunization_records",
-            "$permissions": [],
+            "$permissions": [
+                "create(\"any\")",
+                "read(\"any\")",
+                "update(\"any\")",
+                "delete(\"any\")"
+            ],
             "databaseId": "68beb588001a9f2d71dc",
             "name": "Immunization Records",
             "enabled": true,

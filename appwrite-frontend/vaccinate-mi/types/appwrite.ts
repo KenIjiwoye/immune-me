@@ -64,16 +64,24 @@ export interface ImmunizationRecord extends AppwriteDocument {
   patient_id: string;
   vaccine_id: string;
   facility_id: string;
-  administered_by: string;
-  administration_date: string;
+  administered_by_user_id: string;
+  administered_date: string;
   batch_number?: string;
-  expiry_date?: string;
-  site_of_administration?: string;
-  dose_number?: number;
+  health_officer?: string;
+  return_date?: string;
+  is_standard_schedule: boolean;
+  schedule_status?: string;
   notes?: string;
-  adverse_reactions?: string;
   created_at: string;
   updated_at: string;
+  administered_by_profile_id?: string;
+  administered_by_employee_id?: string;
+  administered_by_professional_title?: string;
+  administered_by_license_number?: string;
+  administered_by_specializations?: string[];
+  supervisor_profile_id?: string;
+  quality_assurance_verified?: boolean;
+  verification_timestamp?: string;
 }
 
 // =============================================================================
