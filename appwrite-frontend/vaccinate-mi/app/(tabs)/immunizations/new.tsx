@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { usePatients } from '../../../hooks/usePatients';
 import { useCreateImmunization } from '../../../hooks/useImmunizations';
+import { useActiveVaccines } from '../../../hooks/useVaccines';
 import { Patient, ImmunizationRecord } from '../../../types/appwrite';
 
 export default function NewImmunization() {
@@ -24,6 +25,7 @@ export default function NewImmunization() {
 
   // Use React Query hooks
   const { data: patientsData, isLoading: patientsLoading } = usePatients({ limit: 100 });
+  const { data: vaccines, isLoading: vaccinesLoading } = useActiveVaccines();
   const createImmunizationMutation = useCreateImmunization();
 
   const patients = useMemo(() => patientsData?.documents || [], [patientsData]);
@@ -55,10 +57,15 @@ export default function NewImmunization() {
       return;
     }
 
+    if (!data.vaccine) {
+      Alert.alert('Error', 'Please select a vaccine');
+      return;
+    }
+
     try {
       const recordData = {
         patient_id: selectedPatient.$id,
-        vaccine_id: 'temp-vaccine-id', // TODO: Map vaccine name to vaccine ID
+        vaccine_id: data.vaccine.$id,
         facility_id: selectedPatient.facility_id,
         administered_by_user_id: 'temp-user-id', // TODO: Get from auth context
         administered_date: data.dateAdministered.toISOString(),
@@ -91,7 +98,7 @@ export default function NewImmunization() {
     }
   };
 
-  if (patientsLoading) {
+  if (patientsLoading || vaccinesLoading) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -106,7 +113,7 @@ export default function NewImmunization() {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3366FF" />
           <Text category="s1" appearance="hint" style={styles.loadingText}>
-            Loading patients...
+            Loading data...
           </Text>
         </View>
       </Layout>
@@ -180,6 +187,7 @@ export default function NewImmunization() {
           }}
           onSave={handleSave}
           mode="new"
+          vaccines={vaccines || []}
         />
       ) : (
         <View style={styles.emptyState}>

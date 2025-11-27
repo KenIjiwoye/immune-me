@@ -15,9 +15,10 @@ export class VaccinesService extends DatabaseService<Vaccine> {
   /**
    * Get active vaccines
    */
-  async getActive(): Promise<Vaccine[]> {
+  async getActive(limit: number = 100): Promise<Vaccine[]> {
     const result = await this.list({
       queries: [Query.equal('is_active', true)],
+      limit,
     });
     return result.documents;
   }

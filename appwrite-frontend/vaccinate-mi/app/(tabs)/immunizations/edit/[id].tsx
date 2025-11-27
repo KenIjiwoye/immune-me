@@ -12,15 +12,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useImmunization, useUpdateImmunization } from '../../../../hooks/useImmunizations';
 import { usePatient } from '../../../../hooks/usePatients';
+import { useActiveVaccines } from '../../../../hooks/useVaccines';
 import { ImmunizationRecord, Patient } from '../../../../types/appwrite';
-
-const vaccines = ['COVID-19 (Pfizer)', 'Influenza', 'MMR'];
 
 export default function EditImmunization() {
   const params = useLocalSearchParams<{ id: string }>();
 
   // Use React Query hooks
   const { data: immunization, isLoading: immunizationLoading, isError: immunizationError } = useImmunization(params.id);
+  const { data: vaccines, isLoading: vaccinesLoading } = useActiveVaccines();
   const updateImmunizationMutation = useUpdateImmunization();
 
   // Fetch patient details only when immunization data is available
@@ -35,7 +35,7 @@ export default function EditImmunization() {
 
     try {
       const updatedData: Partial<ImmunizationRecord> = {
-        vaccine_id: 'temp-vaccine-id', // TODO: Map vaccine name to vaccine ID
+        vaccine_id: data.vaccine ? data.vaccine.$id : immunization.vaccine_id,
         administered_date: data.dateAdministered.toISOString(),
         batch_number: data.batchNumber,
         notes: data.notes,
@@ -56,7 +56,7 @@ export default function EditImmunization() {
     }
   };
 
-  if (immunizationLoading || (immunization && patientLoading)) {
+  if (immunizationLoading || vaccinesLoading || (immunization && patientLoading)) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -104,11 +104,11 @@ export default function EditImmunization() {
   }
 
 
-  // Map vaccine ID to vaccine index (this is a placeholder)
-  // TODO: Implement proper vaccine mapping
+  // Map vaccine ID to vaccine index
   const getVaccineIndex = (vaccineId: string): IndexPath | undefined => {
-    // For now, return undefined as we don't have vaccine mapping
-    return undefined;
+    if (!vaccines) return undefined;
+    const index = vaccines.findIndex(v => v.$id === vaccineId);
+    return index !== -1 ? new IndexPath(index) : undefined;
   };
 
   return (
@@ -143,6 +143,7 @@ export default function EditImmunization() {
         }}
         onSave={handleSave}
         mode="edit"
+        vaccines={vaccines || []}
       />
     </Layout>
   );

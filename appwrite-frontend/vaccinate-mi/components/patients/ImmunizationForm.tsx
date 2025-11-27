@@ -11,6 +11,8 @@ import {
 import { Layout, Text, Input, Button, Select, SelectItem, Datepicker, IndexPath } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 
+import type { Vaccine } from '../../types/appwrite';
+
 interface InitialData {
   vaccineType?: IndexPath;
   dateAdministered: Date;
@@ -38,11 +40,10 @@ interface Props {
   patientData: PatientData;
   onSave: (data: any) => void;
   mode: 'new' | 'edit';
+  vaccines: Vaccine[];
 }
 
-const vaccines = ['COVID-19 (Pfizer)', 'Influenza', 'MMR'];
-
-export default function ImmunizationForm({ initialData, patientData, onSave, mode }: Props) {
+export default function ImmunizationForm({ initialData, patientData, onSave, mode, vaccines = [] }: Props) {
   const [vaccineType, setVaccineType] = useState<IndexPath | undefined>(initialData.vaccineType);
   const [dateAdministered, setDateAdministered] = useState<Date>(initialData.dateAdministered);
   const [nextDoseDate, setNextDoseDate] = useState<Date | undefined>(initialData.nextDoseDate);
@@ -56,7 +57,7 @@ export default function ImmunizationForm({ initialData, patientData, onSave, mod
 
   const handleSaveInternal = () => {
     const data = {
-      vaccineType: vaccineType !== undefined ? vaccines[vaccineType.row] : undefined,
+      vaccine: vaccineType !== undefined ? vaccines[vaccineType.row] : undefined,
       dateAdministered,
       facility,
       batchNumber,
@@ -112,12 +113,12 @@ export default function ImmunizationForm({ initialData, patientData, onSave, mod
             </Text>
             <Select
               placeholder="Select vaccine"
-              value={vaccineType !== undefined ? vaccines[vaccineType.row] : ''}
+              value={vaccineType !== undefined && vaccines[vaccineType.row] ? vaccines[vaccineType.row].name : ''}
               selectedIndex={vaccineType}
               onSelect={(index) => setVaccineType(index as IndexPath)}
             >
-              {vaccines.map((vaccine, index) => (
-                <SelectItem key={index} title={vaccine} />
+              {vaccines.map((vaccine) => (
+                <SelectItem key={vaccine.$id} title={vaccine.name} />
               ))}
             </Select>
           </View>
