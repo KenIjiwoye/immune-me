@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 
 import { Layout, Text, OverflowMenu, MenuItem } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { patientsService } from '../../../services/patientsService';
+import { usePatient, useDeletePatient } from '../../../hooks/usePatients';
 import { immunizationRecordsService } from '../../../services/immunizationRecordsService';
+import { useQuery } from '@tanstack/react-query';
 import type { Patient } from '../../../types/appwrite';
 
 interface ImmunizationDisplay {
@@ -20,15 +21,17 @@ export default function PatientDetails() {
   const params = useLocalSearchParams<{ id: string }>();
   const [selectedTab, setSelectedTab] = useState(0);
   const [menuVisible, setMenuVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [patient, setPatient] = useState<Patient | null>(null);
-  const [immunizations, setImmunizations] = useState<ImmunizationDisplay[]>([]);
 
-  useEffect(() => {
-    if (params.id) {
-      loadPatientData();
-    }
-  }, [params.id]);
+  // Use React Query hooks
+  const { data: patient, isLoading: patientLoading, isError: patientError } = usePatient(params.id);
+  const deletePatientMutation = useDeletePatient();
+
+  // Fetch immunization records
+  const { data: immunizationRecords = [], isLoading: immunizationsLoading } = useQuery({
+    queryKey: ['immunizations', 'patient', params.id],
+    queryFn: () => immunizationRecordsService.getByPatient(params.id),
+    enabled: !!params.id,
+  });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -39,37 +42,20 @@ export default function PatientDetails() {
     });
   };
 
-  const loadPatientData = async () => {
-    try {
-      setLoading(true);
-      // Load patient info
-      const patientData = await patientsService.get(params.id);
-      setPatient(patientData);
-
-      // Load immunization records for this patient
-      const records = await immunizationRecordsService.getByPatient(params.id);
-
-      // Transform immunization records to display format
-      const immunizationsDisplay: ImmunizationDisplay[] = records.map((record) => ({
-        id: record.$id,
-        name: record.vaccine_id, // TODO: Map vaccine_id to vaccine name
-        administeredDate: formatDate(record.administered_date),
-        nextDose: record.return_date ? formatDate(record.return_date) : null,
-        status: 'completed',
-      }));
-
-      setImmunizations(immunizationsDisplay);
-    } catch (error) {
-      console.error('Failed to load patient data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Transform immunization records to display format
+  const immunizations = useMemo<ImmunizationDisplay[]>(() => {
+    return immunizationRecords.map((record) => ({
+      id: record.$id,
+      name: record.vaccine_id, // TODO: Map vaccine_id to vaccine name
+      administeredDate: formatDate(record.administered_date),
+      nextDose: record.return_date ? formatDate(record.return_date) : null,
+      status: 'completed' as const,
+    }));
+  }, [immunizationRecords]);
 
   const handleBack = () => {
     router.back();
   };
-
 
   const handleAddRecord = () => {
     router.push({
@@ -77,6 +63,48 @@ export default function PatientDetails() {
       params: { patientId: params.id },
     });
   };
+
+  const handleDeletePatient = async () => {
+    if (!patient) return;
+
+    Alert.alert(
+      'Delete Patient',
+      `Are you sure you want to delete ${patient.full_name}? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deletePatientMutation.mutateAsync(patient.$id);
+              Alert.alert(
+                'Success',
+                'Patient deleted successfully',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => router.back(),
+                  },
+                ]
+              );
+            } catch (error: any) {
+              console.error('Failed to delete patient:', error);
+              Alert.alert(
+                'Error',
+                error.message || 'Failed to delete patient. Please try again.',
+                [{ text: 'OK' }]
+              );
+            }
+          },
+        },
+      ]
+    );
+  };
+
 
   const renderInfoItem = (label: string, value: string | undefined) => (
     <View style={styles.infoItem}>
@@ -109,7 +137,8 @@ export default function PatientDetails() {
     </View>
   );
 
-  if (loading) {
+  if (patientLoading || immunizationsLoading) {
+
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -196,44 +225,10 @@ export default function PatientDetails() {
             title="Delete Patient"
             onPress={() => {
               setMenuVisible(false);
-              Alert.alert(
-                'Delete Patient',
-                `Are you sure you want to delete ${patient.full_name}? This action cannot be undone.`,
-                [
-                  {
-                    text: 'Cancel',
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'Delete',
-                    style: 'destructive',
-                    onPress: async () => {
-                      try {
-                        await patientsService.delete(patient.$id);
-                        Alert.alert(
-                          'Success',
-                          'Patient deleted successfully',
-                          [
-                            {
-                              text: 'OK',
-                              onPress: () => router.back(),
-                            },
-                          ]
-                        );
-                      } catch (error: any) {
-                        console.error('Failed to delete patient:', error);
-                        Alert.alert(
-                          'Error',
-                          error.message || 'Failed to delete patient. Please try again.',
-                          [{ text: 'OK' }]
-                        );
-                      }
-                    },
-                  },
-                ]
-              );
+              handleDeletePatient();
             }}
           />
+
         </OverflowMenu>
 
       </Layout>

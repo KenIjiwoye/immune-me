@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator, RefreshControl } from 'react-native';
 import { Layout, Text, Input, Button } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { patientsService } from '../../../services/patientsService';
+import { usePatients } from '../../../hooks/usePatients';
 import type { Patient as PatientType } from '../../../types/appwrite';
 
 interface PatientDisplay {
@@ -18,21 +18,15 @@ interface PatientDisplay {
 
 export default function Patients() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [patients, setPatients] = useState<PatientDisplay[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const [total, setTotal] = useState(0);
   const router = useRouter();
   const LIMIT = 25;
 
-  useEffect(() => {
-    const initializePatients = async () => {
-      await loadPatients(true);
-    };
-    initializePatients();
-  }, []);
+  // Use React Query hook
+  const { data, isLoading, isError, error, refetch, isFetching } = usePatients({
+    limit: LIMIT,
+    offset,
+  });
 
   const calculateAge = (dateOfBirth: string): number => {
     const today = new Date();
@@ -45,57 +39,51 @@ export default function Patients() {
     return age;
   };
 
-  const loadPatients = async (reset: boolean = false) => {
-    try {
-      if (reset) {
-        setLoading(true);
-        setOffset(0);
-      } else {
-        setLoadingMore(true);
-      }
+  // Transform data to PatientDisplay format
+  const patients = useMemo(() => {
+    if (!data?.documents) return [];
 
-      const currentOffset = reset ? 0 : offset;
-      const result = await patientsService.list({
-        limit: LIMIT,
-        offset: currentOffset,
-      });
+    return data.documents.map((patient: PatientType): PatientDisplay => ({
+      id: patient.$id,
+      name: patient.full_name,
+      patientId: patient.$id.slice(-8),
+      age: calculateAge(patient.date_of_birth),
+      gender: patient.sex,
+      status: 'up-to-date', // TODO: Calculate actual status based on immunization records
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        patient.full_name
+      )}&background=3366FF&color=fff&size=128`,
+    }));
+  }, [data]);
 
-      setTotal(result.total);
+  // Filter patients by search query
+  const filteredPatients = useMemo(() => {
+    if (!searchQuery) return patients;
 
-      const patientsList: PatientDisplay[] = result.documents.map((patient: PatientType) => ({
-        id: patient.$id,
-        name: patient.full_name,
-        patientId: patient.$id.slice(-8),
-        age: calculateAge(patient.date_of_birth),
-        gender: patient.sex,
-        status: 'up-to-date', // TODO: Calculate actual status based on immunization records
-        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
-          patient.full_name
-        )}&background=3366FF&color=fff&size=128`,
-      }));
+    return patients.filter(patient =>
+      patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [patients, searchQuery]);
 
-      if (reset) {
-        setPatients(patientsList);
-        setOffset(LIMIT);
-      } else {
-        setPatients(prev => [...prev, ...patientsList]);
-        setOffset(prev => prev + LIMIT);
-      }
+  const total = data?.total || 0;
+  const hasMore = offset + LIMIT < total;
+  const hasPrevious = offset > 0;
 
-      // Check if there are more records to load
-      setHasMore(currentOffset + result.documents.length < result.total);
-    } catch (error) {
-      console.error('Failed to load patients:', error);
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
+  const handleLoadMore = () => {
+    if (hasMore) {
+      setOffset(prev => prev + LIMIT);
     }
   };
 
-  const handleLoadMore = () => {
-    if (!loadingMore && hasMore) {
-      loadPatients(false);
+  const handleLoadPrevious = () => {
+    if (hasPrevious) {
+      setOffset(prev => Math.max(0, prev - LIMIT));
     }
+  };
+
+  const handleRefresh = () => {
+    setOffset(0);
+    refetch();
   };
 
   const handleNotificationPress = () => {
@@ -109,7 +97,6 @@ export default function Patients() {
   const handleAddPatient = () => {
     router.push('/(tabs)/(patients)/new');
   };
-
 
   const handleFilterPress = () => {
     console.log('Filter pressed');
@@ -191,6 +178,37 @@ export default function Patients() {
     </TouchableOpacity>
   );
 
+  // Error state
+  if (isError) {
+    return (
+      <Layout style={styles.container}>
+        <Layout style={styles.header} level="2">
+          <Text category="h4" style={styles.headerTitle}>
+            Patients
+          </Text>
+          <TouchableOpacity
+            style={styles.notificationButton}
+            onPress={handleNotificationPress}
+          >
+            <Ionicons name="notifications-outline" size={24} color="#8F9BB3" />
+          </TouchableOpacity>
+        </Layout>
+        <View style={styles.errorState}>
+          <Ionicons name="alert-circle-outline" size={64} color="#FF3D71" />
+          <Text category="h6" style={styles.errorTitle}>
+            Failed to Load Patients
+          </Text>
+          <Text category="s1" appearance="hint">
+            {error?.message || 'An error occurred'}
+          </Text>
+          <Button style={{ marginTop: 16 }} onPress={handleRefresh}>
+            Try Again
+          </Button>
+        </View>
+      </Layout>
+    );
+  }
+
   return (
     <Layout style={styles.container}>
       {/* Header */}
@@ -261,16 +279,14 @@ export default function Patients() {
       </Layout>
 
       {/* Patient List */}
-      {loading ? (
+      {isLoading && !data ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3366FF" />
           <Text category="s1" appearance="hint" style={styles.loadingText}>
             Loading patients...
           </Text>
         </View>
-      ) : patients.filter(patient =>
-        patient.name.toLowerCase().includes(searchQuery.toLowerCase())
-      ).length === 0 ? (
+      ) : filteredPatients.length === 0 ? (
         <View style={styles.emptyState}>
           <Ionicons name="people-outline" size={64} color="#8F9BB3" />
           <Text category="h6" style={styles.emptyTitle}>
@@ -281,24 +297,44 @@ export default function Patients() {
           </Text>
         </View>
       ) : (
-        <ScrollView style={styles.scrollView} contentContainerStyle={styles.listContainer}>
-          {patients
-            .filter(patient =>
-              patient.name.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            .map((patient) => renderPatientCard(patient))}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.listContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetching && offset === 0}
+              onRefresh={handleRefresh}
+              tintColor="#3366FF"
+            />
+          }
+        >
+          {filteredPatients.map((patient) => renderPatientCard(patient))}
 
-          {/* Load More Button */}
-          {!searchQuery && hasMore && (
-            <View style={styles.loadMoreContainer}>
+          {/* Pagination Controls */}
+          {!searchQuery && (hasPrevious || hasMore) && (
+            <View style={styles.paginationContainer}>
               <Button
-                size="medium"
+                size="small"
+                appearance="outline"
+                onPress={handleLoadPrevious}
+                disabled={!hasPrevious || isFetching}
+                style={styles.paginationButton}
+              >
+                Previous
+              </Button>
+
+              <Text category="c1" appearance="hint">
+                {offset + 1} - {Math.min(offset + LIMIT, total)} of {total}
+              </Text>
+
+              <Button
+                size="small"
                 appearance="outline"
                 onPress={handleLoadMore}
-                disabled={loadingMore}
-                style={styles.loadMoreButton}
+                disabled={!hasMore || isFetching}
+                style={styles.paginationButton}
               >
-                {loadingMore ? 'Loading...' : `Load More (${patients.length} of ${total})`}
+                Next
               </Button>
             </View>
           )}
@@ -448,11 +484,24 @@ const styles = StyleSheet.create({
   emptyTitle: {
     marginTop: 16,
   },
-  loadMoreContainer: {
-    paddingVertical: 16,
+  errorState: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    padding: 32,
   },
-  loadMoreButton: {
-    minWidth: 200,
+  errorTitle: {
+    marginTop: 16,
+  },
+  paginationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    gap: 12,
+  },
+  paginationButton: {
+    minWidth: 100,
   },
 });

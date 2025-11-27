@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -10,13 +10,13 @@ import { Layout, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import PatientForm from '../../../components/patients/PatientForm';
-import { patientsService } from '../../../services/patientsService';
+import { useCreatePatient } from '../../../hooks/usePatients';
 
 // TODO: Get this from user context/session
 const DEFAULT_FACILITY_ID = 'default-facility-id';
 
 export default function PatientNew() {
-  const [loading, setLoading] = useState(false);
+  const createPatientMutation = useCreatePatient();
 
   const handleBack = () => {
     router.back();
@@ -24,8 +24,6 @@ export default function PatientNew() {
 
   const handleSave = async (data: any) => {
     try {
-      setLoading(true);
-
       // Prepare patient data for Appwrite
       const patientData = {
         full_name: data.full_name,
@@ -45,10 +43,8 @@ export default function PatientNew() {
         updated_at: new Date().toISOString(),
       };
 
-      // Create patient in Appwrite
-      const newPatient = await patientsService.create(patientData);
-
-      console.log('Patient created successfully:', newPatient);
+      // Create patient using React Query mutation
+      await createPatientMutation.mutateAsync(patientData);
 
       Alert.alert(
         'Success',
@@ -67,8 +63,6 @@ export default function PatientNew() {
         error.message || 'Failed to create patient. Please try again.',
         [{ text: 'OK' }]
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -89,7 +83,7 @@ export default function PatientNew() {
         <View style={styles.headerSpacer} />
       </Layout>
 
-      {loading ? (
+      {createPatientMutation.isPending ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3366FF" />
           <Text category="s1" appearance="hint" style={styles.loadingText}>

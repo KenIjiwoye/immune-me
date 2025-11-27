@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -10,51 +10,23 @@ import { Layout, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import PatientForm from '../../../components/patients/PatientForm';
-import { patientsService } from '../../../services/patientsService';
-import type { Patient } from '../../../types/appwrite';
+import { usePatient, useUpdatePatient } from '../../../hooks/usePatients';
 
 export default function PatientEdit() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [patient, setPatient] = useState<Patient | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      loadPatient();
-    }
-  }, [id]);
-
-  const loadPatient = async () => {
-    try {
-      setLoading(true);
-      const patientData = await patientsService.get(id);
-      setPatient(patientData);
-    } catch (error) {
-      console.error('Failed to load patient:', error);
-      Alert.alert(
-        'Error',
-        'Failed to load patient data. Please try again.',
-        [
-          {
-            text: 'OK',
-            onPress: () => router.back(),
-          },
-        ]
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Use React Query hooks
+  const { data: patient, isLoading, isError } = usePatient(id);
+  const updatePatientMutation = useUpdatePatient();
 
   const handleBack = () => {
     router.back();
   };
 
   const handleSave = async (data: any) => {
-    try {
-      setSaving(true);
+    if (!id) return;
 
+    try {
       // Prepare patient data for Appwrite
       const patientData = {
         full_name: data.full_name,
@@ -73,10 +45,8 @@ export default function PatientEdit() {
         updated_at: new Date().toISOString(),
       };
 
-      // Update patient in Appwrite
-      const updatedPatient = await patientsService.update(id, patientData);
-
-      console.log('Patient updated successfully:', updatedPatient);
+      // Update patient using React Query mutation
+      await updatePatientMutation.mutateAsync({ id, data: patientData });
 
       Alert.alert(
         'Success',
@@ -95,8 +65,6 @@ export default function PatientEdit() {
         error.message || 'Failed to update patient. Please try again.',
         [{ text: 'OK' }]
       );
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -104,7 +72,8 @@ export default function PatientEdit() {
     router.back();
   };
 
-  if (loading) {
+  // Loading state
+  if (isLoading) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -126,7 +95,8 @@ export default function PatientEdit() {
     );
   }
 
-  if (!patient) {
+  // Error or not found state
+  if (isError || !patient) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
@@ -164,7 +134,7 @@ export default function PatientEdit() {
         <View style={styles.headerSpacer} />
       </Layout>
 
-      {saving ? (
+      {updatePatientMutation.isPending ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3366FF" />
           <Text category="s1" appearance="hint" style={styles.loadingText}>
