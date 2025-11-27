@@ -14,6 +14,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { usePatients } from '../../../hooks/usePatients';
 import { useCreateImmunization } from '../../../hooks/useImmunizations';
 import { useActiveVaccines } from '../../../hooks/useVaccines';
+import { useSimpleAuth } from '../../../hooks/useAuth';
+import { useCurrentUserProfile } from '../../../hooks/useProfiles';
 import { Patient, ImmunizationRecord } from '../../../types/appwrite';
 
 export default function NewImmunization() {
@@ -27,6 +29,9 @@ export default function NewImmunization() {
   const { data: patientsData, isLoading: patientsLoading } = usePatients({ limit: 100 });
   const { data: vaccines, isLoading: vaccinesLoading } = useActiveVaccines();
   const createImmunizationMutation = useCreateImmunization();
+
+  const { user, isLoading: authLoading } = useSimpleAuth();
+  const { profile, isLoading: profileLoading } = useCurrentUserProfile(user?.id);
 
   const patients = useMemo(() => patientsData?.documents || [], [patientsData]);
 
@@ -62,12 +67,18 @@ export default function NewImmunization() {
       return;
     }
 
+    if (!profile) {
+      Alert.alert('Error', 'User profile not found. Please try again.');
+      return;
+    }
+
     try {
       const recordData = {
         patient_id: selectedPatient.$id,
         vaccine_id: data.vaccine.$id,
         facility_id: selectedPatient.facility_id,
-        administered_by_user_id: 'temp-user-id', // TODO: Get from auth context
+        administered_by_user_id: profile.$id,
+        administered_by_profile_id: profile.$id,
         administered_date: data.dateAdministered.toISOString(),
         batch_number: data.batchNumber,
         notes: data.notes,
@@ -98,7 +109,7 @@ export default function NewImmunization() {
     }
   };
 
-  if (patientsLoading || vaccinesLoading) {
+  if (patientsLoading || vaccinesLoading || authLoading || profileLoading) {
     return (
       <Layout style={styles.container}>
         <Layout style={styles.header} level="2">
