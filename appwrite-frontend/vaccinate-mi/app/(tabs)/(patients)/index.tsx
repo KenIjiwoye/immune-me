@@ -107,8 +107,9 @@ export default function Patients() {
   };
 
   const handleAddPatient = () => {
-    console.log('Add patient pressed');
+    router.push('/(tabs)/(patients)/new');
   };
+
 
   const handleFilterPress = () => {
     console.log('Filter pressed');

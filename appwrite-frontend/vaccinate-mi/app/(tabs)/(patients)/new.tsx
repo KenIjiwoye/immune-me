@@ -1,33 +1,79 @@
 import React, { useState } from 'react';
-import ImmunizationForm from '../../../components/patients/ImmunizationForm';
 import {
-  ScrollView,
-  View,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
+  View,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import { Layout, Text, Input, Button, Select, SelectItem, Datepicker, IndexPath } from '@ui-kitten/components';
+import { Layout, Text } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import PatientForm from '../../../components/patients/PatientForm';
+import { patientsService } from '../../../services/patientsService';
+
+// TODO: Get this from user context/session
+const DEFAULT_FACILITY_ID = 'default-facility-id';
 
 export default function PatientNew() {
-  const patient = {
-    name: 'Eleanor Pena',
-    dob: '05/12/1986',
-    patientId: '987-654-321',
-    avatar:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCTL-v5tOhl8JDjLNRmuEmg6ovOnda_XzvnJImUQCMGDCYRJITHh8Rtx18XYDnpk-CmmeBdY1C1D_Q0d_bquEl-mGijDY5QgcpDXyhuPd5xFJmrr3HiTtKGvgA79hSHwzf_hSCtxJgArV0PZGgO0pH-IFC0DI9Irau2-ouTLBDD5KjvdN0kETgEwAXcumvj8bE1OBW81MWAr3J_EhED06LIYdkmVadMhQwQUdoRMObiYgy4hhJFGmcLTW9ln3iMgQ_sSw4tiPpN9zQ',
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
     router.back();
   };
 
-  const handleSave = (data: any) => {
-    console.log('Save record', data);
+  const handleSave = async (data: any) => {
+    try {
+      setLoading(true);
+
+      // Prepare patient data for Appwrite
+      const patientData = {
+        full_name: data.full_name,
+        sex: data.sex,
+        date_of_birth: data.date_of_birth.toISOString(),
+        mother_name: data.mother_name || undefined,
+        father_name: data.father_name || undefined,
+        district: data.district,
+        town_village: data.town_village || undefined,
+        address: data.address,
+        contact_phone: data.contact_phone || undefined,
+        health_worker_name: data.health_worker_name || undefined,
+        health_worker_phone: data.health_worker_phone || undefined,
+        health_worker_address: data.health_worker_address || undefined,
+        facility_id: data.facility_id,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      // Create patient in Appwrite
+      const newPatient = await patientsService.create(patientData);
+
+      console.log('Patient created successfully:', newPatient);
+
+      Alert.alert(
+        'Success',
+        'Patient created successfully!',
+        [
+          {
+            text: 'OK',
+            onPress: () => router.back(),
+          },
+        ]
+      );
+    } catch (error: any) {
+      console.error('Failed to create patient:', error);
+      Alert.alert(
+        'Error',
+        error.message || 'Failed to create patient. Please try again.',
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    router.back();
   };
 
   return (
@@ -38,24 +84,26 @@ export default function PatientNew() {
           <Ionicons name="arrow-back" size={24} color="#8F9BB3" />
         </TouchableOpacity>
         <Text category="h6" style={styles.headerTitle}>
-          New Immunization
+          New Patient
         </Text>
         <View style={styles.headerSpacer} />
       </Layout>
 
-      <ImmunizationForm
-        initialData={{
-          vaccineType: undefined,
-          dateAdministered: new Date(),
-          facility: '',
-          batchNumber: '',
-          nextDoseDate: undefined,
-          notes: '',
-        }}
-        patientData={patient}
-        onSave={handleSave}
-        mode="new"
-      />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3366FF" />
+          <Text category="s1" appearance="hint" style={styles.loadingText}>
+            Creating patient...
+          </Text>
+        </View>
+      ) : (
+        <PatientForm
+          facilityId={DEFAULT_FACILITY_ID}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          mode="new"
+        />
+      )}
     </Layout>
   );
 }
@@ -87,5 +135,14 @@ const styles = StyleSheet.create({
   },
   headerSpacer: {
     width: 40,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  loadingText: {
+    marginTop: 8,
   },
 });

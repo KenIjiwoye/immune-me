@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
+
 import { Layout, Text, OverflowMenu, MenuItem } from '@ui-kitten/components';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -191,7 +192,50 @@ export default function PatientDetails() {
               router.push({ pathname: '/(tabs)/(patients)/edit', params: { id: patient.$id } });
             }}
           />
+          <MenuItem
+            title="Delete Patient"
+            onPress={() => {
+              setMenuVisible(false);
+              Alert.alert(
+                'Delete Patient',
+                `Are you sure you want to delete ${patient.full_name}? This action cannot be undone.`,
+                [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                      try {
+                        await patientsService.delete(patient.$id);
+                        Alert.alert(
+                          'Success',
+                          'Patient deleted successfully',
+                          [
+                            {
+                              text: 'OK',
+                              onPress: () => router.back(),
+                            },
+                          ]
+                        );
+                      } catch (error: any) {
+                        console.error('Failed to delete patient:', error);
+                        Alert.alert(
+                          'Error',
+                          error.message || 'Failed to delete patient. Please try again.',
+                          [{ text: 'OK' }]
+                        );
+                      }
+                    },
+                  },
+                ]
+              );
+            }}
+          />
         </OverflowMenu>
+
       </Layout>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
